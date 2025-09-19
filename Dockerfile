@@ -5,10 +5,12 @@ WORKDIR /app
 # Cache packages installation
 COPY package.json package.json
 COPY bun.lock bun.lock
+COPY drizzle.config.ts drizzle.config.ts
+COPY tsconfig.json tsconfig.json
+COPY ./src ./src
 
 RUN bun install
-
-COPY ./src ./src
+RUN bun db:push
 
 ENV NODE_ENV=production
 
