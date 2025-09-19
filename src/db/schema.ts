@@ -138,7 +138,7 @@ export const usersTable = pgTable("users", {
   id: uuid().primaryKey().defaultRandom(),
   npm: char({ length: 10 }).unique(),
   username: varchar({ length: 32 }).notNull().unique(),
-  password: varchar({ length: 32 }),
+  password: varchar(),
   program: programEnum().notNull(),
   department: varchar(), // TODO: ask for department list from university
   faculty: facultyEnum().notNull(),
