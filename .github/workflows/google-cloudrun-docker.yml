@@ -83,7 +83,7 @@ jobs:
           # NOTE: If using a pre-built image, update the image name below:
 
           image: "${{ steps.build-push.outputs.IMAGE_URL }}"
-          env_vars: |
+          env_vars: |-
             DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             DB_HOST=${{ secrets.DB_HOST }}

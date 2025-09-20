@@ -10,9 +10,10 @@ COPY tsconfig.json tsconfig.json
 COPY ./src ./src
 
 RUN bun install
-RUN bun db:push
 
 ENV NODE_ENV=production
+
+RUN bun db:push
 
 RUN bun build \
 	--compile \
