@@ -107,7 +107,7 @@ jobs:
         with:
           service: "${{ vars.SERVICE }}"
           region: "${{ vars.REGION }}"
-          image: "${{ steps.build-push.outputs.IMAGE_URL }}"
+          image: "${{ vars.REGION }}-docker.pkg.dev/${{ vars.PROJECT_ID }}/${{ vars.SERVICE }}/${{ vars.SERVICE }}:${{ github.sha }}"
           env_vars: |-
             DB_URL=${{ secrets.DB_URL }}
             DB_CERT="${{ secrets.DB_CERT }}"
