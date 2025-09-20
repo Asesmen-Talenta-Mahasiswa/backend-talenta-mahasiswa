@@ -2,5 +2,6 @@
 declare module "bun" {
   interface Env {
     DB_URL: string;
+    DB_CERT: string;
   }
 }

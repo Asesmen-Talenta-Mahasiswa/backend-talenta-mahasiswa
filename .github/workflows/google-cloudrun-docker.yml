@@ -35,7 +35,33 @@ on:
       - main
 
 jobs:
+  db-migration:
+    name: "Run DB Migration"
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - name: "Checkout repository"
+        uses: "actions/checkout@v4"
+
+      - name: "Set up Bun"
+        uses: "oven-sh/setup-bun@v2"
+        with:
+          bun-version: "latest"
+
+      - name: "Install dependencies"
+        run: |
+          bun install
+
+      - name: "Run migration"
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_CERT: ${{ secrets.DB_CERT }}
+        run: |
+          bun db:push
+
   deploy:
+    name: "Build and Deploy"
+    needs: "db-migration"
     runs-on: "ubuntu-latest"
 
     permissions:
@@ -43,24 +69,17 @@ jobs:
       id-token: "write"
 
     steps:
-      - name: "Checkout"
-        uses: "actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332" # actions/checkout@v4
+      - name: "Checkout repository"
+        uses: "actions/checkout@v4"
 
-      # Configure Workload Identity Federation and generate an access token.
-      #
-      # See https://github.com/google-github-actions/auth for more options,
-      # including authenticating via a JSON credentials file.
-      - id: "auth"
-        name: "Authenticate to Google Cloud"
-        uses: "google-github-actions/auth@f112390a2df9932162083945e46d439060d66ec2" # google-github-actions/auth@v2
+      - name: "Authenticate to Google Cloud"
+        id: "auth"
+        uses: "google-github-actions/auth@v2"
         with:
           workload_identity_provider: "${{ vars.WORKLOAD_IDENTITY_PROVIDER }}"
 
-      # BEGIN - Docker auth and build
-      #
-      # If you already have a container image, you can omit these steps.
       - name: "Docker Auth"
-        uses: "docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567" # docker/login-action@v3
+        uses: "docker/login-action@v3"
         with:
           username: "oauth2accesstoken"
           password: "${{ steps.auth.outputs.auth_token }}"
@@ -73,28 +92,19 @@ jobs:
           docker build --tag "${DOCKER_TAG}" .
           docker push "${DOCKER_TAG}"
           echo "IMAGE_URL=${DOCKER_TAG}" >> $GITHUB_OUTPUT
+
       - name: "Deploy to Cloud Run"
-        # END - Docker auth and build
-        id: "deploy"
-        uses: "google-github-actions/deploy-cloudrun@33553064113a37d688aa6937bacbdc481580be17" # google-github-actions/deploy-cloudrun@v2
+        id: "deployment"
+        uses: "google-github-actions/deploy-cloudrun@v2"
         with:
           service: "${{ vars.SERVICE }}"
           region: "${{ vars.REGION }}"
-          # NOTE: If using a pre-built image, update the image name below:
-
           image: "${{ steps.build-push.outputs.IMAGE_URL }}"
-      # If required, use the Cloud Run URL output in later steps
-      - name: Run database migrations
-        run: |
-          bun install
-          bun db:push
-        env:
-          DB_USER: ${{ secrets.DB_USER }}
-          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          DB_HOST: ${{ secrets.DB_HOST }}
-          DB_PORT: ${{ secrets.DB_PORT }}
-          DB_NAME: ${{ secrets.DB_NAME }}
-          DB_URL: "${{ secrets.DB_USER }}://${{ secrets.DB_USER }}:${{ secrets.DB_PASSWORD }}@${{ secrets.DB_HOST }}:${{ secrets.DB_PORT }}/${{ secrets.DB_NAME }}"
+          env_vars: |-
+            DB_URL=${{ secrets.DB_URL }}
+            DB_CERT="${{ secrets.DB_CERT }}"
+
       - name: "Show output"
         run: |
-          echo "Cloud Run URL: ${{ steps.deploy.outputs.url }}"
+          echo "Cloud Run URL: ${{ steps.deployment.outputs.url }}"
+          curl "${{ steps.deployment.outputs.url }}"
