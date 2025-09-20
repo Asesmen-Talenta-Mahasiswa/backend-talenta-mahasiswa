@@ -13,8 +13,6 @@ RUN bun install
 
 ENV NODE_ENV=production
 
-RUN bun db:push
-
 RUN bun build \
 	--compile \
 	--minify-whitespace \
