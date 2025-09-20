@@ -40,3 +40,6 @@ yarn-error.log*
 **/*.log
 package-lock.json
 **/*.bun
+
+# Ignore generated credentials from google-github-actions/auth
+gha-creds-*.json
