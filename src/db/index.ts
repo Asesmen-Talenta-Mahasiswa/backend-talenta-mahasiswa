@@ -4,7 +4,6 @@ import * as schema from "./schema";
 
 const client = postgres({
   prepare: false,
-
   host: process.env.DB_HOST,
   port: parseInt(process.env.DB_PORT),
   user: process.env.DB_USER,
