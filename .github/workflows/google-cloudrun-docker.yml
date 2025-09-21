@@ -63,7 +63,7 @@ jobs:
           DB_CERT: "${{ secrets.DB_CERT }}"
           NODE_ENV: production
         run: |
-          bun db:push
+          bun run db:push
 
   deploy:
     name: "Build and Deploy"
