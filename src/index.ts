@@ -17,20 +17,22 @@ const app = new Elysia()
     try {
       // Test database connection by running a simple query
       await db.execute("SELECT 1");
-      
+
       return {
         status: "healthy",
         database: "connected",
         timestamp: new Date().toISOString(),
-        uptime: process.uptime()
+        uptime: process.uptime(),
       };
     } catch (error) {
+      console.log(error);
+
       return {
         status: "unhealthy",
         database: "disconnected",
         timestamp: new Date().toISOString(),
         uptime: process.uptime(),
-        error: error instanceof Error ? error.message : "Unknown error"
+        error: error instanceof Error ? error.message : "Unknown error",
       };
     }
   })
