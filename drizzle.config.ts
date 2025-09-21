@@ -5,15 +5,13 @@ export default defineConfig({
   schema: "./src/db/schema.ts",
   dialect: "postgresql",
   dbCredentials: {
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT),
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    ssl:
-      process.env.NODE_ENV === "production"
-        ? { ca: process.env.DB_CERT }
-        : false,
+    host: Bun.env.DB_HOST,
+    port: parseInt(Bun.env.DB_PORT),
+    user: Bun.env.DB_USER,
+    password: Bun.env.DB_PASSWORD,
+    database: Bun.env.DB_NAME,
+    // certification for SSL connection, get it from supabase dashboard
+    ssl: Bun.env.NODE_ENV === "production" ? { ca: Bun.env.DB_CERT } : false,
   },
   casing: "snake_case",
 });

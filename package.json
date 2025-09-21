@@ -1,12 +1,12 @@
 {
   "name": "assasment-cced-unila-backend",
-  "version": "0.2.16",
+  "version": "0.2.17",
   "scripts": {
     "test": "bun test",
-    "dev": "bun --watch src/index.ts",
-    "build": "bun build src/index.ts --target bun --outdir ./dist",
-    "start": "NODE_ENV=production bun dist/index.js",
-    "db:push": "drizzle-kit push"
+    "dev": "bun --watch ./src/index.ts",
+    "build": "bun build ./src/index.ts --target bun --outdir ./build",
+    "start": "NODE_ENV=production bun ./build/index.js",
+    "db:push": "bunx drizzle-kit push"
   },
   "dependencies": {
     "@elysiajs/openapi": "^1.4.3",

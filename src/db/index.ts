@@ -4,14 +4,16 @@ import * as schema from "./schema";
 
 const client = postgres({
   prepare: false,
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  host: Bun.env.DB_HOST,
+  port: parseInt(Bun.env.DB_PORT),
+  user: Bun.env.DB_USER,
+  password: Bun.env.DB_PASSWORD,
+  database: Bun.env.DB_NAME,
+  // refer to https://github.com/porsager/postgres#ssl for more info on SSL
   ssl:
-    process.env.NODE_ENV === "production" ? { ca: process.env.DB_CERT } : false,
+    Bun.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 });
+
 const db = drizzle({
   client,
   casing: "snake_case",
