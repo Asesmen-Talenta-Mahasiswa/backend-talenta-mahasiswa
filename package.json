@@ -1,6 +1,6 @@
 {
   "name": "assasment-cced-unila-backend",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "scripts": {
     "test": "bun test",
     "dev": "bun --watch src/index.ts",

@@ -3,6 +3,7 @@
 
 # misc
 **/*.pem
+/llm
 
 # production
 /build
