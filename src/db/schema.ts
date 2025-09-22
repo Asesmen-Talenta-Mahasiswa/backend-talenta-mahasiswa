@@ -5,6 +5,7 @@ import {
   varchar,
   timestamp,
   pgEnum,
+  text,
 } from "drizzle-orm/pg-core";
 
 // Define the permission level enum
@@ -136,11 +137,13 @@ export const programEnum = pgEnum("program_enum", [
 // - admin: system admin
 export const usersTable = pgTable("users", {
   id: uuid().primaryKey().defaultRandom(),
-  npm: char({ length: 10 }).unique(),
+  npm: char({ length: 10 }).notNull().unique(),
   username: varchar({ length: 32 }).notNull().unique(),
-  password: varchar(),
+  password: text().notNull(), // hashed password
+  name: varchar({ length: 100 }).notNull(),
+  email: varchar({ length: 100 }).notNull().unique(),
   program: programEnum().notNull(),
-  department: varchar(), // TODO: ask for department list from university
+  department: varchar({ length: 100 }).notNull(), // TODO: ask for department list from university
   faculty: facultyEnum().notNull(),
   degree: degreeEnum().notNull(),
   permissionLevel: permissionLevelEnum().notNull(),
