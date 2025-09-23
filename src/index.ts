@@ -83,6 +83,12 @@ const app = new Elysia()
       };
     },
     {
+      detail: {
+        tags: ["System"],
+        summary: "Service health check",
+        description:
+          "Returns the health status of each service used by this app.",
+      },
       response: {
         200: z.object({
           ...responseSchema.shape,
@@ -93,10 +99,20 @@ const app = new Elysia()
       },
     }
   )
-  .get("/echo", () => {
-    // echo service to test the API
-    return "Hello world!";
-  })
+  .get(
+    "/echo",
+    () => {
+      // echo service to test the API
+      return "Hello world!";
+    },
+    {
+      detail: {
+        tags: ["System"],
+        summary: "Echo service",
+        description: "A simple echo endpoint to test if the API is reachable.",
+      },
+    }
+  )
   .listen(Bun.env.PORT ?? 3000); // for fallback
 
 console.log(
