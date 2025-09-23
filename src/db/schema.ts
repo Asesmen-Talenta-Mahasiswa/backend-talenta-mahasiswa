@@ -29,7 +29,7 @@ export const facultyEnum = pgEnum("faculty_enum", [
   "FK",
 ]);
 
-export const degreeEnum = pgEnum("degree", ["D3", "D4", "S1"]);
+export const degreeEnum = pgEnum("degree_enum", ["D3", "D4", "S1"]);
 
 export const programEnum = pgEnum("program_enum", [
   // FISIP

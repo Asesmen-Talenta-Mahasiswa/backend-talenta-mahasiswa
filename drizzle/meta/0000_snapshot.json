@@ -1,0 +1,251 @@
+{
+  "id": "bfd4fee5-4fea-42d1-bedd-77d5c41fafe8",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "npm": {
+          "name": "npm",
+          "type": "char(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program": {
+          "name": "program",
+          "type": "program_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "department": {
+          "name": "department",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "faculty": {
+          "name": "faculty",
+          "type": "faculty_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "degree": {
+          "name": "degree",
+          "type": "degree_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permission_level": {
+          "name": "permission_level",
+          "type": "permission_level_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_npm_unique": {
+          "name": "users_npm_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "npm"
+          ]
+        },
+        "users_username_unique": {
+          "name": "users_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.degree_enum": {
+      "name": "degree_enum",
+      "schema": "public",
+      "values": [
+        "D3",
+        "D4",
+        "S1"
+      ]
+    },
+    "public.faculty_enum": {
+      "name": "faculty_enum",
+      "schema": "public",
+      "values": [
+        "FISIP",
+        "FEB",
+        "FMIPA",
+        "FP",
+        "FT",
+        "FH",
+        "FKIP",
+        "FK"
+      ]
+    },
+    "public.permission_level_enum": {
+      "name": "permission_level_enum",
+      "schema": "public",
+      "values": [
+        "student",
+        "program",
+        "department",
+        "faculty",
+        "university",
+        "admin"
+      ]
+    },
+    "public.program_enum": {
+      "name": "program_enum",
+      "schema": "public",
+      "values": [
+        "Administrasi Perkantoran",
+        "Hubungan Masyarakat",
+        "Perpustakaan",
+        "Ilmu Administrasi Bisnis",
+        "Ilmu Administrasi Negara",
+        "Ilmu Komunikasi",
+        "Ilmu Pemerintahan",
+        "Sosiologi",
+        "Akuntansi",
+        "Akuntansi PSDKU Way Kanan",
+        "Keuangan dan Perbankan",
+        "Manajemen Pemasaran",
+        "Perbankan dan Keuangan PSDKU Lampung Tengah",
+        "Perpajakan",
+        "Bisnis Digital",
+        "Ekonomi Pembangunan",
+        "Manajemen",
+        "Manajemen Informatika",
+        "Biologi",
+        "Biologi Terapan",
+        "Fisika",
+        "Ilmu Komputer",
+        "Ilmu Komputer PSDKU Way Kanan",
+        "Kimia",
+        "Matematika",
+        "Sistem Informasi",
+        "Perkebunan",
+        "Agribisnis",
+        "Agronomi",
+        "Agroteknologi",
+        "Budidaya Perairan",
+        "Ilmu Kelautan",
+        "Ilmu Tanah",
+        "Kehutanan",
+        "Nutrisi dan Teknologi Pakan Ternak",
+        "Penyuluhan Pertanian",
+        "Peternakan",
+        "Proteksi Tanaman",
+        "Sumberdaya Akuatik",
+        "Teknologi Hasil Pertanian",
+        "Teknologi Industri Pertanian",
+        "Teknik Pertanian",
+        "Teknik Mesin",
+        "Teknik Sipil",
+        "Teknik Survey dan Pemetaan",
+        "Arsitektur",
+        "Teknik Elektro",
+        "Teknik Geodesi",
+        "Teknik Geofisika",
+        "Teknik Geologi",
+        "Teknik Informatika",
+        "Teknik Kimia",
+        "Teknik Lingkungan",
+        "Teknologi Rekayasa Otomotif",
+        "Ilmu Hukum",
+        "Bimbingan dan Konseling",
+        "Pendidikan Bahasa dan Sastra Indonesia",
+        "Pendidikan Bahasa Inggris",
+        "Pendidikan Bahasa Lampung",
+        "Pendidikan Bahasa Perancis",
+        "Pendidikan Biologi",
+        "Pendidikan Ekonomi",
+        "Pendidikan Fisika",
+        "Pendidikan Geografi",
+        "Pendidikan Guru Pendidikan Anak Usia Dini",
+        "Pendidikan Guru Sekolah Dasar",
+        "Pendidikan Jasmani",
+        "Pendidikan Kimia",
+        "Pendidikan Matematika",
+        "Pendidikan Musik",
+        "Pendidikan Pancasila dan Kewarganegaraan",
+        "Pendidikan Sejarah",
+        "Pendidikan Tari",
+        "Pendidikan Teknologi Informasi",
+        "Farmasi",
+        "Kedokteran",
+        "Gizi"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

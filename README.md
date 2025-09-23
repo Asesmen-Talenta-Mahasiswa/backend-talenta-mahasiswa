@@ -29,13 +29,15 @@ A backend API built with Elysia and Bun runtime.
 
 ### Available Scripts
 
-| Command           | Description                                |
-| ----------------- | ------------------------------------------ |
-| `bun run dev`     | Start development server with hot reload   |
-| `bun run build`   | Build the application for production       |
-| `bun run start`   | Start the production server                |
-| `bun run test`    | Run the test suite                         |
-| `bun run db:push` | Push database schema changes using Drizzle |
+| Command               | Description                                    |
+| --------------------- | ---------------------------------------------- |
+| `bun run dev`         | Start development server with hot reload       |
+| `bun run build`       | Build the application for production           |
+| `bun run start`       | Start the production server                    |
+| `bun run test`        | Run the test suite                             |
+| `bun run db:push`     | Push database schema changes using Drizzle     |
+| `bun run db:generate` | Generate database schema changes using Drizzle |
+| `bun run db:migrate`  | Migrate database schema changes using Drizzle  |
 
 ## Coding Convention
 
