@@ -2,9 +2,10 @@ import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import z from "zod";
 import { DatabaseService } from "./db/service";
-import { responseSchema, responseStatusSchema } from "./common/model";
+import { responseSchema } from "./common/model";
 import { databaseHealthSchema } from "./db/model";
 import { ResponseStatus } from "./common/enum";
+import { version as apiVersion, author } from "../package.json";
 
 const app = new Elysia()
   .use(
@@ -26,7 +27,8 @@ const app = new Elysia()
         message: "Service metadata retrieved",
         data: {
           name: "CCED UNILA Assessment Backend API",
-          version: "0.3.0",
+          version: apiVersion,
+          author: author,
           description:
             "Backend API for the Center for Character and Ethics Development (CCED) University of Lampung assessment system.",
           environment: Bun.env.NODE_ENV ?? "development",
@@ -46,7 +48,7 @@ const app = new Elysia()
     {
       detail: {
         tags: ["System"],
-        summary: "Service metadata",
+        summary: "Get API Metadata",
         description:
           "Returns metadata and runtime information about this backend service, including version, environment, documentation endpoints, and uptime.",
       },
@@ -60,6 +62,10 @@ const app = new Elysia()
             environment: z.string(),
             docs: z.object({ ui: z.string(), json: z.string() }),
             runtime: z.object({ bun: z.string(), platform: z.string() }),
+            author: z.object({
+              name: z.string(),
+              email: z.email(),
+            }),
             serverTime: z.string(),
             uptimeSeconds: z.number(),
           }),
@@ -85,7 +91,7 @@ const app = new Elysia()
     {
       detail: {
         tags: ["System"],
-        summary: "Service health check",
+        summary: "Service Health Check",
         description:
           "Returns the health status of each service used by this app.",
       },
@@ -108,8 +114,11 @@ const app = new Elysia()
     {
       detail: {
         tags: ["System"],
-        summary: "Echo service",
+        summary: "Echo",
         description: "A simple echo endpoint to test if the API is reachable.",
+      },
+      response: {
+        200: z.string().default("Hello world!"),
       },
     }
   )

@@ -1,6 +1,10 @@
 {
   "name": "assasment-cced-unila-backend",
   "version": "0.3.2",
+  "author": {
+    "name": "Muhammad Azka Naufal",
+    "email": "mhmdazkanfl@gmail.com"
+  },
   "scripts": {
     "test": "bun test",
     "dev": "bun --watch ./src/index.ts",
