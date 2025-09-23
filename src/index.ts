@@ -15,10 +15,58 @@ const app = new Elysia()
       path: "/docs",
     })
   )
-  .get("/", () => {
-    // root endpoint
-    // TODO: add metadata about this API and where to find the docs
-  })
+  .get(
+    "/",
+    () => {
+      const now = new Date().toISOString();
+      const uptimeSeconds = Math.floor(process.uptime?.() ?? 0);
+
+      return {
+        status: ResponseStatus.Success,
+        message: "Service metadata retrieved",
+        data: {
+          name: "CCED UNILA Assessment Backend API",
+          version: "0.3.0",
+          description:
+            "Backend API for the Center for Character and Ethics Development (CCED) University of Lampung assessment system.",
+          environment: Bun.env.NODE_ENV ?? "development",
+          docs: {
+            ui: "/docs",
+            json: "/docs/json",
+          },
+          runtime: {
+            bun: Bun.version,
+            platform: process.platform,
+          },
+          serverTime: now,
+          uptimeSeconds,
+        },
+      };
+    },
+    {
+      detail: {
+        tags: ["System"],
+        summary: "Service metadata",
+        description:
+          "Returns metadata and runtime information about this backend service, including version, environment, documentation endpoints, and uptime.",
+      },
+      response: {
+        200: z.object({
+          ...responseSchema.shape,
+          data: z.object({
+            name: z.string(),
+            version: z.string(),
+            description: z.string(),
+            environment: z.string(),
+            docs: z.object({ ui: z.string(), json: z.string() }),
+            runtime: z.object({ bun: z.string(), platform: z.string() }),
+            serverTime: z.string(),
+            uptimeSeconds: z.number(),
+          }),
+        }),
+      },
+    }
+  )
   .get(
     "/health",
     async () => {
@@ -45,9 +93,9 @@ const app = new Elysia()
       },
     }
   )
-  .get("/echo", ({ status }) => {
+  .get("/echo", () => {
     // echo service to test the API
-    return status(200, "Hello world!");
+    return "Hello world!";
   })
   .listen(Bun.env.PORT ?? 3000); // for fallback
 
