@@ -1,0 +1,500 @@
+{
+  "id": "0018a161-fc14-4de9-8958-f22282162c71",
+  "prevId": "bfd4fee5-4fea-42d1-bedd-77d5c41fafe8",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.choices": {
+      "name": "choices",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "question_id": {
+          "name": "question_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "career_category": {
+          "name": "career_category",
+          "type": "career_category_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mbti_type": {
+          "name": "mbti_type",
+          "type": "mbti_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "likert_value_min": {
+          "name": "likert_value_min",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "likert_value_max": {
+          "name": "likert_value_max",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 5
+        },
+        "likert_value_label_min": {
+          "name": "likert_value_label_min",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "likert_value_label_max": {
+          "name": "likert_value_label_max",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "choices_question_id_questions_id_fk": {
+          "name": "choices_question_id_questions_id_fk",
+          "tableFrom": "choices",
+          "tableTo": "questions",
+          "columnsFrom": [
+            "question_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.questions": {
+      "name": "questions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "test_id": {
+          "name": "test_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "question_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "questions_test_id_tests_id_fk": {
+          "name": "questions_test_id_tests_id_fk",
+          "tableFrom": "questions",
+          "tableTo": "tests",
+          "columnsFrom": [
+            "test_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tests": {
+      "name": "tests",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "title": {
+          "name": "title",
+          "type": "varchar(256)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "test_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.users": {
+      "name": "users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "npm": {
+          "name": "npm",
+          "type": "char(10)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "password": {
+          "name": "password",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program": {
+          "name": "program",
+          "type": "program_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "department": {
+          "name": "department",
+          "type": "varchar(100)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "faculty": {
+          "name": "faculty",
+          "type": "faculty_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "degree": {
+          "name": "degree",
+          "type": "degree_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "permission_level": {
+          "name": "permission_level",
+          "type": "permission_level_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "users_npm_unique": {
+          "name": "users_npm_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "npm"
+          ]
+        },
+        "users_username_unique": {
+          "name": "users_username_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "username"
+          ]
+        },
+        "users_email_unique": {
+          "name": "users_email_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "email"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.career_category_enum": {
+      "name": "career_category_enum",
+      "schema": "public",
+      "values": [
+        "praktisi",
+        "akademisi",
+        "pekerja_kreatif",
+        "wirausaha"
+      ]
+    },
+    "public.degree_enum": {
+      "name": "degree_enum",
+      "schema": "public",
+      "values": [
+        "D3",
+        "D4",
+        "S1"
+      ]
+    },
+    "public.faculty_enum": {
+      "name": "faculty_enum",
+      "schema": "public",
+      "values": [
+        "FISIP",
+        "FEB",
+        "FMIPA",
+        "FP",
+        "FT",
+        "FH",
+        "FKIP",
+        "FK"
+      ]
+    },
+    "public.mbti_type_enum": {
+      "name": "mbti_type_enum",
+      "schema": "public",
+      "values": [
+        "E",
+        "I",
+        "S",
+        "N",
+        "T",
+        "F",
+        "J",
+        "P"
+      ]
+    },
+    "public.permission_level_enum": {
+      "name": "permission_level_enum",
+      "schema": "public",
+      "values": [
+        "student",
+        "program",
+        "department",
+        "faculty",
+        "university",
+        "admin"
+      ]
+    },
+    "public.program_enum": {
+      "name": "program_enum",
+      "schema": "public",
+      "values": [
+        "Administrasi Perkantoran",
+        "Hubungan Masyarakat",
+        "Perpustakaan",
+        "Ilmu Administrasi Bisnis",
+        "Ilmu Administrasi Negara",
+        "Ilmu Komunikasi",
+        "Ilmu Pemerintahan",
+        "Sosiologi",
+        "Akuntansi",
+        "Akuntansi PSDKU Way Kanan",
+        "Keuangan dan Perbankan",
+        "Manajemen Pemasaran",
+        "Perbankan dan Keuangan PSDKU Lampung Tengah",
+        "Perpajakan",
+        "Bisnis Digital",
+        "Ekonomi Pembangunan",
+        "Manajemen",
+        "Manajemen Informatika",
+        "Biologi",
+        "Biologi Terapan",
+        "Fisika",
+        "Ilmu Komputer",
+        "Ilmu Komputer PSDKU Way Kanan",
+        "Kimia",
+        "Matematika",
+        "Sistem Informasi",
+        "Perkebunan",
+        "Agribisnis",
+        "Agronomi",
+        "Agroteknologi",
+        "Budidaya Perairan",
+        "Ilmu Kelautan",
+        "Ilmu Tanah",
+        "Kehutanan",
+        "Nutrisi dan Teknologi Pakan Ternak",
+        "Penyuluhan Pertanian",
+        "Peternakan",
+        "Proteksi Tanaman",
+        "Sumberdaya Akuatik",
+        "Teknologi Hasil Pertanian",
+        "Teknologi Industri Pertanian",
+        "Teknik Pertanian",
+        "Teknik Mesin",
+        "Teknik Sipil",
+        "Teknik Survey dan Pemetaan",
+        "Arsitektur",
+        "Teknik Elektro",
+        "Teknik Geodesi",
+        "Teknik Geofisika",
+        "Teknik Geologi",
+        "Teknik Informatika",
+        "Teknik Kimia",
+        "Teknik Lingkungan",
+        "Teknologi Rekayasa Otomotif",
+        "Ilmu Hukum",
+        "Bimbingan dan Konseling",
+        "Pendidikan Bahasa dan Sastra Indonesia",
+        "Pendidikan Bahasa Inggris",
+        "Pendidikan Bahasa Lampung",
+        "Pendidikan Bahasa Perancis",
+        "Pendidikan Biologi",
+        "Pendidikan Ekonomi",
+        "Pendidikan Fisika",
+        "Pendidikan Geografi",
+        "Pendidikan Guru Pendidikan Anak Usia Dini",
+        "Pendidikan Guru Sekolah Dasar",
+        "Pendidikan Jasmani",
+        "Pendidikan Kimia",
+        "Pendidikan Matematika",
+        "Pendidikan Musik",
+        "Pendidikan Pancasila dan Kewarganegaraan",
+        "Pendidikan Sejarah",
+        "Pendidikan Tari",
+        "Pendidikan Teknologi Informasi",
+        "Farmasi",
+        "Kedokteran",
+        "Gizi"
+      ]
+    },
+    "public.question_type_enum": {
+      "name": "question_type_enum",
+      "schema": "public",
+      "values": [
+        "multiple_choice",
+        "single_choice",
+        "likert"
+      ]
+    },
+    "public.test_type_enum": {
+      "name": "test_type_enum",
+      "schema": "public",
+      "values": [
+        "career_interest",
+        "mbti",
+        "pwb",
+        "stress_source"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

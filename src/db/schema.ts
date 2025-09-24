@@ -6,6 +6,8 @@ import {
   timestamp,
   pgEnum,
   text,
+  boolean,
+  integer,
 } from "drizzle-orm/pg-core";
 
 // Define the permission level enum
@@ -126,6 +128,37 @@ export const programEnum = pgEnum("program_enum", [
   "Gizi",
 ]);
 
+export const questionTypeEnum = pgEnum("question_type_enum", [
+  "multiple_choice",
+  "single_choice",
+  "likert",
+]);
+
+export const testTypeEnum = pgEnum("test_type_enum", [
+  "career_interest",
+  "mbti",
+  "pwb",
+  "stress_source",
+]);
+
+export const careerCategotyEnum = pgEnum("career_category_enum", [
+  "praktisi",
+  "akademisi",
+  "pekerja_kreatif",
+  "wirausaha",
+]);
+
+export const mbtiTypeEnum = pgEnum("mbti_type_enum", [
+  "E",
+  "I",
+  "S",
+  "N",
+  "T",
+  "F",
+  "J",
+  "P",
+]);
+
 // User table schema
 // This table merge all user roles into a single table with a permission level field
 // The permission levels are:
@@ -149,3 +182,42 @@ export const usersTable = pgTable("users", {
   permissionLevel: permissionLevelEnum().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
 });
+
+export const testsTable = pgTable("tests", {
+  id: uuid().primaryKey().defaultRandom(),
+  title: varchar({ length: 256 }).notNull(),
+  type: testTypeEnum().notNull(),
+  description: text().notNull(),
+  isActive: boolean().notNull().default(true),
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
+export const questionsTable = pgTable("questions", {
+  id: uuid().primaryKey().defaultRandom(),
+  testId: uuid()
+    .notNull()
+    .references(() => testsTable.id, { onDelete: "cascade" }),
+  title: text().notNull(),
+  type: questionTypeEnum().notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
+export const choicesTable = pgTable("choices", {
+  id: uuid().primaryKey().defaultRandom(),
+  questionId: uuid()
+    .notNull()
+    .references(() => questionsTable.id, { onDelete: "cascade" }),
+  title: text().notNull(),
+  careerCategory: careerCategotyEnum(), // only for career interest test
+  mbtiType: mbtiTypeEnum(), // only for mbti test
+  likertValueMin: integer().default(0), // only for likert scale
+  likertValueMax: integer().default(5), // only for likert scale
+  likertValueLabelMin: varchar({ length: 100 }), // only for likert scale
+  likertValueLabelMax: varchar({ length: 100 }), // only for likert scale
+  createdAt: timestamp().notNull().defaultNow(),
+});
+// Note:
+// Test minat bidang karir itu single choice
+// Test MBTI itu single choice
+// Test PWB itu likert scale
+// Test Keluhan stress itu multiple choice
