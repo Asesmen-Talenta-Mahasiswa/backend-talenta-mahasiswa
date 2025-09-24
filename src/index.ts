@@ -1,5 +1,5 @@
-import openapi from "@elysiajs/openapi";
-import { Elysia } from "elysia";
+import openapi, { withHeaders } from "@elysiajs/openapi";
+import { Elysia, t } from "elysia";
 import z from "zod";
 import { DatabaseService } from "./db/service";
 import { responseSchema } from "./common/model";
@@ -14,6 +14,25 @@ const app = new Elysia()
         zod: z.toJSONSchema,
       },
       path: "/docs",
+      documentation: {
+        openapi: "3.0.3",
+        info: {
+          title: "CCED UNILA Assessment Backend API",
+          version: apiVersion,
+          description:
+            "Backend API for the Center for Character and Ethics Development (CCED) University of Lampung assessment system.",
+          contact: {
+            name: author.name,
+            email: author.email,
+          },
+        },
+        tags: [
+          {
+            name: "System",
+            description: "System related endpoints",
+          },
+        ],
+      },
     })
   )
   .get(
@@ -39,6 +58,7 @@ const app = new Elysia()
           runtime: {
             bun: Bun.version,
             platform: process.platform,
+            isBun: process.isBun,
           },
           serverTime: now,
           uptimeSeconds,

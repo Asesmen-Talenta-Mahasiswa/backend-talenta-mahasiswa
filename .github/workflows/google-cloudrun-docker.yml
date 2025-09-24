@@ -59,7 +59,6 @@ jobs:
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
           DB_NAME: ${{ secrets.DB_NAME }}
-          DB_URL: ${{ secrets.DB_URL }}
           DB_CERT: "${{ secrets.DB_CERT }}"
           NODE_ENV: production
         run: |
@@ -114,7 +113,6 @@ jobs:
             DB_USER=${{ secrets.DB_USER }}
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             DB_NAME=${{ secrets.DB_NAME }}
-            DB_URL=${{ secrets.DB_URL }}
             DB_CERT="${{ secrets.DB_CERT }}"
 
       - name: "Show output"
