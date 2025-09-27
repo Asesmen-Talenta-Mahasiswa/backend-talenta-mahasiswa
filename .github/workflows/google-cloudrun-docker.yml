@@ -61,6 +61,7 @@ jobs:
           DB_NAME: ${{ secrets.DB_NAME }}
           DB_CERT: "${{ secrets.DB_CERT }}"
           NODE_ENV: production
+        timeout-minutes: 5
         run: |
           bun run db:migrate
 

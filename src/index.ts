@@ -6,6 +6,7 @@ import { responseSchema } from "./common/model";
 import { databaseHealthSchema } from "./db/model";
 import { ResponseStatus } from "./common/enum";
 import { version as apiVersion, author } from "../package.json";
+import { dummy } from "./dummy";
 
 const app = new Elysia()
   .use(
@@ -142,6 +143,7 @@ const app = new Elysia()
       },
     }
   )
+  .use(dummy)
   .listen(Bun.env.PORT ?? 3000); // for fallback
 
 console.log(
