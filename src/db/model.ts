@@ -8,7 +8,25 @@ import { usersTable } from "./schema";
 import { serviceStatusSchema } from "../common/model";
 
 export const newUserSchema = createInsertSchema(usersTable, {
-  email: z.email(),
+  username: z
+    .string()
+    .min(3, "Nama pengguna harus memiliki minimal 3 karakter")
+    .max(20, "Nama pengguna maksimal 20 karakter")
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Nama pengguna hanya boleh berisi huruf, angka, dan garis bawah (_)"
+    ),
+  password: z
+    .string()
+    .min(8, "Kata sandi harus memiliki minimal 8 karakter")
+    .max(128, "Kata sandi maksimal 128 karakter")
+    .regex(/[a-z]/, "Kata sandi harus mengandung setidaknya 1 huruf kecil")
+    .regex(/[A-Z]/, "Kata sandi harus mengandung setidaknya 1 huruf besar")
+    .regex(/[0-9]/, "Kata sandi harus mengandung setidaknya 1 angka")
+    .regex(
+      /[^a-zA-Z0-9]/,
+      "Kata sandi harus mengandung setidaknya 1 simbol khusus"
+    ),
 });
 export const userSchema = createSelectSchema(usersTable);
 export const updateUserSchema = createUpdateSchema(usersTable);

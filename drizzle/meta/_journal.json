@@ -15,6 +15,20 @@
       "when": 1758733991951,
       "tag": "0001_lean_warlock",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1759472702055,
+      "tag": "0002_new_krista_starr",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1759485787749,
+      "tag": "0003_round_living_tribunal",
+      "breakpoints": true
     }
   ]
 }

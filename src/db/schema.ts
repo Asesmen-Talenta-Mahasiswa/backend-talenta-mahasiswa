@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   uuid,
@@ -12,7 +13,6 @@ import {
 
 // Define the permission level enum
 export const permissionLevelEnum = pgEnum("permission_level_enum", [
-  "student",
   "program",
   "department",
   "faculty",
@@ -141,14 +141,14 @@ export const testTypeEnum = pgEnum("test_type_enum", [
   "stress_source",
 ]);
 
-export const careerCategotyEnum = pgEnum("career_category_enum", [
+export const careerCategoryEnum = pgEnum("career_category_enum", [
   "praktisi",
   "akademisi",
   "pekerja_kreatif",
   "wirausaha",
 ]);
 
-export const mbtiTypeEnum = pgEnum("mbti_type_enum", [
+export const mbtiDimensionEnum = pgEnum("mbti_dimension_enum", [
   "E",
   "I",
   "S",
@@ -157,6 +157,25 @@ export const mbtiTypeEnum = pgEnum("mbti_type_enum", [
   "F",
   "J",
   "P",
+]);
+
+export const careerFieldResultEnum = pgEnum("career_field_result_enum", [
+  "very_suitable",
+  "quite_suitable",
+  "not_suitable",
+]);
+
+export const pwbResultEnum = pgEnum("pwb_result_enum", [
+  "low",
+  "medium",
+  "high",
+]);
+
+export const talentResultEnum = pgEnum("talent_result_enum", [
+  "analyst",
+  "diplomat",
+  "sentinel",
+  "explorer",
 ]);
 
 // User table schema
@@ -170,23 +189,27 @@ export const mbtiTypeEnum = pgEnum("mbti_type_enum", [
 // - admin: system admin
 export const usersTable = pgTable("users", {
   id: uuid().primaryKey().defaultRandom(),
-  npm: char({ length: 10 }).notNull().unique(),
   username: varchar({ length: 32 }).notNull().unique(),
   password: text().notNull(), // hashed password
-  name: varchar({ length: 100 }).notNull(),
-  email: varchar({ length: 100 }).notNull().unique(),
+  permissionLevel: permissionLevelEnum().notNull(),
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
+export const studentsTable = pgTable("students", {
+  id: uuid().primaryKey().defaultRandom(),
+  npm: char({ length: 10 }).notNull().unique(), // e.g. 2215061066
+  name: varchar({ length: 128 }).notNull(),
+  email: varchar({ length: 128 }),
   program: programEnum().notNull(),
-  department: varchar({ length: 100 }).notNull(), // TODO: ask for department list from university
+  department: varchar(), // TODO: ask for department list from university
   faculty: facultyEnum().notNull(),
   degree: degreeEnum().notNull(),
-  permissionLevel: permissionLevelEnum().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
 });
 
 export const testsTable = pgTable("tests", {
   id: uuid().primaryKey().defaultRandom(),
   title: varchar({ length: 256 }).notNull(),
-  type: testTypeEnum().notNull(),
   description: text().notNull(),
   isActive: boolean().notNull().default(true),
   createdAt: timestamp().notNull().defaultNow(),
@@ -202,18 +225,38 @@ export const questionsTable = pgTable("questions", {
   createdAt: timestamp().notNull().defaultNow(),
 });
 
-export const choicesTable = pgTable("choices", {
+export const multipleChoiceOptionsTable = pgTable("multiple_choice_options", {
   id: uuid().primaryKey().defaultRandom(),
   questionId: uuid()
     .notNull()
     .references(() => questionsTable.id, { onDelete: "cascade" }),
   title: text().notNull(),
-  careerCategory: careerCategotyEnum(), // only for career interest test
-  mbtiType: mbtiTypeEnum(), // only for mbti test
-  likertValueMin: integer().default(0), // only for likert scale
-  likertValueMax: integer().default(5), // only for likert scale
-  likertValueLabelMin: varchar({ length: 100 }), // only for likert scale
-  likertValueLabelMax: varchar({ length: 100 }), // only for likert scale
+  careerCategory: careerCategoryEnum(), // only for career interest test
+  mbtiType: mbtiDimensionEnum(), // only for mbti test
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
+export const singleChoiceOptionsTable = pgTable("single_choice_options", {
+  id: uuid().primaryKey().defaultRandom(),
+  questionId: uuid()
+    .notNull()
+    .references(() => questionsTable.id, { onDelete: "cascade" }),
+  title: text().notNull(),
+  careerCategory: careerCategoryEnum(), // only for career interest test
+  mbtiType: mbtiDimensionEnum(), // only for mbti test
+  createdAt: timestamp().notNull().defaultNow(),
+});
+
+export const likertOptionsTable = pgTable("likert_options", {
+  id: uuid().primaryKey().defaultRandom(),
+  questionId: uuid()
+    .notNull()
+    .references(() => questionsTable.id, { onDelete: "cascade" }),
+  title: text().notNull(),
+  likertValueMin: integer().default(1),
+  likertValueMax: integer().default(5),
+  likertValueLabelMin: text(),
+  likertValueLabelMax: text(),
   createdAt: timestamp().notNull().defaultNow(),
 });
 // Note:
@@ -221,3 +264,78 @@ export const choicesTable = pgTable("choices", {
 // Test MBTI itu single choice
 // Test PWB itu likert scale
 // Test Keluhan stress itu multiple choice
+
+export const resultsTable = pgTable("results", {
+  id: uuid().primaryKey().defaultRandom(),
+  studentId: uuid()
+    .notNull()
+    .references(() => studentsTable.id, { onDelete: "cascade" }),
+  careerCategory: careerCategoryEnum().notNull(), // from career interest test result
+  mbtiType: varchar({ length: 4 }).notNull(), // from mbti test result, e.g. INFP
+  pwbScore: integer().notNull(), // from pwb test result, range 0-100
+  createdAt: timestamp({ mode: "string" }).notNull().defaultNow(),
+});
+
+// Tests <-> Questions
+export const testsRelations = relations(testsTable, ({ many }) => ({
+  questions: many(questionsTable),
+}));
+
+// Questions -> Tests, Question -> Options
+export const questionsRelations = relations(
+  questionsTable,
+  ({ one, many }) => ({
+    test: one(testsTable, {
+      fields: [questionsTable.testId],
+      references: [testsTable.id],
+    }),
+    multipleChoiceOptions: many(multipleChoiceOptionsTable),
+    singleChoiceOptions: many(singleChoiceOptionsTable),
+    likertOptions: many(likertOptionsTable),
+  })
+);
+
+// Multiple choice options -> Question
+export const multipleChoiceOptionsRelations = relations(
+  multipleChoiceOptionsTable,
+  ({ one }) => ({
+    question: one(questionsTable, {
+      fields: [multipleChoiceOptionsTable.questionId],
+      references: [questionsTable.id],
+    }),
+  })
+);
+
+// Single choice options -> Question
+export const singleChoiceOptionsRelations = relations(
+  singleChoiceOptionsTable,
+  ({ one }) => ({
+    question: one(questionsTable, {
+      fields: [singleChoiceOptionsTable.questionId],
+      references: [questionsTable.id],
+    }),
+  })
+);
+
+// Likert options -> Question
+export const likertOptionsRelations = relations(
+  likertOptionsTable,
+  ({ one }) => ({
+    question: one(questionsTable, {
+      fields: [likertOptionsTable.questionId],
+      references: [questionsTable.id],
+    }),
+  })
+);
+
+// Students <-> Results
+export const studentsRelations = relations(studentsTable, ({ many }) => ({
+  results: many(resultsTable),
+}));
+
+export const resultsRelations = relations(resultsTable, ({ one }) => ({
+  student: one(studentsTable, {
+    fields: [resultsTable.studentId],
+    references: [studentsTable.id],
+  }),
+}));

@@ -1,7 +1,7 @@
 import Elysia from "elysia";
 import z from "zod";
 
-export const dummy = new Elysia({ prefix: "/dummy" })
+export const dummyEndpoint = new Elysia({ prefix: "/dummy", tags: ["Dummy"] })
   .get(
     "/tests",
     () => {
