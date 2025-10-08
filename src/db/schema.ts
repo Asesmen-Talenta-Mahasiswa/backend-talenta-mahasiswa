@@ -1,4 +1,4 @@
-import { NonArray, relations } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 import {
   pgTable,
   uuid,
@@ -11,17 +11,12 @@ import {
   integer,
 } from "drizzle-orm/pg-core";
 import {
-  CareerCategory,
-  CareerFieldResult,
   Degree,
   Faculty,
-  MbtiDimension,
   PermissionLevel,
   Program,
-  PwbResult,
   QuestionType,
-  TalentResult,
-  TestType,
+  SubmissionStatus,
 } from "../common/enum";
 import { enumToPgEnum } from "../utils";
 
@@ -42,28 +37,9 @@ export const questionTypeEnum = pgEnum(
   enumToPgEnum(QuestionType)
 );
 
-export const testTypeEnum = pgEnum("test_type_enum", enumToPgEnum(TestType));
-
-export const careerCategoryEnum = pgEnum(
-  "career_category_enum",
-  enumToPgEnum(CareerCategory)
-);
-
-export const mbtiDimensionEnum = pgEnum(
-  "mbti_dimension_enum",
-  enumToPgEnum(MbtiDimension)
-);
-
-export const careerFieldResultEnum = pgEnum(
-  "career_field_result_enum",
-  enumToPgEnum(CareerFieldResult)
-);
-
-export const pwbResultEnum = pgEnum("pwb_result_enum", enumToPgEnum(PwbResult));
-
-export const talentResultEnum = pgEnum(
-  "talent_result_enum",
-  enumToPgEnum(TalentResult)
+export const submissionStatusEnum = pgEnum(
+  "submission_status_enum",
+  enumToPgEnum(SubmissionStatus)
 );
 
 // User table schema
@@ -81,6 +57,9 @@ export const usersTable = pgTable("users", {
   password: text().notNull(), // hashed password
   permissionLevel: permissionLevelEnum().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 export const studentsTable = pgTable("students", {
@@ -93,137 +72,162 @@ export const studentsTable = pgTable("students", {
   faculty: facultyEnum().notNull(),
   degree: degreeEnum().notNull(),
   createdAt: timestamp().notNull().defaultNow(),
+  updatedAt: timestamp()
+    .notNull()
+    .$onUpdate(() => new Date()),
 });
 
 export const testsTable = pgTable("tests", {
   id: uuid().primaryKey().defaultRandom(),
-  title: varchar({ length: 256 }).notNull(),
-  description: text().notNull(),
+  name: text().notNull(),
+  description: text(),
   isActive: boolean().notNull().default(true),
-  createdAt: timestamp().notNull().defaultNow(),
+});
+
+export const subTestsTable = pgTable("sub_tests", {
+  id: uuid().primaryKey().defaultRandom(),
+  name: text().notNull(),
+  description: text(),
+  testId: uuid()
+    .notNull()
+    .references(() => testsTable.id, { onDelete: "cascade" }),
 });
 
 export const questionsTable = pgTable("questions", {
   id: uuid().primaryKey().defaultRandom(),
-  testId: uuid()
-    .notNull()
-    .references(() => testsTable.id, { onDelete: "cascade" }),
-  title: text().notNull(),
+  text: text().notNull(),
   type: questionTypeEnum().notNull(),
-  createdAt: timestamp().notNull().defaultNow(),
+  subtestId: uuid()
+    .notNull()
+    .references(() => subTestsTable.id, { onDelete: "cascade" }),
 });
 
-export const multipleChoiceOptionsTable = pgTable("multiple_choice_options", {
-  id: uuid().primaryKey().defaultRandom(),
+export const optionsTable = pgTable("options", {
+  id: uuid().defaultRandom().primaryKey(),
+  text: text().notNull(), // The text displayed to the user (e.g., "Strongly Agree")
+  // The calculable value of the option. Text type makes it super flexible.
+  value: text().notNull(),
+  order: integer().notNull().default(0),
   questionId: uuid()
     .notNull()
     .references(() => questionsTable.id, { onDelete: "cascade" }),
-  title: text().notNull(),
-  careerCategory: careerCategoryEnum(), // only for career interest test
-  mbtiType: mbtiDimensionEnum(), // only for mbti test
-  createdAt: timestamp().notNull().defaultNow(),
 });
 
-export const singleChoiceOptionsTable = pgTable("single_choice_options", {
-  id: uuid().primaryKey().defaultRandom(),
-  questionId: uuid()
-    .notNull()
-    .references(() => questionsTable.id, { onDelete: "cascade" }),
-  title: text().notNull(),
-  careerCategory: careerCategoryEnum(), // only for career interest test
-  mbtiType: mbtiDimensionEnum(), // only for mbti test
-  createdAt: timestamp().notNull().defaultNow(),
-});
-
-export const likertOptionsTable = pgTable("likert_options", {
-  id: uuid().primaryKey().defaultRandom(),
-  questionId: uuid()
-    .notNull()
-    .references(() => questionsTable.id, { onDelete: "cascade" }),
-  title: text().notNull(),
-  likertValueMin: integer().default(1),
-  likertValueMax: integer().default(5),
-  likertValueLabelMin: text(),
-  likertValueLabelMax: text(),
-  createdAt: timestamp().notNull().defaultNow(),
-});
-// Note:
-// Test minat bidang karir itu single choice
-// Test MBTI itu single choice
-// Test PWB itu likert scale
-// Test Keluhan stress itu multiple choice
-
-export const resultsTable = pgTable("results", {
-  id: uuid().primaryKey().defaultRandom(),
+export const testSubmissionsTable = pgTable("test_submissions", {
+  id: uuid().defaultRandom().primaryKey(),
   studentId: uuid()
     .notNull()
     .references(() => studentsTable.id, { onDelete: "cascade" }),
-  careerCategory: careerCategoryEnum().notNull(), // from career interest test result
-  mbtiType: varchar({ length: 4 }).notNull(), // from mbti test result, e.g. INFP
-  pwbScore: integer().notNull(), // from pwb test result, range 0-100
-  createdAt: timestamp({ mode: "string" }).notNull().defaultNow(),
+  testId: uuid()
+    .notNull()
+    .references(() => testsTable.id, { onDelete: "cascade" }),
+  status: submissionStatusEnum().default("in_progress").notNull(),
+  createdAt: timestamp().defaultNow().notNull(),
+  completedAt: timestamp(),
 });
 
-// Tests <-> Questions
-export const testsRelations = relations(testsTable, ({ many }) => ({
+export const studentAnswersTable = pgTable("student_answers", {
+  id: uuid().defaultRandom().primaryKey(),
+  submissionId: uuid()
+    .notNull()
+    .references(() => testSubmissionsTable.id, { onDelete: "cascade" }),
+  questionId: uuid()
+    .notNull()
+    .references(() => questionsTable.id, { onDelete: "cascade" }),
+  selectedOptionId: uuid()
+    .notNull()
+    .references(() => optionsTable.id, { onDelete: "cascade" }),
+  createdAt: timestamp().defaultNow().notNull(),
+});
+
+export const submissionResultsTable = pgTable("submission_results", {
+  id: uuid().defaultRandom().primaryKey(),
+  submissionId: uuid()
+    .notNull()
+    .references(() => testSubmissionsTable.id, { onDelete: "cascade" }),
+  subtestId: uuid()
+    .notNull()
+    .references(() => subTestsTable.id, { onDelete: "cascade" }),
+  // Stores "academics", "ENTJ", or a score like "50"
+  resultValue: text().notNull(),
+  createdAt: timestamp().defaultNow().notNull(),
+});
+
+export const testRelations = relations(testsTable, ({ many }) => ({
+  submissions: many(testSubmissionsTable),
+}));
+
+export const subTestRelations = relations(subTestsTable, ({ one, many }) => ({
+  test: one(testsTable, {
+    fields: [subTestsTable.testId],
+    references: [testsTable.id],
+  }),
   questions: many(questionsTable),
 }));
 
-// Questions -> Tests, Question -> Options
-export const questionsRelations = relations(
-  questionsTable,
-  ({ one, many }) => ({
-    test: one(testsTable, {
-      fields: [questionsTable.testId],
-      references: [testsTable.id],
-    }),
-    multipleChoiceOptions: many(multipleChoiceOptionsTable),
-    singleChoiceOptions: many(singleChoiceOptionsTable),
-    likertOptions: many(likertOptionsTable),
-  })
-);
-
-// Multiple choice options -> Question
-export const multipleChoiceOptionsRelations = relations(
-  multipleChoiceOptionsTable,
-  ({ one }) => ({
-    question: one(questionsTable, {
-      fields: [multipleChoiceOptionsTable.questionId],
-      references: [questionsTable.id],
-    }),
-  })
-);
-
-// Single choice options -> Question
-export const singleChoiceOptionsRelations = relations(
-  singleChoiceOptionsTable,
-  ({ one }) => ({
-    question: one(questionsTable, {
-      fields: [singleChoiceOptionsTable.questionId],
-      references: [questionsTable.id],
-    }),
-  })
-);
-
-// Likert options -> Question
-export const likertOptionsRelations = relations(
-  likertOptionsTable,
-  ({ one }) => ({
-    question: one(questionsTable, {
-      fields: [likertOptionsTable.questionId],
-      references: [questionsTable.id],
-    }),
-  })
-);
-
-// Students <-> Results
-export const studentsRelations = relations(studentsTable, ({ many }) => ({
-  results: many(resultsTable),
+export const questionRelations = relations(questionsTable, ({ one, many }) => ({
+  subTest: one(subTestsTable, {
+    fields: [questionsTable.subtestId],
+    references: [subTestsTable.id],
+  }),
+  options: many(optionsTable),
 }));
 
-export const resultsRelations = relations(resultsTable, ({ one }) => ({
-  student: one(studentsTable, {
-    fields: [resultsTable.studentId],
-    references: [studentsTable.id],
+export const optionRelations = relations(optionsTable, ({ one }) => ({
+  question: one(questionsTable, {
+    fields: [optionsTable.questionId],
+    references: [questionsTable.id],
   }),
 }));
+
+export const studentRelations = relations(studentsTable, ({ many }) => ({
+  submissions: many(testSubmissionsTable),
+}));
+
+export const testSubmissionsRelations = relations(
+  testSubmissionsTable,
+  ({ one, many }) => ({
+    student: one(studentsTable, {
+      fields: [testSubmissionsTable.studentId],
+      references: [studentsTable.id],
+    }),
+    test: one(testsTable, {
+      fields: [testSubmissionsTable.testId],
+      references: [testsTable.id],
+    }),
+    answers: many(studentAnswersTable),
+    results: many(submissionResultsTable),
+  })
+);
+
+export const studentAnswersRelations = relations(
+  studentAnswersTable,
+  ({ one }) => ({
+    submission: one(testSubmissionsTable, {
+      fields: [studentAnswersTable.submissionId],
+      references: [testSubmissionsTable.id],
+    }),
+    question: one(questionsTable, {
+      fields: [studentAnswersTable.questionId],
+      references: [questionsTable.id],
+    }),
+    selectedOption: one(optionsTable, {
+      fields: [studentAnswersTable.selectedOptionId],
+      references: [optionsTable.id],
+    }),
+  })
+);
+
+export const submissionResultsRelations = relations(
+  submissionResultsTable,
+  ({ one }) => ({
+    submission: one(testSubmissionsTable, {
+      fields: [submissionResultsTable.submissionId],
+      references: [testSubmissionsTable.id],
+    }),
+    subTest: one(subTestsTable, {
+      fields: [submissionResultsTable.subtestId],
+      references: [subTestsTable.id],
+    }),
+  })
+);

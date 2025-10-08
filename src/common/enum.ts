@@ -1,8 +1,14 @@
 export const ServiceStatus = { Healthy: "healthy", Bad: "bad" } as const;
+
 export const ResponseStatus = {
   Success: "success",
   Error: "error",
   Fail: "fail",
+} as const;
+
+export const SubmissionStatus = {
+  InProgress: "in_progress",
+  Completed: "completed",
 } as const;
 
 export const PermissionLevel = {
@@ -124,48 +130,4 @@ export const QuestionType = {
   MultipleChoice: "multiple_choice",
   SingleChoice: "single_choice",
   Likert: "likert",
-} as const;
-
-export const TestType = {
-  CareerInterest: "career_interest",
-  Mbti: "mbti",
-  Pwb: "pwb",
-  StressSource: "stress_source",
-} as const;
-
-export const CareerCategory = {
-  Praktisi: "praktisi",
-  Akademisi: "akademisi",
-  PekerjaKreatif: "pekerja_kreatif",
-  Wirausaha: "wirausaha",
-} as const;
-
-export const MbtiDimension = {
-  E: "E",
-  I: "I",
-  S: "S",
-  N: "N",
-  T: "T",
-  F: "F",
-  J: "J",
-  P: "P",
-} as const;
-
-export const CareerFieldResult = {
-  VerySuitable: "very_suitable",
-  QuiteSuitable: "quite_suitable",
-  NotSuitable: "not_suitable",
-} as const;
-
-export const PwbResult = {
-  Low: "low",
-  Medium: "medium",
-  High: "high",
-} as const;
-
-export const TalentResult = {
-  Analyst: "analyst",
-  Diplomat: "diplomat",
-  Sentinel: "sentinel",
-  Explorer: "explorer",
 } as const;
