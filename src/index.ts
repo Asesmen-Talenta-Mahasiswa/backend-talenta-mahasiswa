@@ -1,18 +1,15 @@
 import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
-import * as z from "zod";
 import { version as apiVersion, author } from "../package.json";
 
 import { dummyEndpoint } from "./feature/dummy";
 import { studentEndpoint } from "./feature/student";
 import { systemEndpoint } from "./feature/system";
+import { ResponseStatus } from "./common/enum";
 
 const app = new Elysia()
   .use(
     openapi({
-      mapJsonSchema: {
-        zod: z.toJSONSchema,
-      },
       path: "/docs",
       documentation: {
         openapi: "3.0.3",
@@ -35,6 +32,39 @@ const app = new Elysia()
       },
     })
   )
+  .onError(({ error, code, status }) => {
+    console.log(`[Student] Error ${code}:`, error);
+
+    if (code === "VALIDATION") {
+      const errMsg =
+        error.customError ?? error.valueError?.message ?? "Request tidak valid";
+      return status("Unprocessable Content", {
+        status: ResponseStatus.Fail,
+        message: errMsg,
+      });
+    }
+
+    if (code === "PARSE") {
+      return status("Bad Request", {
+        status: ResponseStatus.Fail,
+        message: "Request body tidak valid",
+      });
+    }
+
+    if (code === "UNKNOWN" || code === "INTERNAL_SERVER_ERROR") {
+      return status("Internal Server Error", {
+        status: ResponseStatus.Error,
+        message: "Terjadi kesalahan pada server",
+      });
+    }
+
+    if (code === "NOT_FOUND") {
+      return status("Not Found", {
+        status: ResponseStatus.Fail,
+        message: "Resource tidak ditemukan",
+      });
+    }
+  })
   .use(dummyEndpoint)
   .use(systemEndpoint)
   .use(studentEndpoint)

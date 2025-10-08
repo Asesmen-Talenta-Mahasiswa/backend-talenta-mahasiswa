@@ -1,33 +1,43 @@
-import { createSelectSchema, createUpdateSchema } from "drizzle-zod";
+import {
+  createInsertSchema,
+  createSelectSchema,
+  createUpdateSchema,
+} from "drizzle-typebox";
+import { t } from "elysia";
 import { resultsTable, studentsTable } from "../../db/schema";
-import z from "zod";
-import { responseSchema } from "../../common/model";
 
-const studentSchema = createSelectSchema(studentsTable);
+export const newStudentSchema = createInsertSchema(studentsTable, {
+  npm: t.String({
+    minLength: 10,
+    maxLength: 10,
+    pattern: "^[0-9]+$",
+    error: "NPM harus terdiri dari 10 digit angka",
+  }),
+  name: t.String({
+    minLength: 1,
+    maxLength: 128,
+    error: "Nama tidak boleh kosong",
+  }),
+  email: t.Optional(
+    t.Null(t.String({ format: "email", error: "Email tidak valid" }))
+  ),
+});
+export const getStudentSchema = createSelectSchema(studentsTable);
 export const updateStudentSchema = createUpdateSchema(studentsTable, {
-  email: z.email("Email tidak valid").nullable().optional(),
+  email: t.String({ format: "email", error: "Email tidak valid" }),
 });
 
-const resultSchema = createSelectSchema(resultsTable);
+export const resultSchema = createSelectSchema(resultsTable);
 
-export const getStudentInfoSchema = z.object({
-  ...responseSchema.shape,
-  data: z.object({
-    ...studentSchema.omit({ createdAt: true }).shape,
-    results: z.array(resultSchema.omit({ id: true, studentId: true })),
+export const npmSchema = t.Object({
+  npm: t.String({
+    minLength: 10,
+    maxLength: 10,
+    pattern: "^[0-9]+$",
+    error: "NPM harus terdiri dari 10 digit angka",
   }),
 });
 
-export const putStudentInfoSchema = z.object({
-  ...responseSchema.shape,
-  data: updateStudentSchema.omit({ createdAt: true }),
-});
-
-export const npmSchema = z.object({
-  npm: z
-    .string()
-    .length(10, "NPM harus terdiri dari 10 karakter")
-    .regex(/^\d+$/, "NPM harus berupa angka"),
-});
-
-export type UpdateStudentModel = z.infer<typeof updateStudentSchema>;
+export type NewStudentModel = typeof newStudentSchema.static;
+export type StudentModel = typeof getStudentSchema.static;
+export type UpdateStudentModel = typeof updateStudentSchema.static;

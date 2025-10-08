@@ -1,7 +1,30 @@
-import Elysia from "elysia";
-import z from "zod";
+import Elysia, { NotFoundError, t } from "elysia";
+
+const questionType = {
+  multipleChoice: "multiple_choice",
+  singleChoice: "single_choice",
+  likert: "likert",
+} as const;
+
+const careerCategory = {
+  praktisi: "praktisi",
+  akademisi: "akademisi",
+  pekerjaKreatif: "pekerja_kreatif",
+  wirausaha: "wirausaha",
+} as const;
 
 export const dummyEndpoint = new Elysia({ prefix: "/dummy", tags: ["Dummy"] })
+  .all(
+    "/",
+    () => {
+      throw new NotFoundError();
+    },
+    {
+      detail: {
+        hide: true,
+      },
+    }
+  )
   .get(
     "/tests",
     () => {
@@ -40,17 +63,17 @@ export const dummyEndpoint = new Elysia({ prefix: "/dummy", tags: ["Dummy"] })
     },
     {
       response: {
-        200: z.object({
-          status: z.string(),
-          message: z.string(),
-          data: z.object({
-            tests: z.array(
-              z.object({
-                id: z.uuid(),
-                title: z.string(),
-                description: z.string(),
-                isActive: z.boolean(),
-                createdAt: z.string(),
+        200: t.Object({
+          status: t.String(),
+          message: t.String(),
+          data: t.Object({
+            tests: t.Array(
+              t.Object({
+                id: t.String({ format: "uuid" }),
+                title: t.String(),
+                description: t.String(),
+                isActive: t.Boolean(),
+                createdAt: t.String(),
               })
             ),
           }),
@@ -79,16 +102,16 @@ export const dummyEndpoint = new Elysia({ prefix: "/dummy", tags: ["Dummy"] })
     },
     {
       response: {
-        200: z.object({
-          status: z.string(),
-          message: z.string(),
-          data: z.object({
-            test: z.object({
-              id: z.uuid(),
-              title: z.string(),
-              description: z.string(),
-              isActive: z.boolean(),
-              createdAt: z.string(),
+        200: t.Object({
+          status: t.String(),
+          message: t.String(),
+          data: t.Object({
+            test: t.Object({
+              id: t.String({ format: "uuid" }),
+              title: t.String(),
+              description: t.String(),
+              isActive: t.Boolean(),
+              createdAt: t.String(),
             }),
           }),
         }),
@@ -168,29 +191,24 @@ export const dummyEndpoint = new Elysia({ prefix: "/dummy", tags: ["Dummy"] })
     },
     {
       response: {
-        200: z.object({
-          status: z.string(),
-          message: z.string(),
-          data: z.object({
-            questions: z.array(
-              z.object({
-                id: z.uuid(),
-                testId: z.uuid(),
-                title: z.string(),
-                type: z.enum(["multiple_choice", "single_choice", "likert"]),
-                options: z.array(
-                  z.object({
-                    id: z.uuid(),
-                    text: z.string(),
-                    category: z.enum([
-                      "praktisi",
-                      "akademisi",
-                      "pekerja_kreatif",
-                      "wirausaha",
-                    ]),
+        200: t.Object({
+          status: t.String(),
+          message: t.String(),
+          data: t.Object({
+            questions: t.Array(
+              t.Object({
+                id: t.String({ format: "uuid" }),
+                testId: t.String({ format: "uuid" }),
+                title: t.String(),
+                type: t.Enum(questionType),
+                options: t.Array(
+                  t.Object({
+                    id: t.String({ format: "uuid" }),
+                    text: t.String(),
+                    category: t.Enum(careerCategory),
                   })
                 ),
-                createdAt: z.string(),
+                createdAt: t.String(),
               })
             ),
           }),

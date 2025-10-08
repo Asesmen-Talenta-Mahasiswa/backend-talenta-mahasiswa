@@ -1,14 +1,14 @@
-import z from "zod";
+import { t } from "elysia";
 import { ResponseStatus, ServiceStatus } from "./enum";
 
-export const serviceStatusSchema = z.enum(ServiceStatus);
-export const responseStatusSchema = z.enum(ResponseStatus);
+export const serviceStatusSchema = t.Enum(ServiceStatus);
+export const responseStatusSchema = t.Enum(ResponseStatus);
 
-export const responseSchema = z.object({
+export const responseSchema = t.Object({
   status: responseStatusSchema,
-  message: z.string(),
+  message: t.String(),
 });
 
-export type ResponseModel = z.infer<typeof responseSchema>;
-export type ServiceStatusModel = z.infer<typeof serviceStatusSchema>;
-export type ResponseStatusModel = z.infer<typeof responseStatusSchema>;
+export type ResponseModel = typeof responseSchema.static;
+export type ServiceStatusModel = typeof serviceStatusSchema.static;
+export type ResponseStatusModel = typeof responseStatusSchema.static;

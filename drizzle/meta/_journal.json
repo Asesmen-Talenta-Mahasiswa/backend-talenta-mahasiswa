@@ -29,6 +29,13 @@
       "when": 1759485787749,
       "tag": "0003_round_living_tribunal",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1759910127926,
+      "tag": "0004_tired_santa_claus",
+      "breakpoints": true
     }
   ]
 }

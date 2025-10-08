@@ -1,6 +1,5 @@
-import Elysia from "elysia";
+import Elysia, { NotFoundError } from "elysia";
 import { ResponseStatus } from "../../common/enum";
-import z from "zod";
 import {
   getSystemEchoSchema,
   getSystemHealthSchema,
@@ -9,6 +8,17 @@ import {
 import { SystemService } from "./service";
 
 export const systemEndpoint = new Elysia()
+  .all(
+    "/",
+    () => {
+      throw new NotFoundError();
+    },
+    {
+      detail: {
+        hide: true,
+      },
+    }
+  )
   .get(
     "/",
     ({ status }) => {

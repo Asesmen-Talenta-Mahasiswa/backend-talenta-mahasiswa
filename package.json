@@ -1,6 +1,6 @@
 {
   "name": "assasment-cced-unila-backend",
-  "version": "0.4.2",
+  "version": "0.5.0",
   "author": {
     "name": "Muhammad Azka Naufal",
     "email": "mhmdazkanfl@gmail.com"
@@ -17,14 +17,16 @@
   "dependencies": {
     "@elysiajs/openapi": "^1.4.11",
     "drizzle-orm": "^0.44.6",
-    "drizzle-zod": "^0.8.3",
+    "drizzle-typebox": "^0.3.3",
     "elysia": "1.4.9",
-    "postgres": "^3.4.7",
-    "zod": "^4.1.11"
+    "postgres": "^3.4.7"
   },
   "devDependencies": {
     "bun-types": "1.2.23",
     "drizzle-kit": "^0.31.5"
   },
-  "module": "src/index.js"
+  "module": "src/index.js",
+  "overrides": {
+    "@sinclair/typebox": "0.34.8"
+  }
 }

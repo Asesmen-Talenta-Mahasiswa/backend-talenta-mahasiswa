@@ -16,16 +16,6 @@ export abstract class StudentService {
         where: eq(studentsTable.npm, npm),
       });
 
-      //   const student = await db.query.resultsTable.findFirst({
-      //     with: {
-      //       student: true,
-      //     },
-      //     // where: eq(studentsTable.npm, npm),
-      //     // orderBy: desc(resultsTable.createdAt),
-      //   });
-
-      console.log(student);
-
       if (!student) {
         return null;
       }
@@ -39,9 +29,13 @@ export abstract class StudentService {
 
   static async updateStudentInfo(npm: string, student: UpdateStudentModel) {
     try {
+      console.log(student);
+
       const result = await db
         .update(studentsTable)
-        .set(student)
+        .set({
+          email: student.email,
+        })
         .where(eq(studentsTable.npm, npm))
         .returning();
 

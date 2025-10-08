@@ -1,10 +1,10 @@
-import Elysia from "elysia";
+import Elysia, { NotFoundError, t, ValidationError } from "elysia";
 import { StudentService } from "./service";
 import { ResponseStatus } from "../../common/enum";
 import {
-  getStudentInfoSchema,
+  getStudentSchema,
   npmSchema,
-  putStudentInfoSchema,
+  resultSchema,
   updateStudentSchema,
 } from "./model";
 import { responseSchema } from "../../common/model";
@@ -13,6 +13,17 @@ export const studentEndpoint = new Elysia({
   prefix: "/students",
   tags: ["Student"],
 })
+  .all(
+    "/",
+    () => {
+      throw new NotFoundError();
+    },
+    {
+      detail: {
+        hide: true,
+      },
+    }
+  )
   .get(
     "/:npm",
     async ({ params, status }) => {
@@ -24,6 +35,8 @@ export const studentEndpoint = new Elysia({
         });
       }
 
+      console.log(student);
+
       return status(200, {
         status: ResponseStatus.Success,
         message: "Mahasiswa ditemukan",
@@ -33,7 +46,13 @@ export const studentEndpoint = new Elysia({
     {
       params: npmSchema,
       response: {
-        200: getStudentInfoSchema,
+        200: t.Object({
+          ...responseSchema.properties,
+          data: t.Object({
+            ...getStudentSchema.properties,
+            results: t.Array(resultSchema),
+          }),
+        }),
         404: responseSchema,
       },
     }
@@ -61,9 +80,14 @@ export const studentEndpoint = new Elysia({
     },
     {
       params: npmSchema,
-      body: updateStudentSchema,
+      body: t.Pick(updateStudentSchema, ["email"], {
+        error: "Properti email tidak ditemukan",
+      }),
       response: {
-        201: putStudentInfoSchema,
+        201: t.Object({
+          ...responseSchema.properties,
+          data: getStudentSchema,
+        }),
         422: responseSchema,
       },
     }
