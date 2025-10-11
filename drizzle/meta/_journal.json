@@ -43,6 +43,27 @@
       "when": 1759940458106,
       "tag": "0005_classy_sentry",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1760104776384,
+      "tag": "0006_pale_mantis",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1760105155790,
+      "tag": "0007_first_major_mapleleaf",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1760114030363,
+      "tag": "0008_classy_eternity",
+      "breakpoints": true
     }
   ]
 }

@@ -1,6 +1,6 @@
 import { desc, eq } from "drizzle-orm";
 import db from "../../db";
-import { resultsTable, studentsTable } from "../../db/schema";
+import { studentsTable, testSubmissionsTable } from "../../db/schema";
 import { DatabaseService } from "../../db/service";
 import { UpdateStudentModel } from "./model";
 
@@ -9,8 +9,12 @@ export abstract class StudentService {
     try {
       const student = await db.query.studentsTable.findFirst({
         with: {
-          results: {
-            orderBy: desc(resultsTable.createdAt),
+          submissions: {
+            with: {
+              test: true,
+              answers: true,
+              results: true,
+            },
           },
         },
         where: eq(studentsTable.npm, npm),

@@ -6,8 +6,12 @@ import {
   getSystemInfoSchema,
 } from "./model";
 import { SystemService } from "./service";
+import { DatabaseService } from "../../db/service";
 
-export const systemEndpoint = new Elysia()
+export const systemEndpoint = new Elysia({
+  prefix: "/system",
+  tags: ["System"],
+})
   .all(
     "/",
     () => {
@@ -32,7 +36,6 @@ export const systemEndpoint = new Elysia()
     },
     {
       detail: {
-        tags: ["System"],
         summary: "Get API Metadata",
         description:
           "Returns metadata and runtime information about this backend service, including version, environment, documentation endpoints, and uptime.",
@@ -55,7 +58,6 @@ export const systemEndpoint = new Elysia()
     },
     {
       detail: {
-        tags: ["System"],
         summary: "Service Health Check",
         description:
           "Returns the health status of each service used by this app.",
@@ -73,12 +75,46 @@ export const systemEndpoint = new Elysia()
     },
     {
       detail: {
-        tags: ["System"],
         summary: "Echo",
         description: "A simple echo endpoint to test if the API is reachable.",
       },
       response: {
         200: getSystemEchoSchema,
+      },
+    }
+  )
+  .post(
+    "/seed-db",
+    async () => {
+      const result = await DatabaseService.seedDatabase();
+      return {
+        status: ResponseStatus.Success,
+        message: "Database has been seeded",
+        data: result,
+      };
+    },
+    {
+      detail: {
+        summary: "Seed Database with Sample Data",
+        description:
+          "Seeds the database with sample student data for testing purposes.",
+      },
+    }
+  )
+  .post(
+    "/reset-db",
+    async () => {
+      await DatabaseService.resetDatabase();
+      return {
+        status: ResponseStatus.Success,
+        message: "Database has been reset",
+      };
+    },
+    {
+      detail: {
+        summary: "Reset Database",
+        description:
+          "Resets the database by dropping and recreating all tables.",
       },
     }
   );

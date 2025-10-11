@@ -4,7 +4,11 @@ import {
   createUpdateSchema,
 } from "drizzle-typebox";
 import { t } from "elysia";
-import { resultsTable, studentsTable } from "../../db/schema";
+import {
+  studentsTable,
+  submissionResultsTable,
+  testSubmissionsTable,
+} from "../../db/schema";
 
 export const newStudentSchema = createInsertSchema(studentsTable, {
   npm: t.String({
@@ -19,7 +23,10 @@ export const newStudentSchema = createInsertSchema(studentsTable, {
     error: "Nama tidak boleh kosong",
   }),
   email: t.Optional(
-    t.Null(t.String({ format: "email", error: "Email tidak valid" }))
+    t.Union([
+      t.String({ format: "email", error: "Email tidak valid" }),
+      t.Null(),
+    ])
   ),
 });
 export const getStudentSchema = createSelectSchema(studentsTable);
@@ -27,7 +34,8 @@ export const updateStudentSchema = createUpdateSchema(studentsTable, {
   email: t.String({ format: "email", error: "Email tidak valid" }),
 });
 
-export const resultSchema = createSelectSchema(resultsTable);
+export const getTestSubmissionsSchema =
+  createSelectSchema(testSubmissionsTable);
 
 export const npmSchema = t.Object({
   npm: t.String({

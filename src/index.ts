@@ -6,6 +6,7 @@ import { dummyEndpoint } from "./feature/dummy";
 import { studentEndpoint } from "./feature/student";
 import { systemEndpoint } from "./feature/system";
 import { ResponseStatus } from "./common/enum";
+import { testEndpoint } from "./feature/test";
 
 const app = new Elysia()
   .use(
@@ -30,7 +31,7 @@ const app = new Elysia()
           },
         ],
       },
-    })
+    }),
   )
   .onError(({ error, code, status }) => {
     console.log(`[Student] Error ${code}:`, error);
@@ -68,8 +69,9 @@ const app = new Elysia()
   .use(dummyEndpoint)
   .use(systemEndpoint)
   .use(studentEndpoint)
+  .use(testEndpoint)
   .listen(Bun.env.PORT ?? 3000); // for fallback
 
 console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
 );

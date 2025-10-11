@@ -4,8 +4,8 @@ import { ResponseStatus } from "../../common/enum";
 import {
   getStudentSchema,
   npmSchema,
-  resultSchema,
   updateStudentSchema,
+  getTestSubmissionsSchema,
 } from "./model";
 import { responseSchema } from "../../common/model";
 
@@ -50,7 +50,7 @@ export const studentEndpoint = new Elysia({
           ...responseSchema.properties,
           data: t.Object({
             ...getStudentSchema.properties,
-            results: t.Array(resultSchema),
+            submissions: t.Array(getTestSubmissionsSchema),
           }),
         }),
         404: responseSchema,

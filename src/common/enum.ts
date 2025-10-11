@@ -131,3 +131,10 @@ export const QuestionType = {
   SingleChoice: "single_choice",
   Likert: "likert",
 } as const;
+
+export const CareerCategory = {
+  Praktisi: "praktisi",
+  Akademisi: "akademisi",
+  PekerjaKreatif: "pekerja_kreatif",
+  Wirausaha: "wirausaha",
+} as const;

@@ -7,6 +7,9 @@ import {
 import db from ".";
 import { DatabaseHealthModel } from "./model";
 import { ServiceStatus } from "../common/enum";
+import { reset } from "drizzle-seed";
+import { schema } from "./schema";
+import { seedResult, seedStudent, seedTest, seedUser } from "./seed";
 
 export abstract class DatabaseService {
   static logDatabaseError(error: any) {
@@ -77,5 +80,22 @@ export abstract class DatabaseService {
         message,
       } satisfies DatabaseHealthModel;
     }
+  }
+
+  static async seedDatabase() {
+    const studentResult = await seedStudent();
+    const userResult = await seedUser();
+    const testResult = await seedTest();
+    const resultResult = await seedResult();
+    return {
+      studentResult,
+      userResult,
+      testResult,
+      resultResult,
+    };
+  }
+
+  static async resetDatabase() {
+    await reset(db, schema);
   }
 }

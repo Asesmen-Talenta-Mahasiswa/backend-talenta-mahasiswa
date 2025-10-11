@@ -9,6 +9,7 @@ import {
   text,
   boolean,
   integer,
+  foreignKey,
 } from "drizzle-orm/pg-core";
 import {
   Degree,
@@ -19,6 +20,7 @@ import {
   SubmissionStatus,
 } from "../common/enum";
 import { enumToPgEnum } from "../utils";
+import { E } from "@faker-js/faker/dist/airline-CHFQMWko";
 
 // Define the permission level enum
 export const permissionLevelEnum = pgEnum(
@@ -64,7 +66,7 @@ export const usersTable = pgTable("users", {
 
 export const studentsTable = pgTable("students", {
   id: uuid().primaryKey().defaultRandom(),
-  npm: char({ length: 10 }).notNull().unique(), // e.g. 2215061066
+  npm: char({ length: 10 }).notNull().unique(), // e.g. 2515061066
   name: varchar({ length: 128 }).notNull(),
   email: varchar({ length: 128 }),
   program: programEnum().notNull(),
@@ -84,13 +86,46 @@ export const testsTable = pgTable("tests", {
   isActive: boolean().notNull().default(true),
 });
 
-export const subTestsTable = pgTable("sub_tests", {
-  id: uuid().primaryKey().defaultRandom(),
-  name: text().notNull(),
-  description: text(),
-  testId: uuid()
+export const subTestsTable = pgTable(
+  "sub_tests",
+  {
+    id: uuid().primaryKey().defaultRandom(),
+    name: text().notNull(),
+    description: text(),
+    testId: uuid().notNull(),
+    parentId: uuid(),
+  },
+  (table) => [
+    // reference to testsTable.id
+    foreignKey({
+      columns: [table.testId],
+      foreignColumns: [testsTable.id],
+    }).onDelete("cascade"),
+
+    // self-reference (parent/child)
+    foreignKey({
+      columns: [table.parentId],
+      foreignColumns: [table.id],
+    }).onDelete("cascade"),
+  ]
+);
+
+export const subtestInstructionsTable = pgTable("subtest_instructions", {
+  id: uuid().defaultRandom().primaryKey(),
+  text: text().notNull(),
+  order: integer().default(0).notNull(), // To order the instructions
+  subtestId: uuid()
     .notNull()
-    .references(() => testsTable.id, { onDelete: "cascade" }),
+    .references(() => subTestsTable.id, { onDelete: "cascade" }),
+});
+
+export const subtestNotesTable = pgTable("subtest_notes", {
+  id: uuid().defaultRandom().primaryKey(),
+  text: text().notNull(),
+  order: integer().default(0).notNull(), // To order the notes
+  subtestId: uuid()
+    .notNull()
+    .references(() => subTestsTable.id, { onDelete: "cascade" }),
 });
 
 export const questionsTable = pgTable("questions", {
@@ -107,7 +142,7 @@ export const optionsTable = pgTable("options", {
   text: text().notNull(), // The text displayed to the user (e.g., "Strongly Agree")
   // The calculable value of the option. Text type makes it super flexible.
   value: text().notNull(),
-  order: integer().notNull().default(0),
+  order: integer().notNull().default(0), // To order the options
   questionId: uuid()
     .notNull()
     .references(() => questionsTable.id, { onDelete: "cascade" }),
@@ -154,6 +189,7 @@ export const submissionResultsTable = pgTable("submission_results", {
 });
 
 export const testRelations = relations(testsTable, ({ many }) => ({
+  subTests: many(subTestsTable),
   submissions: many(testSubmissionsTable),
 }));
 
@@ -163,6 +199,25 @@ export const subTestRelations = relations(subTestsTable, ({ one, many }) => ({
     references: [testsTable.id],
   }),
   questions: many(questionsTable),
+  instructions: many(subtestInstructionsTable),
+  notes: many(subtestNotesTable),
+}));
+
+export const subtestInstructionRelations = relations(
+  subtestInstructionsTable,
+  ({ one }) => ({
+    subTest: one(subTestsTable, {
+      fields: [subtestInstructionsTable.subtestId],
+      references: [subTestsTable.id],
+    }),
+  })
+);
+
+export const subtestNoteRelations = relations(subtestNotesTable, ({ one }) => ({
+  subTest: one(subTestsTable, {
+    fields: [subtestNotesTable.subtestId],
+    references: [subTestsTable.id],
+  }),
 }));
 
 export const questionRelations = relations(questionsTable, ({ one, many }) => ({
@@ -231,3 +286,17 @@ export const submissionResultsRelations = relations(
     }),
   })
 );
+
+export const schema = {
+  usersTable,
+  studentsTable,
+  testsTable,
+  subTestsTable,
+  questionsTable,
+  optionsTable,
+  testSubmissionsTable,
+  studentAnswersTable,
+  submissionResultsTable,
+  subtestInstructionsTable,
+  subtestNotesTable,
+} as const;
