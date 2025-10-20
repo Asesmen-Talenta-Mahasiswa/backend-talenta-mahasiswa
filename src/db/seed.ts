@@ -1,6 +1,6 @@
 import { fakerID_ID as faker } from "@faker-js/faker";
 import { NewStudentModel } from "../feature/student/model";
-import { objectValues } from "../utils";
+import { buildConflictUpdateColumns, objectValues } from "../utils";
 import {
   CareerCategory,
   Degree,
@@ -14,37 +14,98 @@ import { schema } from "./schema";
 import { DatabaseService } from "./service";
 import { NewUserModel } from "../feature/user/model";
 import {
-  NewSubTestInstructionModel,
-  NewSubTestModel,
-  NewSubTestNoteModel,
+  NewTestInstructionModel,
   NewTestModel,
+  NewTestNoteModel,
 } from "../feature/test/model";
 import { NewOptionModel, NewQuestionModel } from "../feature/test/model";
+import { inArray, sql } from "drizzle-orm";
+import { SubmissionStatus } from "../common/enum";
 
 export async function seedStudent() {
+  const makePool = (concurrency: number) => {
+    let active = 0;
+    const queue: (() => void)[] = [];
+    return async function <T>(fn: () => Promise<T>): Promise<T> {
+      if (active >= concurrency) {
+        await new Promise<void>((res) => queue.push(res));
+      }
+      active++;
+      try {
+        return await fn();
+      } finally {
+        active--;
+        const next = queue.shift();
+        if (next) next();
+      }
+    };
+  };
+
   const degreeVals = objectValues(Degree);
   const facultyVals = objectValues(Faculty);
   const programVals = objectValues(Program);
 
-  const prefix = "25";
+  const prefixNPM = "25";
+  const totalFakeStudents = 30000;
+  const PG_PARAM_LIMIT = 65535;
+  const totalInsertColumn = 6;
+  const maxDbPoolSize = 15;
+
+  const maxRowsPerQuery = Math.floor(PG_PARAM_LIMIT / totalInsertColumn);
+
+  const batchSize = Math.min(8000, maxRowsPerQuery); // tune 2000-5000 depending on row width
+  const concurrency = Math.min(8, maxDbPoolSize - 2); // tune to your DB connection pool (2-8)
 
   const fakeStudents = faker.helpers
     .uniqueArray(
       () => faker.string.numeric({ allowLeadingZeros: true, length: 8 }),
-      10
+      totalFakeStudents
     )
     .map(
       (npm): NewStudentModel => ({
-        npm: prefix + npm,
+        npm: prefixNPM + npm,
         name: faker.person.fullName(),
+        year: faker.helpers.arrayElement([2024, 2025, 2026]),
         degree: faker.helpers.arrayElement(degreeVals),
         faculty: faker.helpers.arrayElement(facultyVals),
         program: faker.helpers.arrayElement(programVals),
       })
     );
 
+  const pool = makePool(concurrency);
+
+  const updateConflictColumn = buildConflictUpdateColumns(schema.studentsTable, [
+    "npm",
+    "name",
+  ]);
+
+  // create batches
+  const batches: NewStudentModel[][] = [];
+  for (let i = 0; i < fakeStudents.length; i += batchSize) {
+    batches.push(fakeStudents.slice(i, i + batchSize));
+  }
+
   try {
-    await db.insert(schema.studentsTable).values(fakeStudents);
+    // We'll use per-batch inserts with limited concurrency:
+    await Promise.all(
+      batches.map((batch) =>
+        pool(async () => {
+          // each batch in its own transaction (optional)
+          // return db.transaction(async (tx) => {
+          return db
+            .insert(schema.studentsTable)
+            .values(batch)
+            .onConflictDoUpdate({
+              target: schema.studentsTable.npm,
+              set: {
+                ...updateConflictColumn,
+                updatedAt: sql`now()`,
+              },
+            });
+          // });
+        })
+      )
+    );
     return true;
   } catch (error) {
     DatabaseService.logDatabaseError(error);
@@ -59,11 +120,12 @@ export async function seedUser() {
   const UNDERSCORE = "_";
 
   const defaultPassword = await Bun.password.hash("password123");
+  const totalFakeUsers = 10;
 
   const fakeUsers = faker.helpers
     .uniqueArray(
       () => faker.string.fromCharacters(UPPER + LOWER + UNDERSCORE, 10),
-      10
+      totalFakeUsers
     )
     .map(
       (username): NewUserModel => ({
@@ -73,8 +135,23 @@ export async function seedUser() {
       })
     );
 
+  const updateConflictColumn = buildConflictUpdateColumns(schema.usersTable, [
+    "username",
+    "password",
+    "permissionLevel",
+  ]);
+
   try {
-    await db.insert(schema.usersTable).values(fakeUsers);
+    await db
+      .insert(schema.usersTable)
+      .values(fakeUsers)
+      .onConflictDoUpdate({
+        target: schema.usersTable.username,
+        set: {
+          ...updateConflictColumn,
+          updatedAt: sql`now()`,
+        },
+      });
     return true;
   } catch (error) {
     DatabaseService.logDatabaseError(error);
@@ -84,262 +161,251 @@ export async function seedUser() {
 
 export async function seedTest() {
   try {
-    await db.transaction(async (tx) => {
-      const fakeTest: NewTestModel = {
+    const result = await db.transaction(async (tx) => {
+      const fakeParentTest: NewTestModel = {
         name: "Asesmen Talenta Mahasiswa",
         description:
           "Tes Asesmen Talenta Mahasiswa merupakan alat ukur yang dirancang untuk membantu mahasiswa mengenali potensi, kepribadian, serta arah pengembangan diri dan karier mereka. Melalui asesmen ini, mahasiswa akan memperoleh gambaran yang lebih komprehensif mengenai minat, karakteristik personal, dan pola perilaku yang memengaruhi cara mereka belajar, berinteraksi, serta mengambil keputusan dalam kehidupan akademik maupun profesional.",
       };
 
-      const [test] = await tx
+      const [asesmenTalentaMahasiswaTest] = await tx
         .insert(schema.testsTable)
-        .values(fakeTest)
-        .returning();
+        .values(fakeParentTest)
+        .returning()
+        .onConflictDoNothing();
 
-      if (!test) {
+      if (!asesmenTalentaMahasiswaTest) {
         tx.rollback();
+        return false;
       }
 
       console.log("success inserting fake test");
 
-      const fakeSubTest: NewSubTestModel[] = [
+      const fakeChildTest: NewTestModel[] = [
         {
           name: "Bidang Karir Ideal",
           description:
             "Asesmen pada bagian ini akan membantumu untuk mengetahui kecenderungan bidang karir yang ideal untuk kamu tekuni kelak, berdasarkan minat serta karakteristik diri. Terdapat 40 soal yang terbagi menjadi dua sub bagian. Cermati instruksi pada setiap sub. bagiannya ya. Selamat Mengerjakan!",
-          testId: test.id,
+          parentId: asesmenTalentaMahasiswaTest.id,
         },
         {
           name: "Pola Perilaku",
           description:
             "Asesmen pada bagian ini bertujuan untuk mengetahui pola perilaku yang biasa kamu lakukan sehari - hari, apakah sudah mendukung pengembangan talentamu. Terdapat 36 pernyataan yang akan membantumu melakukan refleksi diri",
-          testId: test.id,
+          parentId: asesmenTalentaMahasiswaTest.id,
         },
       ];
 
-      const subTest = await tx
-        .insert(schema.subTestsTable)
-        .values(fakeSubTest)
-        .returning();
-
-      if (subTest.length !== 2) {
-        tx.rollback();
-      }
+      const childTest = await tx
+        .insert(schema.testsTable)
+        .values(fakeChildTest)
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake sub test");
 
-      const bidangKarirIdealId =
-        subTest.find((st) => st.name === "Bidang Karir Ideal")?.id ?? "";
-      const polaPerilakuId =
-        subTest.find((st) => st.name === "Pola Perilaku")?.id ?? "";
+      const bidangKarirIdealTest = childTest.find(
+        (st) => st.name === "Bidang Karir Ideal"
+      );
+      const polaPerilakuIdTest = childTest.find((st) => st.name === "Pola Perilaku");
 
-      const fakeSubSubTest: NewSubTestModel[] = [
+      if (!bidangKarirIdealTest || !polaPerilakuIdTest) {
+        tx.rollback();
+        return false;
+      }
+
+      const fakeSubChildTest: NewTestModel[] = [
         {
           name: "Minat Karir",
           description:
             "Mengukur kecenderungan dan ketertarikan individu terhadap berbagai bidang pekerjaan dan karier. Hasilnya membantu mahasiswa memahami bidang kerja yang paling sesuai dengan minat dan nilai pribadi, serta memberikan arah dalam merencanakan jalur karier masa depan.",
-          testId: test.id,
-          parentId: bidangKarirIdealId,
+          parentId: bidangKarirIdealTest.id,
         },
         {
           name: "Karakteristik Diri",
           description:
             "Berdasarkan kerangka Myers-Briggs Type Indicator (MBTI), subtes ini menggali preferensi dasar dalam cara berpikir, berinteraksi, dan mengambil keputusan. Hasilnya menunjukkan tipe kepribadian mahasiswa, yang dapat menjadi panduan dalam mengenali kekuatan diri, potensi pengembangan, serta gaya kerja yang paling sesuai.",
-          testId: test.id,
-          parentId: bidangKarirIdealId,
+          parentId: bidangKarirIdealTest.id,
         },
         {
           name: "Kesejahteraan Psikologis",
           description:
             "Tes Psychological Well-Being (PWB) merupakan alat asesmen yang dirancang untuk mengukur tingkat kesejahteraan psikologis individu. Tes ini membantu memahami sejauh mana seseorang merasa bahagia, berfungsi secara positif, dan mampu mengembangkan potensi dirinya dalam kehidupan sehari-hari.",
-          testId: test.id,
-          parentId: polaPerilakuId,
+          parentId: polaPerilakuIdTest.id,
         },
       ];
 
-      const subSubTest = await tx
-        .insert(schema.subTestsTable)
-        .values(fakeSubSubTest)
-        .returning();
-
-      if (subSubTest.length !== 3) {
-        tx.rollback();
-      }
+      const subChildTest = await tx
+        .insert(schema.testsTable)
+        .values(fakeSubChildTest)
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake sub sub test");
 
-      const minatKarirId =
-        subSubTest.find((sst) => sst.name === "Minat Karir")?.id ?? "";
-      const KarakteristikDiriId =
-        subSubTest.find((sst) => sst.name === "Karakteristik Diri")?.id ?? "";
-      const KesejahteraanPsikologiId =
-        subSubTest.find((sst) => sst.name === "Kesejahteraan Psikologis")?.id ??
-        "";
+      const minatKarirTest = subChildTest.find((test) => test.name === "Minat Karir");
+      const karakteristikDiriTest = subChildTest.find(
+        (test) => test.name === "Karakteristik Diri"
+      );
+      const kesejahteraanPsikologisTest = subChildTest.find(
+        (test) => test.name === "Kesejahteraan Psikologis"
+      );
 
-      const fakeSubSubTestInstruction: NewSubTestInstructionModel[] = [
+      if (!minatKarirTest || !karakteristikDiriTest || !kesejahteraanPsikologisTest) {
+        tx.rollback();
+        return false;
+      }
+
+      const fakeTestInstruction: NewTestInstructionModel[] = [
         {
           text: "Pilih 1 respon yang paling kamu sukai atau paling mungkin kamu lakukan dari 4 pilihan respon yang tersedia di setiap situasi.",
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
           order: 0,
         },
         {
           text: "Tentukan pilihan yang paling sesuai dengan karakteristik dan kebiasaanmu dari 2 opsi jawaban yang tersedia di setiap situasi.",
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
           order: 0,
         },
         {
           text: "Cermati setiap pernyataan dan renungkan seberapa cocok pernyataan tersebut dengan kondisi dirimu saat ini.",
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
           order: 0,
         },
         {
           text: "Jika pernyataan sangat sesuai, pilih angka 5 (iya banget).",
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
           order: 1,
         },
         {
           text: "Jika pernyataan tidak sesuai, pilih angka 1 (nggak juga).",
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
           order: 2,
         },
         {
           text: "Pilih angka di antara 1-5 sesuai dengan tingkat kesesuaianmu.",
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
           order: 3,
         },
       ];
 
-      const subSubTestInstruction = await tx
-        .insert(schema.subtestInstructionsTable)
-        .values(fakeSubSubTestInstruction)
-        .returning();
-
-      if (subSubTestInstruction.length !== 6) {
-        tx.rollback();
-      }
+      const testInstruction = await tx
+        .insert(schema.testInstructionsTable)
+        .values(fakeTestInstruction)
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake sub sub test instruction");
 
-      const fakeSubSubTestNote: NewSubTestNoteModel[] = [
+      const fakeTestNote: NewTestNoteModel[] = [
         {
           text: "Total terdapat 12 situasi yang akan kamu hadapi.",
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
           order: 0,
         },
         {
           text: "Pilihlah respon yang paling “aku banget”.",
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
           order: 1,
         },
         {
           text: "Semakin jujur jawabanmu, semakin akurat hasil yang akan kamu peroleh.",
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
           order: 2,
         },
         {
           text: "Total terdapat 28 situasi yang akan kamu hadapi.",
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
           order: 0,
         },
         {
           text: "Jika merasa kedua pilihan kurang sesuai, tetap pilih salah satu yang paling mendekati dirimu.",
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
           order: 1,
         },
         {
           text: "Tidak ada jawaban benar atau salah, semua menggambarkan keunikanmu.",
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
           order: 2,
         },
       ];
 
-      const subSubTestNote = await tx
-        .insert(schema.subtestNotesTable)
-        .values(fakeSubSubTestNote)
-        .returning();
-
-      if (subSubTestNote.length !== 6) {
-        tx.rollback();
-      }
+      const testNote = await tx
+        .insert(schema.testNotesTable)
+        .values(fakeTestNote)
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake sub sub test note");
-
-      // Insert questions and options for Sub-Sub Test: Minat Karir
-      if (!minatKarirId) {
-        tx.rollback();
-      }
 
       const minatKarirQuestions: NewQuestionModel[] = [
         {
           text: "Cara saya agar lebih mudah memahami materi kuliah adalah dengan…",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Jenis tugas kuliah yang menarik minat saya & membuat bersemangat mengerjakannya adalah…",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Saat  kerja kelompok, peran / bagian yang paling saya nikmati adalah…",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Saya suka teman belajar yang …",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Saat diminta membuat kelompok, saya akan memilih teman kelompok yang ..",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Peran yang paling saya nikmati saat presentasi adalah …",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Saat kelompok saya menghadapi kesulitan dalam mengerjakan tugas, yang biasanya saya lakukan.. ",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Saat membantu teman yang kesulitan belajar, saya biasanya…",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Saya tertarik untuk mengikuti kelas dengan karakteristik mengajar dosen yang …",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Kegiatan mahasiswa yang menarik minat saya …",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Saat punya waktu luang, saya lebih suka…",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
         {
           text: "Dalam 5 tahun kedepan, saya membayangkan akan menekuni jenis profesi …",
           type: QuestionType.SingleChoice,
-          subtestId: minatKarirId,
+          testId: minatKarirTest.id,
         },
       ];
 
       const createdMinatKarirQuestions = await tx
         .insert(schema.questionsTable)
         .values(minatKarirQuestions)
-        .returning();
-
-      if (createdMinatKarirQuestions.length !== 12) {
-        tx.rollback();
-      }
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake minat karir questions");
 
@@ -418,183 +484,172 @@ export async function seedTest() {
         ],
       ];
 
-      const minatKarirOptions: NewOptionModel[] =
-        createdMinatKarirQuestions.flatMap((q, idx) =>
+      const minatKarirOptions: NewOptionModel[] = createdMinatKarirQuestions.flatMap(
+        (q, idx) =>
           minatKarirOptionsTexts[idx].map((text, order) => ({
             text,
             value: objectValues(CareerCategory)[order],
             order,
             questionId: q.id,
           }))
-        );
+      );
 
       const createdMinatKarirOptions = await tx
         .insert(schema.optionsTable)
         .values(minatKarirOptions)
-        .returning();
-
-      if (createdMinatKarirOptions.length !== 12 * 4) {
-        tx.rollback();
-      }
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake minat karir options");
-
-      // Insert questions and options for Sub-Sub Test: Karakteristik Diri
-      if (!KarakteristikDiriId) {
-        tx.rollback();
-      }
 
       const karakteristikDiriQuestions: NewQuestionModel[] = [
         {
           text: "Ide akan lebih mudah datang jika:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Belajar akan lebih efektif di tempat yang suasananya:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Lebih bersemangat belajar di kelas yang suasananya:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Lebih mudah memahami materi pelajaran jika:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Lebih enak mengulang pelajaran dengan cara:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Lebih bersemangat jika mengerjakan tugas:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Waktu kosong terasa lebih menyenangkan jika digunakan untuk:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Cara saya mempersiapkan bahan presentasi:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Cara saya mencatat penjelasan dosen:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Belajar akan lebih seru jika:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Kontribusi saya dalam tugas kelompok biasanya:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Saat membuat catatan mandiri, saya lebih sering:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Topik diskusi yang membuat saya bersemangat:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Materi kuliah akan lebih mudah saya pahami jika:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Jika terdapat perbedaan pendapat saat berdiskusi, saya lebih memilih:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Jika diminta untuk menilai presentasi kelompok lain, saya lebih memperhatikan:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Menurut saya bantuan terbaik untuk teman yang sulit memahami pelajaran adalah:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Jika dalam kelompok ada teman yang kurang berkontribusi, yang akan saya lakukan:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Dalam kelompok belajar, yang paling penting buat saya:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Dalam memilih teman dekat, saya lebih tertarik pada:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Saat teman curhat, saya akan:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Pola saya menulis makalah:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Jika ada beberapa tugas dalam waktu bersamaan, saya biasanya",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Dalam mengatur kegiatan sehari-hari, saya lebih suka:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Saya lebih suka alur diskusi yang:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Saat ada janjian mengerjakan tugas kelompok:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Cara saya mempersiapkan diri saat menjadi presenter:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
         {
           text: "Saat mengulang membaca materi kuliah:",
           type: QuestionType.SingleChoice,
-          subtestId: KarakteristikDiriId,
+          testId: karakteristikDiriTest.id,
         },
       ];
 
       const createdKarakteristikDiriQuestions = await tx
         .insert(schema.questionsTable)
         .values(karakteristikDiriQuestions)
-        .returning();
-
-      if (createdKarakteristikDiriQuestions.length !== 28) {
-        tx.rollback();
-      }
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake karakteristik diri questions");
 
@@ -641,10 +696,7 @@ export async function seedTest() {
           "Mempertahankan argumen yang saya yakini benar",
           "Menjaga agar suasana tetap harmonis",
         ],
-        [
-          "Kualitas struktur logika & isi materi",
-          "Usaha, semangat & kerjasama kelompok",
-        ],
+        ["Kualitas struktur logika & isi materi", "Usaha, semangat & kerjasama kelompok"],
         [
           "Menjelaskan materi dengan sistematis & rasional agar dia mudah memahami",
           "Memberikan dorongan & semangat agar dia mau terus mencoba",
@@ -697,10 +749,7 @@ export async function seedTest() {
       // Questions 8-14: S/N
       // Questions 15-21: T/F
       // Questions 22-28: J/P
-      const getMBTIValue = (
-        questionIndex: number,
-        optionIndex: number
-      ): string => {
+      const getMBTIValue = (questionIndex: number, optionIndex: number): string => {
         if (questionIndex < 7) {
           // Questions 1-7: Option A = E, Option B = I
           return optionIndex === 0 ? "E" : "I";
@@ -729,246 +778,235 @@ export async function seedTest() {
       const createdKarakteristikDiriOptions = await tx
         .insert(schema.optionsTable)
         .values(karakteristikDiriOptions)
-        .returning();
-
-      if (createdKarakteristikDiriOptions.length !== 28 * 2) {
-        tx.rollback();
-      }
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake karakteristik diri options");
-
-      // Insert questions and options for Sub-Sub Test: Kesejahteraan Psikologis
-      if (!KesejahteraanPsikologiId) {
-        tx.rollback();
-      }
 
       const kesejahteraanPsikologisQuestions: NewQuestionModel[] = [
         // SELF ACCEPTANCE - Favorable
         {
           text: "Secara umum, saya merasa puas dengan kualitas diri saya saat ini",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // SELF ACCEPTANCE - Unfavorable
         {
           text: "Saya sering menginginkan kehidupan seperti orang yang terlihat lebih beruntung.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // SELF ACCEPTANCE - Favorable
         {
           text: "Saya mampu menerima kekurangan saya tanpa harus membenci diri sendiri",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // SELF ACCEPTANCE - Unfavorable
         {
           text: "Ada hal-hal dalam diri saya yang membuat saya terus merasa insecure (rendah diri)",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // SELF ACCEPTANCE - Favorable
         {
           text: "Saya sudah mampu berdamai dengan hampir semua pengalaman buruk di masa lalu",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // SELF ACCEPTANCE - Unfavorable
         {
           text: "Masih banyak kejadian di masa lalu yang ingin saya ubah karena membuat saya kecewa saat mengingatnya",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // AUTONOMY - Favorable
         {
           text: "Saya punya cara sendiri dalam menentukan apa yang penting bagi hidup saya.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // AUTONOMY - Unfavorable
         {
           text: "Saya gampang overthinking (berpikir berlebihan) setelah mendapat penilaian negatif dari orang lain.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // AUTONOMY - Favorable
         {
           text: "Saya berani memilih keputusan meski berbeda dari kebanyakan orang",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // AUTONOMY - Unfavorable
         {
           text: "Seringkali saya mengikuti apa kata orang meskipun tidak sesuai dengan keinginan saya",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // AUTONOMY - Favorable
         {
           text: "Saya akan tetap berkata jujur meskipun tidak sesuai dengan harapan orang lain",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // AUTONOMY - Unfavorable
         {
           text: "Seringkali saya menyesuaikan perilaku agar bisa diterima di lingkungan sosial",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PURPOSE IN LIFE - Favorable
         {
           text: "Saya sudah memiliki rencana dengan langkah yang jelas untuk mencapai cita - cita di masa depan",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PURPOSE IN LIFE - Unfavorable
         {
           text: "Saat ini saya tidak tahu dengan pasti apa yang ingin saya capai di masa depan",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PURPOSE IN LIFE - Favorable
         {
           text: "Saya berani memilih keputusan meski berbeda dari kebanyakan orang",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PURPOSE IN LIFE - Unfavorable
         {
           text: "Rasanya tidak banyak momen berharga dari perjalanan hidup yang telah saya lalu",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PURPOSE IN LIFE - Favorable
         {
           text: "Optimis dan yakin, bahwa di masa depan saya akan menjadi pribadi yang berguna bagi banyak orang.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PURPOSE IN LIFE - Unfavorable
         {
           text: "Jika melihat kondisi diri saat ini, rasanya di masa depan saya akan kesulitan untuk bisa sukses.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PERSONAL GROWTH - Favorable
         {
           text: "Saya merasakan banyak perubahan positif pada diri saya dalam 1 tahun terakhir",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PERSONAL GROWTH - Unfavorable
         {
           text: "Beberapa kebiasaan buruk masih menghambat saya untuk berkembang",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PERSONAL GROWTH - Favorable
         {
           text: "Saya rutin melakukan evaluasi & refleksi diri, untuk semakin memahami bakat serta potensi yang dimilik",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PERSONAL GROWTH - Unfavorable
         {
           text: "Saya belum menyadari apa saja potensi diri yang perlu saya kembangkan",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PERSONAL GROWTH - Favorable
         {
           text: "Saya senang mencari tantangan dengan mencoba berbagai pengalaman baru",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // PERSONAL GROWTH - Unfavorable
         {
           text: "Seringkali saya menghindar untuk mencoba hal - hal baru, karena takut gagal.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // ENVIRONMENTAL MASTERY - Favorable
         {
           text: "Saya mampu menata lingkungan agar mememberikan suasana yang kondusif untuk saya belajar.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // ENVIRONMENTAL MASTERY - Unfavorable
         {
           text: "Seringkali saya merasa kewalahan untuk menghadapi tuntutan lingkungan kepada saya",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // ENVIRONMENTAL MASTERY - Favorable
         {
           text: "Saya mampu menyelesaikan semua tanggung jawab sehari - hari tanpa merasa kewalahan.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // ENVIRONMENTAL MASTERY - Unfavorable
         {
           text: "Seringkali saya merasa memiliki terlalu banyak kegiatan, sehingga sulit mengaturnya",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // ENVIRONMENTAL MASTERY - Favorable
         {
           text: "Saya termasuk orang yang jeli menemukan peluang dan kesempatan yang ada disekitar",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // ENVIRONMENTAL MASTERY - Unfavorable
         {
           text: "Seringkali saya terlambat menyadari jika ternyata di sekitar saya terdapat banyak kesempatan & peluang baik",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // POSITIVE RELATIONSHIP WITH OTHERS - Favorable
         {
           text: "Saya memiliki beberapa teman yang benar - benar dipercaya untuk menyimpan rahasia.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // POSITIVE RELATIONSHIP WITH OTHERS - Unfavorable
         {
           text: "Rasanya orang - orang di sekitar saya tidak benar - benar bisa memahami saya",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // POSITIVE RELATIONSHIP WITH OTHERS - Favorable
         {
           text: "Saya merasa mampu dan nyaman untuk menunjukkan perhatian secara langsung kepada orang lain.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // POSITIVE RELATIONSHIP WITH OTHERS - Unfavorable
         {
           text: "Seringkali saya menjadi orang yang diabaikan di lingkaran pertemanan",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // POSITIVE RELATIONSHIP WITH OTHERS - Favorable
         {
           text: "Mudah bagi saya untuk meredam ego dan mengalah agar perdebatan tidak berlaut - larut.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
         // POSITIVE RELATIONSHIP WITH OTHERS - Unfavorable
         {
           text: "Seringkali kesabaran saya berkurang saat menghadapi orang yang pemikirannya tidak sejalan dengan saya.",
           type: QuestionType.Likert,
-          subtestId: KesejahteraanPsikologiId,
+          testId: kesejahteraanPsikologisTest.id,
         },
       ];
 
       const createdKesejahteraanPsikologisQuestions = await tx
         .insert(schema.questionsTable)
         .values(kesejahteraanPsikologisQuestions)
-        .returning();
-
-      if (createdKesejahteraanPsikologisQuestions.length !== 36) {
-        tx.rollback();
-      }
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake kesejahteraan psikologis questions");
 
@@ -1037,17 +1075,14 @@ export async function seedTest() {
       const createdKesejahteraanPsikologisOptions = await tx
         .insert(schema.optionsTable)
         .values(kesejahteraanPsikologisOptions)
-        .returning();
-
-      if (createdKesejahteraanPsikologisOptions.length !== 36 * 5) {
-        tx.rollback();
-      }
+        .returning()
+        .onConflictDoNothing();
 
       console.log("success inserting fake kesejahteraan psikologis options");
-
       return true;
     });
-    return true;
+
+    return result;
   } catch (error) {
     DatabaseService.logDatabaseError(error);
     return false;
@@ -1056,337 +1091,393 @@ export async function seedTest() {
 
 export async function seedResult() {
   try {
-    // Get all students, tests, and related data
-    const students = await db.select().from(schema.studentsTable);
-    const tests = await db.select().from(schema.testsTable);
-    const subTests = await db.select().from(schema.subTestsTable);
-    const questions = await db.select().from(schema.questionsTable);
-    const options = await db.select().from(schema.optionsTable);
+    // 1) Load required tests by name to get their IDs
+    const allTests = await db.select().from(schema.testsTable);
 
-    if (students.length === 0 || tests.length === 0) {
-      console.log(
-        "No students or tests found. Please seed students and tests first."
-      );
+    const getTestByName = (name: string) => allTests.find((t) => t.name === name);
+
+    const parentTest = getTestByName("Asesmen Talenta Mahasiswa");
+    const bidangKarirIdealTest = getTestByName("Bidang Karir Ideal");
+    const polaPerilakuTest = getTestByName("Pola Perilaku");
+    const minatKarirTest = getTestByName("Minat Karir");
+    const karakteristikDiriTest = getTestByName("Karakteristik Diri");
+    const kesejahteraanPsikologisTest = getTestByName("Kesejahteraan Psikologis");
+
+    if (
+      !parentTest ||
+      !bidangKarirIdealTest ||
+      !polaPerilakuTest ||
+      !minatKarirTest ||
+      !karakteristikDiriTest ||
+      !kesejahteraanPsikologisTest
+    ) {
+      console.error("Required tests are missing. Please run seedTest() first.");
       return false;
     }
 
-    const test = tests[0]; // Use the first test
+    // 2) Load questions and options for leaf tests
+    const leafTestIds = [
+      minatKarirTest.id,
+      karakteristikDiriTest.id,
+      kesejahteraanPsikologisTest.id,
+    ];
 
-    // Create submissions for 5 students (completed) and 2 students (in progress)
-    const completedStudents = students.slice(0, 5);
-    const inProgressStudents = students.slice(5, 7);
+    const leafQuestions = await db
+      .select()
+      .from(schema.questionsTable)
+      .where(inArray(schema.questionsTable.testId, leafTestIds));
 
-    await db.transaction(async (tx) => {
-      // Create completed submissions
-      for (const student of completedStudents) {
-        const [submission] = await tx
-          .insert(schema.testSubmissionsTable)
-          .values({
-            studentId: student.id,
-            testId: test.id,
-            status: "completed",
-            completedAt: new Date(
-              Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000
-            ), // Random time in last 7 days
-          })
-          .returning();
+    const questionIds = leafQuestions.map((q) => q.id);
+    const allOptions = await db
+      .select()
+      .from(schema.optionsTable)
+      .where(inArray(schema.optionsTable.questionId, questionIds));
 
-        console.log(
-          `Created completed submission for student: ${student.name}`
-        );
+    const optionsByQuestionId = new Map<string, typeof allOptions>();
+    for (const opt of allOptions) {
+      const list = optionsByQuestionId.get(opt.questionId) ?? [];
+      list.push(opt);
+      optionsByQuestionId.set(opt.questionId, list);
+    }
 
-        // Create answers for all questions
-        const studentAnswers = questions.map((question) => {
-          // Get options for this question
-          const questionOptions = options.filter(
-            (opt) => opt.questionId === question.id
-          );
+    const questionsByTestId = new Map<number, typeof leafQuestions>();
+    for (const q of leafQuestions) {
+      const list = questionsByTestId.get(q.testId) ?? [];
+      list.push(q);
+      questionsByTestId.set(q.testId, list);
+    }
 
-          // Randomly select an option
-          const selectedOption = faker.helpers.arrayElement(questionOptions);
+    // 3) Pick 1000 students
+    const students = await db.select().from(schema.studentsTable).limit(1000);
+    if (students.length === 0) {
+      console.error("No students found. Please run seedStudent() first.");
+      return false;
+    }
 
-          return {
-            submissionId: submission.id,
-            questionId: question.id,
-            selectedOptionId: selectedOption.id,
-          };
-        });
+    // Choose 15% as in-progress (no answers/results), rest completed
+    const inProgressCount = Math.floor(students.length * 0.15);
+    const shuffled = [...students].sort(() => Math.random() - 0.5);
+    const inProgressIds = new Set<string>(
+      shuffled.slice(0, inProgressCount).map((s) => s.id)
+    );
 
-        await tx.insert(schema.studentAnswersTable).values(studentAnswers);
+    // Helper: random pick
+    const pick = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
 
-        console.log(
-          `Created ${studentAnswers.length} answers for submission ${submission.id}`
-        );
+    // Helper: compute MBTI from selected values
+    const computeMbti = (values: string[]): string => {
+      let E = 0,
+        I = 0,
+        S = 0,
+        N = 0,
+        T = 0,
+        F = 0,
+        J = 0,
+        P = 0;
+      for (const v of values) {
+        if (v === "E") E++;
+        else if (v === "I") I++;
+        else if (v === "S") S++;
+        else if (v === "N") N++;
+        else if (v === "T") T++;
+        else if (v === "F") F++;
+        else if (v === "J") J++;
+        else if (v === "P") P++;
+      }
+      const letter = (a: number, b: number, A: string, B: string) =>
+        a === b ? (Math.random() < 0.5 ? A : B) : a > b ? A : B;
+      return (
+        letter(E, I, "E", "I") +
+        letter(S, N, "S", "N") +
+        letter(T, F, "T", "F") +
+        letter(J, P, "J", "P")
+      );
+    };
 
-        // Calculate and create results for each sub-test
-        const minatKarirSubtest = subTests.find(
-          (st) => st.name === "Minat Karir"
-        );
-        const karakteristikDiriSubtest = subTests.find(
-          (st) => st.name === "Karakteristik Diri"
-        );
-        const kesejahteraanPsikologisSubtest = subTests.find(
-          (st) => st.name === "Kesejahteraan Psikologis"
-        );
+    // Helper: map MBTI to dominant/secondary CareerCategory
+    const mbtiToCareer = (mbti: string): { dominan: string; sekunder: string } => {
+      // Simple heuristic mapping based on the first two letters
+      const first = mbti[0];
+      const second = mbti[1];
+      // Dominant
+      let dominan: string;
+      if (second === "S" && (first === "E" || first === "I")) {
+        // Sensing types lean to practical, hands-on
+        dominan = CareerCategory.Praktisi;
+      } else if (second === "N") {
+        // Intuitive types split by T/F
+        dominan =
+          mbti[2] === "T" ? CareerCategory.Akademisi : CareerCategory.PekerjaKreatif;
+      } else {
+        dominan = CareerCategory.Wirausaha;
+      }
+      // Secondary
+      let sekunder: string;
+      switch (dominan) {
+        case CareerCategory.Praktisi:
+          sekunder = CareerCategory.Wirausaha;
+          break;
+        case CareerCategory.Akademisi:
+          sekunder = CareerCategory.Praktisi;
+          break;
+        case CareerCategory.PekerjaKreatif:
+          sekunder = CareerCategory.Wirausaha;
+          break;
+        default:
+          sekunder = CareerCategory.PekerjaKreatif;
+      }
+      return { dominan, sekunder };
+    };
 
-        const results = [];
+    const bidangKarirCompatibility = (
+      minat: string,
+      mbti: string
+    ): "sangat_sesuai" | "cukup_sesuai" | "tidak_sesuai" => {
+      const { dominan, sekunder } = mbtiToCareer(mbti);
+      if (minat === dominan) return "sangat_sesuai";
+      if (minat === sekunder) return "cukup_sesuai";
+      return "tidak_sesuai";
+    };
 
-        // Minat Karir Result (Career Category)
-        if (minatKarirSubtest) {
-          const minatKarirQuestions = questions.filter(
-            (q) => q.subtestId === minatKarirSubtest.id
-          );
-          const minatKarirAnswers = studentAnswers.filter((ans) =>
-            minatKarirQuestions.some((q) => q.id === ans.questionId)
-          );
+    const polaPerilakuLevel = (
+      pwbScore: number
+    ): "tidak_siap" | "cukup_siap" | "sangat_siap" => {
+      if (pwbScore <= 60) return "tidak_siap";
+      if (pwbScore <= 120) return "cukup_siap";
+      return "sangat_siap";
+    };
 
-          // Count career category occurrences
-          const categoryCounts: Record<string, number> = {};
-          for (const answer of minatKarirAnswers) {
-            const option = options.find(
-              (opt) => opt.id === answer.selectedOptionId
-            );
-            if (option && option.value) {
-              categoryCounts[option.value] =
-                (categoryCounts[option.value] || 0) + 1;
-            }
-          }
+    const nineBox = (
+      bidang: "sangat_sesuai" | "cukup_sesuai" | "tidak_sesuai",
+      pola: "tidak_siap" | "cukup_siap" | "sangat_siap"
+    ) => {
+      if (bidang === "tidak_sesuai" && pola === "tidak_siap") return "critical_mismatch";
+      if (bidang === "tidak_sesuai" && pola === "cukup_siap")
+        return "inconsistent_fit_zone";
+      if (bidang === "tidak_sesuai" && pola === "sangat_siap")
+        return "happy_but_misaligned";
+      if (bidang === "cukup_sesuai" && pola === "tidak_siap")
+        return "underdeveloped_potential";
+      if (bidang === "cukup_sesuai" && pola === "cukup_siap") return "growth_zone";
+      if (bidang === "cukup_sesuai" && pola === "sangat_siap")
+        return "positive_explorers";
+      if (bidang === "sangat_sesuai" && pola === "tidak_siap") return "latent_talent";
+      if (bidang === "sangat_sesuai" && pola === "cukup_siap")
+        return "aligned_developers";
+      return "high-fit_champions";
+    };
 
-          // Find the most frequent category
-          const dominantCategory =
-            Object.entries(categoryCounts).sort(
-              ([, a], [, b]) => b - a
-            )[0]?.[0] || "Practitioner";
+    // Batching to reduce memory/statement pressure
+    const batchSize = 500;
+    for (let i = 0; i < students.length; i += batchSize) {
+      const batch = students.slice(i, i + batchSize);
+      await db.transaction(async (tx) => {
+        for (const student of batch) {
+          const now = new Date();
 
-          results.push({
-            submissionId: submission.id,
-            subtestId: minatKarirSubtest.id,
-            resultValue: dominantCategory,
-          });
-        }
+          // Always create ONE submission for the parent test per student
+          const [parentSubmission] = await tx
+            .insert(schema.testSubmissionsTable)
+            .values({
+              studentId: student.id,
+              testId: parentTest.id,
+              status: inProgressIds.has(student.id)
+                ? SubmissionStatus.InProgress
+                : SubmissionStatus.Completed,
+              createdAt: now,
+              completedAt: inProgressIds.has(student.id) ? null : now,
+            })
+            .returning();
 
-        // Karakteristik Diri Result (MBTI)
-        if (karakteristikDiriSubtest) {
-          const karakteristikDiriQuestions = questions.filter(
-            (q) => q.subtestId === karakteristikDiriSubtest.id
-          );
-          const karakteristikDiriAnswers = studentAnswers.filter((ans) =>
-            karakteristikDiriQuestions.some((q) => q.id === ans.questionId)
-          );
+          // If in-progress, optionally create partial answers only; no results
+          if (inProgressIds.has(student.id)) {
+            const willAnswerSomething = Math.random() < 0.6; // 60% answer something
+            if (!willAnswerSomething) continue;
 
-          // Count MBTI dimensions
-          const dimensionCounts: Record<string, number> = {};
-          for (const answer of karakteristikDiriAnswers) {
-            const option = options.find(
-              (opt) => opt.id === answer.selectedOptionId
-            );
-            if (option && option.value) {
-              dimensionCounts[option.value] =
-                (dimensionCounts[option.value] || 0) + 1;
-            }
-          }
+            const answersToInsert: {
+              submissionId: string;
+              questionId: string;
+              selectedOptionId: string;
+            }[] = [];
 
-          // Determine MBTI type
-          const e = dimensionCounts["E"] || 0;
-          const i = dimensionCounts["I"] || 0;
-          const s = dimensionCounts["S"] || 0;
-          const n = dimensionCounts["N"] || 0;
-          const t = dimensionCounts["T"] || 0;
-          const f = dimensionCounts["F"] || 0;
-          const j = dimensionCounts["J"] || 0;
-          const p = dimensionCounts["P"] || 0;
+            const maybeAnswerPartial = (
+              testId: number,
+              minRatio = 0.2,
+              maxRatio = 0.6
+            ) => {
+              const qs = questionsByTestId.get(testId) ?? [];
+              if (!qs.length) return;
+              const started = Math.random() < 0.7;
+              if (!started) return;
+              const ratio = minRatio + Math.random() * (maxRatio - minRatio);
+              const count = Math.max(1, Math.floor(qs.length * ratio));
+              const indices = Array.from({ length: qs.length }, (_, i) => i)
+                .sort(() => Math.random() - 0.5)
+                .slice(0, count);
+              for (const idx of indices) {
+                const q = qs[idx];
+                const opts = optionsByQuestionId.get(q.id) ?? [];
+                if (!opts.length) continue;
+                const chosen = opts[Math.floor(Math.random() * opts.length)];
+                answersToInsert.push({
+                  submissionId: parentSubmission.id,
+                  questionId: q.id,
+                  selectedOptionId: chosen.id,
+                });
+              }
+            };
 
-          const mbtiType = `${e >= i ? "E" : "I"}${s >= n ? "S" : "N"}${
-            t >= f ? "T" : "F"
-          }${j >= p ? "J" : "P"}`;
+            // Try partial answers on each leaf test; ensure at least one question answered
+            maybeAnswerPartial(minatKarirTest.id);
+            maybeAnswerPartial(karakteristikDiriTest.id);
+            maybeAnswerPartial(kesejahteraanPsikologisTest.id);
 
-          results.push({
-            submissionId: submission.id,
-            subtestId: karakteristikDiriSubtest.id,
-            resultValue: mbtiType,
-          });
-        }
-
-        // Kesejahteraan Psikologis Result (PWB Score)
-        let kesejahteraanScore = 0;
-        if (kesejahteraanPsikologisSubtest) {
-          const kesejahteraanQuestions = questions.filter(
-            (q) => q.subtestId === kesejahteraanPsikologisSubtest.id
-          );
-          const kesejahteraanAnswers = studentAnswers.filter((ans) =>
-            kesejahteraanQuestions.some((q) => q.id === ans.questionId)
-          );
-
-          // Calculate total score
-          let totalScore = 0;
-          for (const answer of kesejahteraanAnswers) {
-            const option = options.find(
-              (opt) => opt.id === answer.selectedOptionId
-            );
-            if (option && option.value) {
-              totalScore += parseInt(option.value);
-            }
-          }
-
-          kesejahteraanScore = totalScore;
-
-          results.push({
-            submissionId: submission.id,
-            subtestId: kesejahteraanPsikologisSubtest.id,
-            resultValue: totalScore.toString(),
-          });
-        }
-
-        // Get parent subtests
-        const bidangKarirIdealSubtest = subTests.find(
-          (st) => st.name === "Bidang Karir Ideal"
-        );
-        const polaPerilakuSubtest = subTests.find(
-          (st) => st.name === "Pola Perilaku"
-        );
-
-        // MBTI to Career Field mapping
-        const mbtiToCareerMapping: Record<
-          string,
-          { dominant: string; secondary: string }
-        > = {
-          ISTJ: { dominant: "praktisi", secondary: "akademisi" },
-          ISFJ: { dominant: "praktisi", secondary: "pekerja_kreatif" },
-          INFJ: { dominant: "akademisi", secondary: "pekerja_kreatif" },
-          INTJ: { dominant: "akademisi", secondary: "wirausaha" },
-          ISTP: { dominant: "praktisi", secondary: "wirausaha" },
-          ISFP: { dominant: "pekerja_kreatif", secondary: "praktisi" },
-          INFP: { dominant: "pekerja_kreatif", secondary: "akademisi" },
-          INTP: { dominant: "akademisi", secondary: "pekerja_kreatif" },
-          ESTP: { dominant: "wirausaha", secondary: "praktisi" },
-          ESFP: { dominant: "pekerja_kreatif", secondary: "wirausaha" },
-          ENFP: { dominant: "pekerja_kreatif", secondary: "wirausaha" },
-          ENTP: { dominant: "wirausaha", secondary: "pekerja_kreatif" },
-          ESTJ: { dominant: "praktisi", secondary: "wirausaha" },
-          ESFJ: { dominant: "praktisi", secondary: "pekerja_kreatif" },
-          ENFJ: { dominant: "wirausaha", secondary: "akademisi" },
-          ENTJ: { dominant: "wirausaha", secondary: "akademisi" },
-        };
-
-        // Calculate Bidang Karir Ideal Result
-        let bidangKarirIdealResult = "tidak_sesuai";
-        if (
-          bidangKarirIdealSubtest &&
-          minatKarirSubtest &&
-          karakteristikDiriSubtest
-        ) {
-          const minatKarirResult = results.find(
-            (r) => r.subtestId === minatKarirSubtest.id
-          )?.resultValue;
-          const karakteristikDiriResult = results.find(
-            (r) => r.subtestId === karakteristikDiriSubtest.id
-          )?.resultValue;
-
-          if (minatKarirResult && karakteristikDiriResult) {
-            const mbtiMapping = mbtiToCareerMapping[karakteristikDiriResult];
-            if (mbtiMapping) {
-              if (minatKarirResult === mbtiMapping.dominant) {
-                bidangKarirIdealResult = "sangat_sesuai";
-              } else if (minatKarirResult === mbtiMapping.secondary) {
-                bidangKarirIdealResult = "cukup_sesuai";
+            if (answersToInsert.length === 0) {
+              // Force answering at least 1 question from Minat Karir if none selected
+              const qs = questionsByTestId.get(minatKarirTest.id) ?? [];
+              if (qs.length) {
+                const q = qs[Math.floor(Math.random() * qs.length)];
+                const opts = optionsByQuestionId.get(q.id) ?? [];
+                if (opts.length) {
+                  const chosen = opts[Math.floor(Math.random() * opts.length)];
+                  answersToInsert.push({
+                    submissionId: parentSubmission.id,
+                    questionId: q.id,
+                    selectedOptionId: chosen.id,
+                  });
+                }
               }
             }
+
+            if (answersToInsert.length) {
+              await tx.insert(schema.studentAnswersTable).values(answersToInsert);
+            }
+            continue;
           }
 
-          results.push({
-            submissionId: submission.id,
-            subtestId: bidangKarirIdealSubtest.id,
-            resultValue: bidangKarirIdealResult,
-          });
-        }
-
-        // Calculate Pola Perilaku Result
-        let polaPerilakuResult = "tidak_siap";
-        if (polaPerilakuSubtest) {
-          if (kesejahteraanScore >= 121 && kesejahteraanScore <= 180) {
-            polaPerilakuResult = "sangat_siap";
-          } else if (kesejahteraanScore >= 61 && kesejahteraanScore <= 120) {
-            polaPerilakuResult = "cukup_siap";
-          } else if (kesejahteraanScore >= 0 && kesejahteraanScore <= 60) {
-            polaPerilakuResult = "tidak_siap";
-          }
-
-          results.push({
-            submissionId: submission.id,
-            subtestId: polaPerilakuSubtest.id,
-            resultValue: polaPerilakuResult,
-          });
-        }
-
-        // Note: Nine Box Talent is a calculated result based on Bidang Karir Ideal and Pola Perilaku
-        // It should be calculated on-the-fly in the backend when needed, not stored in the database
-        // The calculation logic:
-        // - Critical Mismatch: tidak_sesuai + tidak_siap
-        // - Inconsistent Fit Zone: tidak_sesuai + cukup_siap
-        // - Happy But Misaligned: tidak_sesuai + sangat_siap
-        // - Underdeveloped Potential: cukup_sesuai + tidak_siap
-        // - Growth Zone: cukup_sesuai + cukup_siap
-        // - Positive Explorers: cukup_sesuai + sangat_siap
-        // - Latent Talent: sangat_sesuai + tidak_siap
-        // - Aligned Developers: sangat_sesuai + cukup_siap
-        // - High Fit Champions: sangat_sesuai + sangat_siap
-
-        // Insert all results
-        if (results.length > 0) {
-          await tx.insert(schema.submissionResultsTable).values(results);
-          console.log(
-            `Created ${results.length} results for submission ${submission.id}`
-          );
-        }
-      }
-
-      // Create in-progress submissions (partial answers)
-      for (const student of inProgressStudents) {
-        const [submission] = await tx
-          .insert(schema.testSubmissionsTable)
-          .values({
-            studentId: student.id,
-            testId: test.id,
-            status: "in_progress",
-            completedAt: null,
-          })
-          .returning();
-
-        console.log(
-          `Created in-progress submission for student: ${student.name}`
-        );
-
-        // Create partial answers (only answer some questions)
-        const answeredQuestions = faker.helpers.arrayElements(
-          questions,
-          Math.floor(questions.length * 0.3) // Answer 30% of questions
-        );
-
-        const studentAnswers = answeredQuestions.map((question) => {
-          const questionOptions = options.filter(
-            (opt) => opt.questionId === question.id
-          );
-          const selectedOption = faker.helpers.arrayElement(questionOptions);
-
-          return {
-            submissionId: submission.id,
-            questionId: question.id,
-            selectedOptionId: selectedOption.id,
+          // Completed flow: answer all leaf tests, compute, and store all results under the SAME parent submission
+          // Answer Minat Karir and compute category counts
+          const minatQs = questionsByTestId.get(minatKarirTest.id) ?? [];
+          const careerCounts: Record<string, number> = {
+            [CareerCategory.Praktisi]: 0,
+            [CareerCategory.Akademisi]: 0,
+            [CareerCategory.PekerjaKreatif]: 0,
+            [CareerCategory.Wirausaha]: 0,
           };
-        });
+          const minatAnswers: {
+            submissionId: string;
+            questionId: string;
+            selectedOptionId: string;
+          }[] = [];
+          for (const q of minatQs) {
+            const opts = optionsByQuestionId.get(q.id) ?? [];
+            const chosen = pick(opts);
+            minatAnswers.push({
+              submissionId: parentSubmission.id,
+              questionId: q.id,
+              selectedOptionId: chosen.id,
+            });
+            const v = chosen.value;
+            if (v in careerCounts) careerCounts[v]++;
+          }
+          const minatDominantCategory = Object.entries(careerCounts).sort(
+            (a, b) => b[1] - a[1]
+          )[0][0];
 
-        if (studentAnswers.length > 0) {
-          await tx.insert(schema.studentAnswersTable).values(studentAnswers);
-          console.log(
-            `Created ${studentAnswers.length} partial answers for submission ${submission.id}`
-          );
+          // Answer Karakteristik Diri and compute MBTI
+          const karQs = questionsByTestId.get(karakteristikDiriTest.id) ?? [];
+          const karValues: string[] = [];
+          const karAnswers: {
+            submissionId: string;
+            questionId: string;
+            selectedOptionId: string;
+          }[] = [];
+          for (const q of karQs) {
+            const opts = optionsByQuestionId.get(q.id) ?? [];
+            const chosen = pick(opts);
+            karAnswers.push({
+              submissionId: parentSubmission.id,
+              questionId: q.id,
+              selectedOptionId: chosen.id,
+            });
+            karValues.push(chosen.value);
+          }
+          const mbtiType = computeMbti(karValues);
+
+          // Answer Kesejahteraan Psikologis and compute total score
+          const pwbQs = questionsByTestId.get(kesejahteraanPsikologisTest.id) ?? [];
+          let pwbSum = 0;
+          const pwbAnswers: {
+            submissionId: string;
+            questionId: string;
+            selectedOptionId: string;
+          }[] = [];
+          for (const q of pwbQs) {
+            const opts = optionsByQuestionId.get(q.id) ?? [];
+            const chosen = pick(opts);
+            pwbAnswers.push({
+              submissionId: parentSubmission.id,
+              questionId: q.id,
+              selectedOptionId: chosen.id,
+            });
+            const valNum = Number(chosen.value);
+            pwbSum += Number.isFinite(valNum) ? valNum : 0;
+          }
+
+          // Insert all answers
+          if (minatAnswers.length) {
+            await tx.insert(schema.studentAnswersTable).values(minatAnswers);
+          }
+          if (karAnswers.length) {
+            await tx.insert(schema.studentAnswersTable).values(karAnswers);
+          }
+          if (pwbAnswers.length) {
+            await tx.insert(schema.studentAnswersTable).values(pwbAnswers);
+          }
+
+          // Compute derived results
+          const bidangRes = bidangKarirCompatibility(minatDominantCategory, mbtiType);
+          const polaRes = polaPerilakuLevel(pwbSum);
+          const nineRes = nineBox(bidangRes, polaRes);
+
+          // Insert ALL results (leaf, mid-level, and parent) to the SAME submissionId
+          await tx.insert(schema.submissionResultsTable).values([
+            {
+              submissionId: parentSubmission.id,
+              testId: minatKarirTest.id,
+              resultValue: String(minatDominantCategory),
+            },
+            {
+              submissionId: parentSubmission.id,
+              testId: karakteristikDiriTest.id,
+              resultValue: mbtiType,
+            },
+            {
+              submissionId: parentSubmission.id,
+              testId: kesejahteraanPsikologisTest.id,
+              resultValue: String(pwbSum),
+            },
+            {
+              submissionId: parentSubmission.id,
+              testId: bidangKarirIdealTest.id,
+              resultValue: bidangRes,
+            },
+            {
+              submissionId: parentSubmission.id,
+              testId: polaPerilakuTest.id,
+              resultValue: polaRes,
+            },
+            {
+              submissionId: parentSubmission.id,
+              testId: parentTest.id,
+              resultValue: nineRes,
+            },
+          ]);
         }
+      });
+    }
 
-        // No results for in-progress submissions
-      }
-    });
-
-    console.log("Successfully seeded test results!");
+    console.log("success seeding 1000 submission results with answers");
     return true;
   } catch (error) {
     DatabaseService.logDatabaseError(error);

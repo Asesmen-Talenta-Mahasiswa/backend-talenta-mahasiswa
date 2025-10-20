@@ -10,6 +10,7 @@ import { ServiceStatus } from "../common/enum";
 import { reset } from "drizzle-seed";
 import { schema } from "./schema";
 import { seedResult, seedStudent, seedTest, seedUser } from "./seed";
+import { SeedDatabaseModel } from "../feature/system/model";
 
 export abstract class DatabaseService {
   static logDatabaseError(error: any) {
@@ -82,16 +83,16 @@ export abstract class DatabaseService {
     }
   }
 
-  static async seedDatabase() {
-    const studentResult = await seedStudent();
-    const userResult = await seedUser();
-    const testResult = await seedTest();
-    const resultResult = await seedResult();
+  static async seedDatabase(config: SeedDatabaseModel) {
+    const studentResult = config.student ? await seedStudent() : false;
+    const userResult = config.user ? await seedUser() : false;
+    const testResult = config.test ? await seedTest() : false;
+    const resultResult = config.result ? await seedResult() : false;
     return {
-      studentResult,
-      userResult,
-      testResult,
-      resultResult,
+      student: studentResult,
+      user: userResult,
+      testResult: testResult,
+      resultResult: resultResult,
     };
   }
 

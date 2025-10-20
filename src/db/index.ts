@@ -10,8 +10,7 @@ const client = postgres({
   password: Bun.env.DB_PASSWORD,
   database: Bun.env.DB_NAME,
   // refer to https://github.com/porsager/postgres#ssl for more info on SSL
-  ssl:
-    Bun.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+  ssl: Bun.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
 });
 
 const db = drizzle({

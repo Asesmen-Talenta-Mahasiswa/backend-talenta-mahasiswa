@@ -1,2 +1,0 @@
-ALTER TABLE "sub_tests" ADD COLUMN "parent_id" uuid;--> statement-breakpoint
-ALTER TABLE "sub_tests" ADD CONSTRAINT "sub_tests_parent_id_sub_tests_id_fk" FOREIGN KEY ("parent_id") REFERENCES "public"."sub_tests"("id") ON DELETE cascade ON UPDATE no action;

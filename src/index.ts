@@ -2,13 +2,15 @@ import openapi from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import { version as apiVersion, author } from "../package.json";
 
-import { dummyEndpoint } from "./feature/dummy";
 import { studentEndpoint } from "./feature/student";
 import { systemEndpoint } from "./feature/system";
 import { ResponseStatus } from "./common/enum";
 import { testEndpoint } from "./feature/test";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const app = new Elysia()
+  // Documentation
   .use(
     openapi({
       path: "/docs",
@@ -31,11 +33,11 @@ const app = new Elysia()
           },
         ],
       },
-    }),
+    })
   )
-  .onError(({ error, code, status }) => {
-    console.log(`[Student] Error ${code}:`, error);
 
+  .onError(({ error, code, status }) => {
+    console.error(`[ERROR] ${code}:`, error);
     if (code === "VALIDATION") {
       const errMsg =
         error.customError ?? error.valueError?.message ?? "Request tidak valid";
@@ -48,7 +50,7 @@ const app = new Elysia()
     if (code === "PARSE") {
       return status("Bad Request", {
         status: ResponseStatus.Fail,
-        message: "Request body tidak valid",
+        message: "Request tidak valid",
       });
     }
 
@@ -66,12 +68,11 @@ const app = new Elysia()
       });
     }
   })
-  .use(dummyEndpoint)
+
   .use(systemEndpoint)
   .use(studentEndpoint)
   .use(testEndpoint)
+
   .listen(Bun.env.PORT ?? 3000); // for fallback
 
-console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`,
-);
+console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);

@@ -1,5 +1,5 @@
 import { t } from "elysia";
-import { responseSchema } from "../../common/model";
+import { commonResponseSchema } from "../../common/model";
 import { databaseHealthSchema } from "../../db/model";
 
 const systemInfoSchema = t.Object({
@@ -21,13 +21,25 @@ const systemInfoSchema = t.Object({
   uptimeSeconds: t.Number(),
 });
 
+export const seedDatabaseSchema = t.Object(
+  {
+    user: t.Optional(t.Boolean({ error: "Invalid user flag" })),
+    student: t.Optional(t.Boolean({ error: "Invalid student flag" })),
+    test: t.Optional(t.Boolean({ error: "Invalid test flag" })),
+    result: t.Optional(t.Boolean({ error: "Invalid result flag" })),
+  },
+  {
+    error: "Invalid request",
+  }
+);
+
 export const getSystemInfoSchema = t.Object({
-  ...responseSchema.properties,
+  ...commonResponseSchema("success").properties,
   data: systemInfoSchema,
 });
 
 export const getSystemHealthSchema = t.Object({
-  ...responseSchema.properties,
+  ...commonResponseSchema("success").properties,
   data: t.Object({
     database: databaseHealthSchema,
   }),
@@ -36,3 +48,4 @@ export const getSystemHealthSchema = t.Object({
 export const getSystemEchoSchema = t.Literal("Hello world!");
 
 export type SystemInfoModel = typeof systemInfoSchema.static;
+export type SeedDatabaseModel = typeof seedDatabaseSchema.static;

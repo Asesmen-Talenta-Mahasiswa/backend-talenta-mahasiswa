@@ -1,13 +1,17 @@
-import Elysia, { NotFoundError, t, ValidationError } from "elysia";
+import Elysia, { NotFoundError, t } from "elysia";
 import { StudentService } from "./service";
 import { ResponseStatus } from "../../common/enum";
 import {
-  getStudentSchema,
-  npmSchema,
+  npmParamsSchema,
+  studentQuerySchema,
+  studentSchema,
+  UpdateStudentModel,
   updateStudentSchema,
-  getTestSubmissionsSchema,
 } from "./model";
-import { responseSchema } from "../../common/model";
+import { commonResponseSchema } from "../../common/model";
+import { cleanFalsyArray, hasAnyValue } from "../../utils";
+import { submissionResultSchema, testSubmissionSchema } from "../result/model";
+import { testSchema } from "../test/model";
 
 export const studentEndpoint = new Elysia({
   prefix: "/students",
@@ -25,17 +29,62 @@ export const studentEndpoint = new Elysia({
     }
   )
   .get(
+    "",
+    async ({ query, status }) => {
+      const results = await StudentService.getStudents(
+        query.page,
+        query.pageSize,
+        query.search,
+        cleanFalsyArray<number>(query.year),
+        cleanFalsyArray<string>(query.program),
+        cleanFalsyArray<string>(query.faculty),
+        cleanFalsyArray<string>(query.degree)
+      );
+
+      return status(200, {
+        status: ResponseStatus.Success,
+        message: "Data mahasiswa berhasil diambil",
+        data: results.students,
+        meta: results.meta,
+      });
+    },
+    {
+      query: studentQuerySchema,
+      response: {
+        200: t.Object({
+          ...commonResponseSchema("success").properties,
+          data: t.Array(
+            t.Object({
+              ...studentSchema.properties,
+              submissions: t.Array(
+                t.Object({
+                  ...testSubmissionSchema.properties,
+                  results: t.Array(
+                    t.Object({
+                      ...submissionResultSchema.properties,
+                      test: testSchema,
+                    })
+                  ),
+                })
+              ),
+            })
+          ),
+        }),
+        500: commonResponseSchema("error"),
+      },
+    }
+  )
+  .get(
     "/:npm",
     async ({ params, status }) => {
-      const student = await StudentService.getStudentInfo(params.npm);
+      const student = await StudentService.getStudent(params.npm);
+
       if (!student) {
         return status(404, {
           status: ResponseStatus.Fail,
           message: "Mahasiswa tidak ditemukan",
         });
       }
-
-      console.log(student);
 
       return status(200, {
         status: ResponseStatus.Success,
@@ -44,26 +93,43 @@ export const studentEndpoint = new Elysia({
       });
     },
     {
-      params: npmSchema,
+      params: npmParamsSchema,
       response: {
         200: t.Object({
-          ...responseSchema.properties,
+          ...commonResponseSchema("success").properties,
           data: t.Object({
-            ...getStudentSchema.properties,
-            submissions: t.Array(getTestSubmissionsSchema),
+            ...studentSchema.properties,
+            submissions: t.Array(
+              t.Object({
+                ...testSubmissionSchema.properties,
+                results: t.Array(
+                  t.Object({
+                    ...submissionResultSchema.properties,
+                    test: testSchema,
+                  })
+                ),
+              })
+            ),
           }),
         }),
-        404: responseSchema,
+        404: commonResponseSchema("fail"),
+        500: commonResponseSchema("error"),
       },
     }
   )
-  .put(
+  .patch(
     "/:npm",
     async ({ params, body, status }) => {
-      const newStudent = await StudentService.updateStudentInfo(
-        params.npm,
-        body
-      );
+      const isRequestBodyEmpty = hasAnyValue<UpdateStudentModel>(body);
+
+      if (!isRequestBodyEmpty) {
+        return status(400, {
+          status: ResponseStatus.Fail,
+          message: "Tidak ada data yang bisa diperbarui karena request body kosong",
+        });
+      }
+
+      const newStudent = await StudentService.updateStudent(params.npm, body);
 
       if (!newStudent) {
         return status(422, {
@@ -79,16 +145,17 @@ export const studentEndpoint = new Elysia({
       });
     },
     {
-      params: npmSchema,
-      body: t.Pick(updateStudentSchema, ["email"], {
-        error: "Properti email tidak ditemukan",
+      params: npmParamsSchema,
+      body: t.Omit(updateStudentSchema, ["id", "npm", "createdAt", "updatedAt"], {
+        error: "Request body tidak valid",
       }),
       response: {
         201: t.Object({
-          ...responseSchema.properties,
-          data: getStudentSchema,
+          ...commonResponseSchema("success").properties,
+          data: studentSchema,
         }),
-        422: responseSchema,
+        400: commonResponseSchema("fail"),
+        422: commonResponseSchema("fail"),
       },
     }
   );

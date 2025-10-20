@@ -1,6 +1,6 @@
-import { Degree, Faculty, Program } from "../common/enum";
-import { NewStudentModel } from "../feature/student/model";
-import { fakerID_ID as faker } from "@faker-js/faker";
+import { PgTable } from "drizzle-orm/pg-core";
+import { SQLiteTable } from "drizzle-orm/sqlite-core";
+import { getTableColumns, SQL, sql } from "drizzle-orm";
 
 /**
  * Convert a TypeScript (string) enum or a plain readonly object into a non-empty tuple
@@ -106,4 +106,44 @@ export function generateRandomUsername(): string {
   }
 
   return result.join("");
+}
+
+export const cleanFalsyArray = <T>(
+  arr?: (T | null | undefined | false | "" | 0)[]
+): T[] => (arr ?? []).filter(Boolean) as T[];
+
+export const buildConflictUpdateColumns = <
+  T extends PgTable | SQLiteTable,
+  Q extends keyof T["_"]["columns"]
+>(
+  table: T,
+  columns: Q[]
+) => {
+  const cls = getTableColumns(table);
+
+  return columns.reduce((acc, column) => {
+    const colName = cls[column].name;
+    acc[column] = sql.raw(`excluded.${colName}`);
+
+    return acc;
+  }, {} as Record<Q, SQL>);
+};
+
+export function enumValuesAsNonEmptyTuple<T extends Record<string, string | number>>(
+  obj: T
+): readonly [T[keyof T], ...T[keyof T][]] {
+  const vals = Object.values(obj) as T[keyof T][];
+  if (vals.length === 0) {
+    throw new Error("enum object must have at least one value");
+  }
+  // We assert the runtime-checked array is a non-empty tuple of the same value type.
+  return vals as unknown as readonly [T[keyof T], ...T[keyof T][]];
+}
+
+export function hasAnyValue<T>(obj: T): boolean {
+  for (const key in obj) {
+    const value = obj[key as keyof T];
+    if (value !== undefined && value !== null) return true;
+  }
+  return false;
 }

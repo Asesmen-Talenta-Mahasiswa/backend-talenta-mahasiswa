@@ -6,19 +6,6 @@ export const ResponseStatus = {
   Fail: "fail",
 } as const;
 
-export const SubmissionStatus = {
-  InProgress: "in_progress",
-  Completed: "completed",
-} as const;
-
-export const PermissionLevel = {
-  Program: "program",
-  Department: "department",
-  Faculty: "faculty",
-  University: "university",
-  Admin: "admin",
-} as const;
-
 export const Faculty = {
   FISIP: "FISIP",
   FEB: "FEB",
@@ -51,8 +38,7 @@ export const Program = {
   AkuntansiPsdkuWayKanan: "Akuntansi PSDKU Way Kanan",
   KeuanganDanPerbankan: "Keuangan dan Perbankan",
   ManajemenPemasaran: "Manajemen Pemasaran",
-  PerbankanDanKeuanganPsdkuLampungTengah:
-    "Perbankan dan Keuangan PSDKU Lampung Tengah",
+  PerbankanDanKeuanganPsdkuLampungTengah: "Perbankan dan Keuangan PSDKU Lampung Tengah",
   Perpajakan: "Perpajakan",
   BisnisDigital: "Bisnis Digital",
   EkonomiPembangunan: "Ekonomi Pembangunan",
@@ -115,8 +101,7 @@ export const Program = {
   PendidikanKimia: "Pendidikan Kimia",
   PendidikanMatematika: "Pendidikan Matematika",
   PendidikanMusik: "Pendidikan Musik",
-  PendidikanPancasilaDanKewarganegaraan:
-    "Pendidikan Pancasila dan Kewarganegaraan",
+  PendidikanPancasilaDanKewarganegaraan: "Pendidikan Pancasila dan Kewarganegaraan",
   PendidikanSejarah: "Pendidikan Sejarah",
   PendidikanTari: "Pendidikan Tari",
   PendidikanTeknologiInformasi: "Pendidikan Teknologi Informasi",
@@ -124,6 +109,19 @@ export const Program = {
   Farmasi: "Farmasi",
   Kedokteran: "Kedokteran",
   Gizi: "Gizi",
+} as const;
+
+export const SubmissionStatus = {
+  InProgress: "in_progress",
+  Completed: "completed",
+} as const;
+
+export const PermissionLevel = {
+  Program: "program",
+  Department: "department",
+  Faculty: "faculty",
+  University: "university",
+  Admin: "admin",
 } as const;
 
 export const QuestionType = {

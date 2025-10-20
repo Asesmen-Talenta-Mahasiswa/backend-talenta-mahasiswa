@@ -1,9 +1,684 @@
 {
-  "id": "bfd4fee5-4fea-42d1-bedd-77d5c41fafe8",
+  "id": "8f008619-ebad-4b86-bc37-afb11de2de27",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
+    "public.options": {
+      "name": "options",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "question_id": {
+          "name": "question_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "options_question_id_questions_id_fk": {
+          "name": "options_question_id_questions_id_fk",
+          "tableFrom": "options",
+          "tableTo": "questions",
+          "columnsFrom": [
+            "question_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.questions": {
+      "name": "questions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "type": {
+          "name": "type",
+          "type": "question_type_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "test_id": {
+          "name": "test_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "questions_test_id_tests_id_fk": {
+          "name": "questions_test_id_tests_id_fk",
+          "tableFrom": "questions",
+          "tableTo": "tests",
+          "columnsFrom": [
+            "test_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.student_answers": {
+      "name": "student_answers",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "submission_id": {
+          "name": "submission_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "question_id": {
+          "name": "question_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "selected_option_id": {
+          "name": "selected_option_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "student_answers_submission_id_test_submissions_id_fk": {
+          "name": "student_answers_submission_id_test_submissions_id_fk",
+          "tableFrom": "student_answers",
+          "tableTo": "test_submissions",
+          "columnsFrom": [
+            "submission_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "student_answers_question_id_questions_id_fk": {
+          "name": "student_answers_question_id_questions_id_fk",
+          "tableFrom": "student_answers",
+          "tableTo": "questions",
+          "columnsFrom": [
+            "question_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "student_answers_selected_option_id_options_id_fk": {
+          "name": "student_answers_selected_option_id_options_id_fk",
+          "tableFrom": "student_answers",
+          "tableTo": "options",
+          "columnsFrom": [
+            "selected_option_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.students": {
+      "name": "students",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "npm": {
+          "name": "npm",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "email": {
+          "name": "email",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "year": {
+          "name": "year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "program": {
+          "name": "program",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "faculty": {
+          "name": "faculty",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "degree": {
+          "name": "degree",
+          "type": "varchar",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {
+        "npm_gin_idx": {
+          "name": "npm_gin_idx",
+          "columns": [
+            {
+              "expression": "\"npm\" gin_trgm_ops",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gin",
+          "with": {}
+        },
+        "name_gin_idx": {
+          "name": "name_gin_idx",
+          "columns": [
+            {
+              "expression": "\"name\" gin_trgm_ops",
+              "asc": true,
+              "isExpression": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "gin",
+          "with": {}
+        },
+        "name_btree_idx": {
+          "name": "name_btree_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "student_filters_idx": {
+          "name": "student_filters_idx",
+          "columns": [
+            {
+              "expression": "program",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "faculty",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "year",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "degree",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "students_npm_unique": {
+          "name": "students_npm_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "npm"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.submission_results": {
+      "name": "submission_results",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "submission_id": {
+          "name": "submission_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "test_id": {
+          "name": "test_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "result_value": {
+          "name": "result_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "submission_results_submission_id_test_submissions_id_fk": {
+          "name": "submission_results_submission_id_test_submissions_id_fk",
+          "tableFrom": "submission_results",
+          "tableTo": "test_submissions",
+          "columnsFrom": [
+            "submission_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "submission_results_test_id_tests_id_fk": {
+          "name": "submission_results_test_id_tests_id_fk",
+          "tableFrom": "submission_results",
+          "tableTo": "tests",
+          "columnsFrom": [
+            "test_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.test_instructions": {
+      "name": "test_instructions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "test_id": {
+          "name": "test_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "test_instructions_test_id_tests_id_fk": {
+          "name": "test_instructions_test_id_tests_id_fk",
+          "tableFrom": "test_instructions",
+          "tableTo": "tests",
+          "columnsFrom": [
+            "test_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.test_notes": {
+      "name": "test_notes",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "text": {
+          "name": "text",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "order": {
+          "name": "order",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "test_id": {
+          "name": "test_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "test_notes_test_id_tests_id_fk": {
+          "name": "test_notes_test_id_tests_id_fk",
+          "tableFrom": "test_notes",
+          "tableTo": "tests",
+          "columnsFrom": [
+            "test_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.test_submissions": {
+      "name": "test_submissions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "uuidv7()"
+        },
+        "student_id": {
+          "name": "student_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "test_id": {
+          "name": "test_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "status": {
+          "name": "status",
+          "type": "submission_status_enum",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'in_progress'"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "test_submissions_student_id_students_id_fk": {
+          "name": "test_submissions_student_id_students_id_fk",
+          "tableFrom": "test_submissions",
+          "tableTo": "students",
+          "columnsFrom": [
+            "student_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "test_submissions_test_id_tests_id_fk": {
+          "name": "test_submissions_test_id_tests_id_fk",
+          "tableFrom": "test_submissions",
+          "tableTo": "tests",
+          "columnsFrom": [
+            "test_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.tests": {
+      "name": "tests",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "serial",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "description": {
+          "name": "description",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": true
+        },
+        "parent_id": {
+          "name": "parent_id",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "tests_parent_id_tests_id_fk": {
+          "name": "tests_parent_id_tests_id_fk",
+          "tableFrom": "tests",
+          "tableTo": "tests",
+          "columnsFrom": [
+            "parent_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
     "public.users": {
       "name": "users",
       "schema": "",
@@ -13,62 +688,17 @@
           "type": "uuid",
           "primaryKey": true,
           "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "npm": {
-          "name": "npm",
-          "type": "char(10)",
-          "primaryKey": false,
-          "notNull": true
+          "default": "uuidv7()"
         },
         "username": {
           "name": "username",
-          "type": "varchar(32)",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
         "password": {
           "name": "password",
           "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "email": {
-          "name": "email",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "program": {
-          "name": "program",
-          "type": "program_enum",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "department": {
-          "name": "department",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "faculty": {
-          "name": "faculty",
-          "type": "faculty_enum",
-          "typeSchema": "public",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "degree": {
-          "name": "degree",
-          "type": "degree_enum",
-          "typeSchema": "public",
           "primaryKey": false,
           "notNull": true
         },
@@ -85,31 +715,23 @@
           "primaryKey": false,
           "notNull": true,
           "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "users_npm_unique": {
-          "name": "users_npm_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "npm"
-          ]
-        },
         "users_username_unique": {
           "name": "users_username_unique",
           "nullsNotDistinct": false,
           "columns": [
             "username"
-          ]
-        },
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
           ]
         }
       },
@@ -119,34 +741,10 @@
     }
   },
   "enums": {
-    "public.degree_enum": {
-      "name": "degree_enum",
-      "schema": "public",
-      "values": [
-        "D3",
-        "D4",
-        "S1"
-      ]
-    },
-    "public.faculty_enum": {
-      "name": "faculty_enum",
-      "schema": "public",
-      "values": [
-        "FISIP",
-        "FEB",
-        "FMIPA",
-        "FP",
-        "FT",
-        "FH",
-        "FKIP",
-        "FK"
-      ]
-    },
     "public.permission_level_enum": {
       "name": "permission_level_enum",
       "schema": "public",
       "values": [
-        "student",
         "program",
         "department",
         "faculty",
@@ -154,87 +752,21 @@
         "admin"
       ]
     },
-    "public.program_enum": {
-      "name": "program_enum",
+    "public.question_type_enum": {
+      "name": "question_type_enum",
       "schema": "public",
       "values": [
-        "Administrasi Perkantoran",
-        "Hubungan Masyarakat",
-        "Perpustakaan",
-        "Ilmu Administrasi Bisnis",
-        "Ilmu Administrasi Negara",
-        "Ilmu Komunikasi",
-        "Ilmu Pemerintahan",
-        "Sosiologi",
-        "Akuntansi",
-        "Akuntansi PSDKU Way Kanan",
-        "Keuangan dan Perbankan",
-        "Manajemen Pemasaran",
-        "Perbankan dan Keuangan PSDKU Lampung Tengah",
-        "Perpajakan",
-        "Bisnis Digital",
-        "Ekonomi Pembangunan",
-        "Manajemen",
-        "Manajemen Informatika",
-        "Biologi",
-        "Biologi Terapan",
-        "Fisika",
-        "Ilmu Komputer",
-        "Ilmu Komputer PSDKU Way Kanan",
-        "Kimia",
-        "Matematika",
-        "Sistem Informasi",
-        "Perkebunan",
-        "Agribisnis",
-        "Agronomi",
-        "Agroteknologi",
-        "Budidaya Perairan",
-        "Ilmu Kelautan",
-        "Ilmu Tanah",
-        "Kehutanan",
-        "Nutrisi dan Teknologi Pakan Ternak",
-        "Penyuluhan Pertanian",
-        "Peternakan",
-        "Proteksi Tanaman",
-        "Sumberdaya Akuatik",
-        "Teknologi Hasil Pertanian",
-        "Teknologi Industri Pertanian",
-        "Teknik Pertanian",
-        "Teknik Mesin",
-        "Teknik Sipil",
-        "Teknik Survey dan Pemetaan",
-        "Arsitektur",
-        "Teknik Elektro",
-        "Teknik Geodesi",
-        "Teknik Geofisika",
-        "Teknik Geologi",
-        "Teknik Informatika",
-        "Teknik Kimia",
-        "Teknik Lingkungan",
-        "Teknologi Rekayasa Otomotif",
-        "Ilmu Hukum",
-        "Bimbingan dan Konseling",
-        "Pendidikan Bahasa dan Sastra Indonesia",
-        "Pendidikan Bahasa Inggris",
-        "Pendidikan Bahasa Lampung",
-        "Pendidikan Bahasa Perancis",
-        "Pendidikan Biologi",
-        "Pendidikan Ekonomi",
-        "Pendidikan Fisika",
-        "Pendidikan Geografi",
-        "Pendidikan Guru Pendidikan Anak Usia Dini",
-        "Pendidikan Guru Sekolah Dasar",
-        "Pendidikan Jasmani",
-        "Pendidikan Kimia",
-        "Pendidikan Matematika",
-        "Pendidikan Musik",
-        "Pendidikan Pancasila dan Kewarganegaraan",
-        "Pendidikan Sejarah",
-        "Pendidikan Tari",
-        "Pendidikan Teknologi Informasi",
-        "Farmasi",
-        "Kedokteran",
-        "Gizi"
+        "multiple_choice",
+        "single_choice",
+        "likert"
+      ]
+    },
+    "public.submission_status_enum": {
+      "name": "submission_status_enum",
+      "schema": "public",
+      "values": [
+        "in_progress",
+        "completed"
       ]
     }
   },

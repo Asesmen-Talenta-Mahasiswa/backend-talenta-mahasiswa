@@ -1,9 +1,10 @@
-import Elysia, { NotFoundError } from "elysia";
+import Elysia, { NotFoundError, t } from "elysia";
 import { ResponseStatus } from "../../common/enum";
 import {
   getSystemEchoSchema,
   getSystemHealthSchema,
   getSystemInfoSchema,
+  seedDatabaseSchema,
 } from "./model";
 import { SystemService } from "./service";
 import { DatabaseService } from "../../db/service";
@@ -59,8 +60,7 @@ export const systemEndpoint = new Elysia({
     {
       detail: {
         summary: "Service Health Check",
-        description:
-          "Returns the health status of each service used by this app.",
+        description: "Returns the health status of each service used by this app.",
       },
       response: {
         200: getSystemHealthSchema,
@@ -69,9 +69,9 @@ export const systemEndpoint = new Elysia({
   )
   .get(
     "/echo",
-    ({}) => {
+    ({ status }) => {
       // echo service to test the API
-      return "Hello world!";
+      return status(200, "Hello world!");
     },
     {
       detail: {
@@ -85,8 +85,8 @@ export const systemEndpoint = new Elysia({
   )
   .post(
     "/seed-db",
-    async () => {
-      const result = await DatabaseService.seedDatabase();
+    async ({ query }) => {
+      const result = await DatabaseService.seedDatabase(query);
       return {
         status: ResponseStatus.Success,
         message: "Database has been seeded",
@@ -96,25 +96,34 @@ export const systemEndpoint = new Elysia({
     {
       detail: {
         summary: "Seed Database with Sample Data",
-        description:
-          "Seeds the database with sample student data for testing purposes.",
+        description: "Seeds the database with sample student data for testing purposes.",
       },
+      query: seedDatabaseSchema,
     }
   )
   .post(
     "/reset-db",
-    async () => {
-      await DatabaseService.resetDatabase();
+    async ({ query }) => {
+      if (query.areYouSure) await DatabaseService.resetDatabase();
       return {
         status: ResponseStatus.Success,
-        message: "Database has been reset",
+        message: query.areYouSure
+          ? "Database has been reset"
+          : "Database reset cancelled",
       };
     },
     {
       detail: {
         summary: "Reset Database",
-        description:
-          "Resets the database by dropping and recreating all tables.",
+        description: "Resets the database by dropping and recreating all tables.",
       },
+      query: t.Object(
+        {
+          areYouSure: t.Optional(t.Boolean({ default: false, error: "Invalid flags" })),
+        },
+        {
+          error: "Invalid request",
+        }
+      ),
     }
   );

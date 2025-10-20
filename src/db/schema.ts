@@ -1,8 +1,7 @@
-import { relations } from "drizzle-orm";
+import { relations, sql } from "drizzle-orm";
 import {
   pgTable,
   uuid,
-  char,
   varchar,
   timestamp,
   pgEnum,
@@ -10,99 +9,86 @@ import {
   boolean,
   integer,
   foreignKey,
+  index,
+  serial,
 } from "drizzle-orm/pg-core";
-import {
-  Degree,
-  Faculty,
-  PermissionLevel,
-  Program,
-  QuestionType,
-  SubmissionStatus,
-} from "../common/enum";
+import { PermissionLevel, QuestionType, SubmissionStatus } from "../common/enum";
 import { enumToPgEnum } from "../utils";
-import { E } from "@faker-js/faker/dist/airline-CHFQMWko";
 
-// Define the permission level enum
+// --- ENUMS ---
+
 export const permissionLevelEnum = pgEnum(
   "permission_level_enum",
   enumToPgEnum(PermissionLevel)
 );
 
-export const facultyEnum = pgEnum("faculty_enum", enumToPgEnum(Faculty));
-
-export const degreeEnum = pgEnum("degree_enum", enumToPgEnum(Degree));
-
-export const programEnum = pgEnum("program_enum", enumToPgEnum(Program));
-
-export const questionTypeEnum = pgEnum(
-  "question_type_enum",
-  enumToPgEnum(QuestionType)
-);
+export const questionTypeEnum = pgEnum("question_type_enum", enumToPgEnum(QuestionType));
 
 export const submissionStatusEnum = pgEnum(
   "submission_status_enum",
   enumToPgEnum(SubmissionStatus)
 );
 
-// User table schema
-// This table merge all user roles into a single table with a permission level field
-// The permission levels are:
-// - student: regular student user
-// - program: program head
-// - department: department head
-// - faculty: faculty head
-// - university: university admin
-// - admin: system admin
+// --- CORE TABLES ---
+
 export const usersTable = pgTable("users", {
-  id: uuid().primaryKey().defaultRandom(),
-  username: varchar({ length: 32 }).notNull().unique(),
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
+  username: varchar().notNull().unique(),
   password: text().notNull(), // hashed password
-  permissionLevel: permissionLevelEnum().notNull(),
-  createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp()
+  permissionLevel: permissionLevelEnum("permission_level").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  updatedAt: timestamp("updated_at")
     .notNull()
     .$onUpdate(() => new Date()),
 });
 
-export const studentsTable = pgTable("students", {
-  id: uuid().primaryKey().defaultRandom(),
-  npm: char({ length: 10 }).notNull().unique(), // e.g. 2515061066
-  name: varchar({ length: 128 }).notNull(),
-  email: varchar({ length: 128 }),
-  program: programEnum().notNull(),
-  // department: varchar(), // university does not have department data.
-  faculty: facultyEnum().notNull(),
-  degree: degreeEnum().notNull(),
-  createdAt: timestamp().notNull().defaultNow(),
-  updatedAt: timestamp()
-    .notNull()
-    .$onUpdate(() => new Date()),
-});
-
-export const testsTable = pgTable("tests", {
-  id: uuid().primaryKey().defaultRandom(),
-  name: text().notNull(),
-  description: text(),
-  isActive: boolean().notNull().default(true),
-});
-
-export const subTestsTable = pgTable(
-  "sub_tests",
+export const studentsTable = pgTable(
+  "students",
   {
-    id: uuid().primaryKey().defaultRandom(),
-    name: text().notNull(),
-    description: text(),
-    testId: uuid().notNull(),
-    parentId: uuid(),
+    id: uuid()
+      .primaryKey()
+      .default(sql`uuidv7()`),
+    npm: varchar().notNull().unique(),
+    name: varchar().notNull(),
+    email: varchar(),
+    year: integer().notNull(),
+    program: varchar().notNull(),
+    faculty: varchar().notNull(),
+    degree: varchar().notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    updatedAt: timestamp("updated_at")
+      .notNull()
+      .$onUpdate(() => new Date()),
   },
   (table) => [
-    // reference to testsTable.id
-    foreignKey({
-      columns: [table.testId],
-      foreignColumns: [testsTable.id],
-    }).onDelete("cascade"),
+    // search
+    index("npm_gin_idx").using("gin", sql`${table.npm} gin_trgm_ops`),
+    index("name_gin_idx").using("gin", sql`${table.name} gin_trgm_ops`),
+    // sorting
+    index("name_btree_idx").on(table.name),
+    // filters b-tree index
+    index("student_filters_idx").on(
+      table.program,
+      table.faculty,
+      table.year,
+      table.degree
+    ),
+  ]
+);
 
-    // self-reference (parent/child)
+export const testsTable = pgTable(
+  "tests",
+  {
+    id: serial().primaryKey(),
+    name: text().notNull(),
+    description: text(),
+    isActive: boolean("is_active").notNull().default(true),
+    // Self-referencing key. NULL parentId = top-level test.
+    parentId: integer("parent_id"),
+  },
+  (table) => [
     foreignKey({
       columns: [table.parentId],
       foreignColumns: [table.id],
@@ -110,120 +96,135 @@ export const subTestsTable = pgTable(
   ]
 );
 
-export const subtestInstructionsTable = pgTable("subtest_instructions", {
-  id: uuid().defaultRandom().primaryKey(),
+export const testInstructionsTable = pgTable("test_instructions", {
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
   text: text().notNull(),
-  order: integer().default(0).notNull(), // To order the instructions
-  subtestId: uuid()
+  order: integer().default(0).notNull(),
+  testId: integer("test_id")
     .notNull()
-    .references(() => subTestsTable.id, { onDelete: "cascade" }),
+    .references(() => testsTable.id, { onDelete: "cascade" }),
 });
 
-export const subtestNotesTable = pgTable("subtest_notes", {
-  id: uuid().defaultRandom().primaryKey(),
+export const testNotesTable = pgTable("test_notes", {
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
   text: text().notNull(),
-  order: integer().default(0).notNull(), // To order the notes
-  subtestId: uuid()
+  order: integer().default(0).notNull(),
+  testId: integer("test_id")
     .notNull()
-    .references(() => subTestsTable.id, { onDelete: "cascade" }),
+    .references(() => testsTable.id, { onDelete: "cascade" }),
 });
 
 export const questionsTable = pgTable("questions", {
-  id: uuid().primaryKey().defaultRandom(),
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
   text: text().notNull(),
   type: questionTypeEnum().notNull(),
-  subtestId: uuid()
+  testId: integer("test_id") // Formerly subtestId
     .notNull()
-    .references(() => subTestsTable.id, { onDelete: "cascade" }),
+    .references(() => testsTable.id, { onDelete: "cascade" }),
 });
 
 export const optionsTable = pgTable("options", {
-  id: uuid().defaultRandom().primaryKey(),
-  text: text().notNull(), // The text displayed to the user (e.g., "Strongly Agree")
-  // The calculable value of the option. Text type makes it super flexible.
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
+  text: text().notNull(),
   value: text().notNull(),
-  order: integer().notNull().default(0), // To order the options
-  questionId: uuid()
+  order: integer().notNull().default(0),
+  questionId: uuid("question_id")
     .notNull()
     .references(() => questionsTable.id, { onDelete: "cascade" }),
 });
 
 export const testSubmissionsTable = pgTable("test_submissions", {
-  id: uuid().defaultRandom().primaryKey(),
-  studentId: uuid()
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
+  studentId: uuid("student_id")
     .notNull()
     .references(() => studentsTable.id, { onDelete: "cascade" }),
-  testId: uuid()
+  testId: integer("test_id")
     .notNull()
     .references(() => testsTable.id, { onDelete: "cascade" }),
   status: submissionStatusEnum().default("in_progress").notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
-  completedAt: timestamp(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  completedAt: timestamp("completed_at"),
 });
 
 export const studentAnswersTable = pgTable("student_answers", {
-  id: uuid().defaultRandom().primaryKey(),
-  submissionId: uuid()
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
+  submissionId: uuid("submission_id")
     .notNull()
     .references(() => testSubmissionsTable.id, { onDelete: "cascade" }),
-  questionId: uuid()
+  questionId: uuid("question_id")
     .notNull()
     .references(() => questionsTable.id, { onDelete: "cascade" }),
-  selectedOptionId: uuid()
+  selectedOptionId: uuid("selected_option_id")
     .notNull()
     .references(() => optionsTable.id, { onDelete: "cascade" }),
-  createdAt: timestamp().defaultNow().notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
 export const submissionResultsTable = pgTable("submission_results", {
-  id: uuid().defaultRandom().primaryKey(),
-  submissionId: uuid()
+  id: uuid()
+    .primaryKey()
+    .default(sql`uuidv7()`),
+  submissionId: uuid("submission_id")
     .notNull()
     .references(() => testSubmissionsTable.id, { onDelete: "cascade" }),
-  subtestId: uuid()
+  testId: integer("test_id")
     .notNull()
-    .references(() => subTestsTable.id, { onDelete: "cascade" }),
-  // Stores "academics", "ENTJ", or a score like "50"
-  resultValue: text().notNull(),
-  createdAt: timestamp().defaultNow().notNull(),
+    .references(() => testsTable.id, { onDelete: "cascade" }),
+  resultValue: text("result_value").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export const testRelations = relations(testsTable, ({ many }) => ({
-  subTests: many(subTestsTable),
+// --- RELATIONS ---
+
+export const studentRelations = relations(studentsTable, ({ many }) => ({
   submissions: many(testSubmissionsTable),
 }));
 
-export const subTestRelations = relations(subTestsTable, ({ one, many }) => ({
-  test: one(testsTable, {
-    fields: [subTestsTable.testId],
+export const testRelations = relations(testsTable, ({ one, many }) => ({
+  parent: one(testsTable, {
+    fields: [testsTable.parentId],
     references: [testsTable.id],
+    relationName: "test_hierarchy",
   }),
+  children: many(testsTable, {
+    relationName: "test_hierarchy",
+  }),
+  instructions: many(testInstructionsTable),
+  notes: many(testNotesTable),
   questions: many(questionsTable),
-  instructions: many(subtestInstructionsTable),
-  notes: many(subtestNotesTable),
+  submissions: many(testSubmissionsTable),
 }));
 
-export const subtestInstructionRelations = relations(
-  subtestInstructionsTable,
-  ({ one }) => ({
-    subTest: one(subTestsTable, {
-      fields: [subtestInstructionsTable.subtestId],
-      references: [subTestsTable.id],
-    }),
-  })
-);
+export const testInstructionRelations = relations(testInstructionsTable, ({ one }) => ({
+  test: one(testsTable, {
+    fields: [testInstructionsTable.testId],
+    references: [testsTable.id],
+  }),
+}));
 
-export const subtestNoteRelations = relations(subtestNotesTable, ({ one }) => ({
-  subTest: one(subTestsTable, {
-    fields: [subtestNotesTable.subtestId],
-    references: [subTestsTable.id],
+export const testNoteRelations = relations(testNotesTable, ({ one }) => ({
+  test: one(testsTable, {
+    fields: [testNotesTable.testId],
+    references: [testsTable.id],
   }),
 }));
 
 export const questionRelations = relations(questionsTable, ({ one, many }) => ({
-  subTest: one(subTestsTable, {
-    fields: [questionsTable.subtestId],
-    references: [subTestsTable.id],
+  test: one(testsTable, {
+    fields: [questionsTable.testId],
+    references: [testsTable.id],
   }),
   options: many(optionsTable),
 }));
@@ -233,10 +234,6 @@ export const optionRelations = relations(optionsTable, ({ one }) => ({
     fields: [optionsTable.questionId],
     references: [questionsTable.id],
   }),
-}));
-
-export const studentRelations = relations(studentsTable, ({ many }) => ({
-  submissions: many(testSubmissionsTable),
 }));
 
 export const testSubmissionsRelations = relations(
@@ -255,23 +252,20 @@ export const testSubmissionsRelations = relations(
   })
 );
 
-export const studentAnswersRelations = relations(
-  studentAnswersTable,
-  ({ one }) => ({
-    submission: one(testSubmissionsTable, {
-      fields: [studentAnswersTable.submissionId],
-      references: [testSubmissionsTable.id],
-    }),
-    question: one(questionsTable, {
-      fields: [studentAnswersTable.questionId],
-      references: [questionsTable.id],
-    }),
-    selectedOption: one(optionsTable, {
-      fields: [studentAnswersTable.selectedOptionId],
-      references: [optionsTable.id],
-    }),
-  })
-);
+export const studentAnswersRelations = relations(studentAnswersTable, ({ one }) => ({
+  submission: one(testSubmissionsTable, {
+    fields: [studentAnswersTable.submissionId],
+    references: [testSubmissionsTable.id],
+  }),
+  question: one(questionsTable, {
+    fields: [studentAnswersTable.questionId],
+    references: [questionsTable.id],
+  }),
+  selectedOption: one(optionsTable, {
+    fields: [studentAnswersTable.selectedOptionId],
+    references: [optionsTable.id],
+  }),
+}));
 
 export const submissionResultsRelations = relations(
   submissionResultsTable,
@@ -280,9 +274,9 @@ export const submissionResultsRelations = relations(
       fields: [submissionResultsTable.submissionId],
       references: [testSubmissionsTable.id],
     }),
-    subTest: one(subTestsTable, {
-      fields: [submissionResultsTable.subtestId],
-      references: [subTestsTable.id],
+    test: one(testsTable, {
+      fields: [submissionResultsTable.testId],
+      references: [testsTable.id],
     }),
   })
 );
@@ -291,12 +285,11 @@ export const schema = {
   usersTable,
   studentsTable,
   testsTable,
-  subTestsTable,
+  testInstructionsTable,
+  testNotesTable,
   questionsTable,
   optionsTable,
   testSubmissionsTable,
   studentAnswersTable,
   submissionResultsTable,
-  subtestInstructionsTable,
-  subtestNotesTable,
 } as const;
