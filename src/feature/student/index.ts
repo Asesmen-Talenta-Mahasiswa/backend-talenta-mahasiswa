@@ -45,7 +45,7 @@ export const studentEndpoint = new Elysia({
         status: ResponseStatus.Success,
         message: "Data mahasiswa berhasil diambil",
         data: results.students,
-        meta: results.meta,
+        pagination: results.pagination,
       });
     },
     {
@@ -69,6 +69,12 @@ export const studentEndpoint = new Elysia({
               ),
             })
           ),
+          pagination: t.Object({
+            page: t.Number(),
+            pageSize: t.Number(),
+            totalItems: t.Number(),
+            totalPages: t.Number(),
+          }),
         }),
         500: commonResponseSchema("error"),
       },

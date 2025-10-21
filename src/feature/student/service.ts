@@ -79,7 +79,7 @@ export abstract class StudentService {
       if (paginatedStudentIds.length === 0) {
         return {
           students: [],
-          meta: { page, pageSize, totalItems: 0, totalPages: 1 },
+          pagination: { page, pageSize, totalItems: 0, totalPages: 1 },
         };
       }
 
@@ -113,7 +113,7 @@ export abstract class StudentService {
 
       return {
         students,
-        meta: {
+        pagination: {
           page,
           pageSize,
           totalItems,
