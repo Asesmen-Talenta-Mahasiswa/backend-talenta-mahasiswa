@@ -46,8 +46,8 @@ export async function seedStudent() {
   const programVals = objectValues(Program);
 
   const prefixNPM = "25";
-  const totalFakeStudents = 30000;
-  const PG_PARAM_LIMIT = 65535;
+  const totalFakeStudents = 100_000;
+  const PG_PARAM_LIMIT = 65_535;
   const totalInsertColumn = 6;
   const maxDbPoolSize = 15;
 
