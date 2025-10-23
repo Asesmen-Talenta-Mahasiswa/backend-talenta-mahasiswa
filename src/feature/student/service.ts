@@ -1,4 +1,4 @@
-import { and, asc, eq, ilike, inArray, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import db from "../../db";
 import { studentsTable } from "../../db/schema";
 import { DatabaseService } from "../../db/service";
@@ -72,7 +72,7 @@ export abstract class StudentService {
           totalItems: sql<string>`count(*) OVER()`.as("total_items"),
         })
         .from(filteredStudentsCte)
-        .orderBy(asc(filteredStudentsCte.id))
+        .orderBy(desc(filteredStudentsCte.id))
         .limit(pageSize)
         .offset((page - 1) * pageSize);
 
@@ -95,7 +95,7 @@ export abstract class StudentService {
       const students = await db.query.studentsTable.findMany({
         where: inArray(studentsTable.id, studentIds),
         // Restore the original sort order
-        orderBy: (studentsTable, { asc }) => [asc(studentsTable.id)],
+        orderBy: (studentsTable, { desc }) => [desc(studentsTable.id)],
         with: {
           submissions: {
             limit: 1,
