@@ -6,8 +6,8 @@ import { studentEndpoint } from "./feature/student";
 import { systemEndpoint } from "./feature/system";
 import { ResponseStatus } from "./common/enum";
 import { testEndpoint } from "./feature/test";
-
-const isDev = process.env.NODE_ENV === "development";
+import { logger } from "./logger";
+import { isDev } from "./common";
 
 const app = new Elysia()
   // Documentation
@@ -36,8 +36,13 @@ const app = new Elysia()
     })
   )
 
+  .use(
+    logger({
+      showStartUpMessage: isDev ? "rich" : "simple",
+    })
+  )
+
   .onError(({ error, code, status }) => {
-    console.error(`[ERROR] ${code}:`, error);
     if (code === "VALIDATION") {
       const errMsg =
         error.customError ?? error.valueError?.message ?? "Request tidak valid";
@@ -57,7 +62,21 @@ const app = new Elysia()
     if (code === "UNKNOWN" || code === "INTERNAL_SERVER_ERROR") {
       return status("Internal Server Error", {
         status: ResponseStatus.Error,
-        message: "Terjadi kesalahan pada server",
+        message: "Terjadi sebuah kesalahan",
+      });
+    }
+
+    if (code === "INVALID_COOKIE_SIGNATURE") {
+      return status("Unauthorized", {
+        status: ResponseStatus.Fail,
+        message: "Tanda tangan cookie tidak valid",
+      });
+    }
+
+    if (code === "INVALID_FILE_TYPE") {
+      return status("Unsupported Media Type", {
+        status: ResponseStatus.Fail,
+        message: "Tipe file tidak didukung",
       });
     }
 
@@ -74,5 +93,3 @@ const app = new Elysia()
   .use(testEndpoint)
 
   .listen(Bun.env.PORT ?? 3000); // for fallback
-
-console.log(`🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`);
