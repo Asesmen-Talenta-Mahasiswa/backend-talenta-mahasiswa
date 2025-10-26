@@ -82,7 +82,7 @@ export const testsTable = pgTable(
   "tests",
   {
     id: serial().primaryKey(),
-    name: text().notNull(),
+    name: text().notNull().unique(),
     description: text(),
     isActive: boolean("is_active").notNull().default(true),
     // Self-referencing key. NULL parentId = top-level test.
@@ -93,6 +93,7 @@ export const testsTable = pgTable(
       columns: [table.parentId],
       foreignColumns: [table.id],
     }).onDelete("cascade"),
+    index("test_name_gin_idx").using("gin", table.name.op("gin_trgm_ops")),
   ]
 );
 

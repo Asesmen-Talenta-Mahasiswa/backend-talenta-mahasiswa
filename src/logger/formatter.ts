@@ -40,6 +40,8 @@ export function formatColorStatusCode(status: number): string {
     return picocolors.red(picocolors.bold(status));
   } else if (status >= 400) {
     return picocolors.yellow(status);
+  } else if (status >= 300) {
+    return picocolors.blue(status);
   } else {
     return picocolors.green(status);
   }

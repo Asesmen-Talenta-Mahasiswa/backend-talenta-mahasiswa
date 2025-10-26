@@ -214,6 +214,12 @@ export const studentQuerySchema = t.Object(
         }
       )
     ),
+    sort: t.Optional(
+      t.UnionEnum(["asc", "desc"], {
+        error: "Opsi sorting tidak valid",
+        default: "desc",
+      })
+    ),
   },
   { error: "Query tidak valid" }
 );

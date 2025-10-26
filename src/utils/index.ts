@@ -1,4 +1,4 @@
-import { PgTable } from "drizzle-orm/pg-core";
+import { pgEnum, PgTable } from "drizzle-orm/pg-core";
 import { SQLiteTable } from "drizzle-orm/sqlite-core";
 import { getTableColumns, SQL, sql } from "drizzle-orm";
 

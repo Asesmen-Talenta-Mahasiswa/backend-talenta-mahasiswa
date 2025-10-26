@@ -38,7 +38,8 @@ export const studentEndpoint = new Elysia({
         cleanFalsyArray<number>(query.year),
         cleanFalsyArray<string>(query.program),
         cleanFalsyArray<string>(query.faculty),
-        cleanFalsyArray<string>(query.degree)
+        cleanFalsyArray<string>(query.degree),
+        query.sort
       );
 
       return status(200, {

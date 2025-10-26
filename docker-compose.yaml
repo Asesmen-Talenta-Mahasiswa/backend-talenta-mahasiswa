@@ -1,0 +1,49 @@
+services:
+  postgres:
+    image: postgres:18
+    cpus: 1.0
+    mem_limit: 512m
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - ${DB_PORT}:5432
+    volumes:
+      - pgdata:/var/lib/postgresql
+
+  redis:
+    image: redis:8.2.2
+    cpus: 1.0
+    mem_limit: 512m
+    ports:
+      - ${REDIS_PORT}:6379
+    volumes:
+      - redis:/data
+
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile_Dev
+    command: bun run dev
+    cpus: 1.0
+    mem_limit: 512m
+    env_file: ".env"
+    develop:
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+          ignore: node_modules/
+
+        - action: rebuild
+          path: package.json
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  pgdata:
+  redis:

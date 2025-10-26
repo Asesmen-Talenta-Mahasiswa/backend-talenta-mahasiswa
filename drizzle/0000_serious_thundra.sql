@@ -1,4 +1,5 @@
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
+
 CREATE TYPE "public"."permission_level_enum" AS ENUM('program', 'department', 'faculty', 'university', 'admin');--> statement-breakpoint
 CREATE TYPE "public"."question_type_enum" AS ENUM('multiple_choice', 'single_choice', 'likert');--> statement-breakpoint
 CREATE TYPE "public"."submission_status_enum" AS ENUM('in_progress', 'completed');--> statement-breakpoint
@@ -75,7 +76,8 @@ CREATE TABLE "tests" (
 	"name" text NOT NULL,
 	"description" text,
 	"is_active" boolean DEFAULT true NOT NULL,
-	"parent_id" integer
+	"parent_id" integer,
+	CONSTRAINT "tests_name_unique" UNIQUE("name")
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
@@ -103,4 +105,5 @@ ALTER TABLE "tests" ADD CONSTRAINT "tests_parent_id_tests_id_fk" FOREIGN KEY ("p
 CREATE INDEX "npm_gin_idx" ON "students" USING gin ("npm" gin_trgm_ops);--> statement-breakpoint
 CREATE INDEX "name_gin_idx" ON "students" USING gin ("name" gin_trgm_ops);--> statement-breakpoint
 CREATE INDEX "name_btree_idx" ON "students" USING btree ("name");--> statement-breakpoint
-CREATE INDEX "student_filters_idx" ON "students" USING btree ("program","faculty","year","degree");
+CREATE INDEX "student_filters_idx" ON "students" USING btree ("program","faculty","year","degree");--> statement-breakpoint
+CREATE INDEX "test_name_gin_idx" ON "tests" USING gin ("name" gin_trgm_ops);

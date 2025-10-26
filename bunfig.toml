@@ -1,0 +1,56 @@
+# [env]
+# NODE_ENV = "test"
+# DATABASE_URL = "postgresql://localhost:5432/test_db"
+# LOG_LEVEL = "error"
+
+[test]
+# Test discovery
+root = "./src"
+preload = ["./setup/test-setup.ts", "./setup/global-mocks.ts"]
+
+# Execution settings
+smol = true
+
+# Coverage configuration
+coverage = true
+coverageReporter = ["text", "lcov"]
+coverageDir = "./coverage"
+coverageThreshold = {
+  lines = 0.85,      # 85% line coverage
+  functions = 0.90,  # 90% function coverage
+  statements = 0.80  # 80% statement coverage
+}
+coverageSkipTestFiles = true
+coveragePathIgnorePatterns = [
+  # Test files
+  "**/*.test.ts",
+  "**/*.spec.ts",
+  "**/*.e2e.ts",
+
+  # Configuration files
+  "*.config.js",
+  "*.config.ts",
+  "webpack.config.*",
+  "vite.config.*",
+
+  # Build output
+  "dist/**",
+  "build/**",
+  ".next/**",
+
+  # Generated code
+  "generated/**",
+  "**/*.generated.ts",
+
+  # Vendor/third-party
+  "vendor/**",
+  "third-party/**",
+
+  # Utilities that don't need testing
+  "src/utils/constants.ts",
+  "src/types/**"
+]
+
+# Reporter configuration
+[test.reporter]
+junit = "./reports/junit.xml"

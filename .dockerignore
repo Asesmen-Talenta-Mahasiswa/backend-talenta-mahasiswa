@@ -1,6 +1,10 @@
 # dependencies
 /node_modules
 
+# testing
+/coverage
+/reports
+
 # misc
 **/*.pem
 /llm
@@ -9,6 +13,7 @@
 /build
 
 # local env files
+**/.env
 **/.env.local
 **/.env.development.local
 **/.env.test.local

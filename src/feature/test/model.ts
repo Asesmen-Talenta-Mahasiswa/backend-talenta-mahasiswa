@@ -13,7 +13,15 @@ import {
 import { t } from "elysia";
 
 export const testSchema = createSelectSchema(testsTable);
-export const newTestSchema = createInsertSchema(testsTable);
+export const newTestSchema = createInsertSchema(testsTable, {
+  name: (schema) =>
+    t.String({
+      ...schema,
+      minLength: 1,
+      error: "Nama tidak valid",
+      examples: ["Tes Akhir Semester", "Quiz Pemrograman"],
+    }),
+});
 export const updateTestSchema = createUpdateSchema(testsTable);
 
 export const testInstructionSchema = createSelectSchema(testInstructionsTable);
@@ -32,9 +40,59 @@ export const optionSchema = createSelectSchema(optionsTable);
 export const newOptionSchema = createInsertSchema(optionsTable);
 export const updateOptionSchema = createUpdateSchema(optionsTable);
 
-export const testParamsSchema = t.Object({
-  testId: t.Numeric({ error: "Test id harus berupa numeric", examples: [1] }),
+export const testQuerySchema = t.Object({
+  page: t.Optional(
+    t.Number({ minimum: 1, error: "Halaman minimal 1", examples: [1, 2, 3] })
+  ),
+  pageSize: t.Optional(
+    t.Number({
+      minimum: 1,
+      maximum: 100,
+      error: "Ukuran halaman harus antara 1-100",
+      examples: [1, 5, 10, 20, 50, 100],
+    })
+  ),
+  search: t.Optional(
+    t.String({
+      error: "Pencarian tidak valid, harus berupa NPM atau nama",
+      examples: ["Tes Talenta Mahasiswa", "Tes Kepribadian Ganda"],
+    })
+  ),
+  showSubTest: t.Optional(
+    t.Boolean({
+      error: "Nilai show sub test hanya boleh true atau false",
+      examples: [true, false],
+    })
+  ),
+  sort: t.Optional(
+    t.UnionEnum(["asc", "desc"], {
+      error: "Opsi sorting tidak valid",
+      examples: ["asc", "desc"],
+    })
+  ),
 });
+
+export const testParamsSchema = t.Object({
+  testId: t.Numeric({ error: "Id harus berupa numeric", examples: [1] }),
+});
+
+export const questionParamsSchema = t.Object({
+  questionid: t.Numeric({ error: "Id harus berupa numeric", examples: [1] }),
+});
+
+export const newTestBodySchema = t.Object({
+  ...t.Omit(newTestSchema, ["id"]).properties,
+  instructions: t.Optional(t.Array(t.Omit(newTestInstructionSchema, ["id", "testId"]))),
+  notes: t.Optional(t.Array(t.Omit(newTestNoteSchema, ["id", "testId"]))),
+  questions: t.Array(
+    t.Object({
+      ...t.Omit(newQuestionSchema, ["id", "testId"]).properties,
+      options: t.Array(t.Omit(newOptionSchema, ["id", "questionId"])),
+    })
+  ),
+});
+
+export type NewTestBodyModel = typeof newTestBodySchema.static;
 
 export type TestModel = typeof testSchema.static;
 export type NewTestModel = typeof newTestSchema.static;

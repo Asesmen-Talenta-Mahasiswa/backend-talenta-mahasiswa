@@ -37,7 +37,8 @@ export abstract class StudentService {
     year: number[] = [],
     program: string[] = [],
     faculty: string[] = [],
-    degree: string[] = []
+    degree: string[] = [],
+    sort: "asc" | "desc" = "desc"
   ) {
     try {
       // 1. Define the common WHERE clause logic
@@ -72,7 +73,9 @@ export abstract class StudentService {
           totalItems: sql<string>`count(*) OVER()`.as("total_items"),
         })
         .from(filteredStudentsCte)
-        .orderBy(desc(filteredStudentsCte.id))
+        .orderBy(
+          sort === "desc" ? desc(filteredStudentsCte.id) : asc(filteredStudentsCte.id)
+        )
         .limit(pageSize)
         .offset((page - 1) * pageSize);
 
@@ -95,11 +98,15 @@ export abstract class StudentService {
       const students = await db.query.studentsTable.findMany({
         where: inArray(studentsTable.id, studentIds),
         // Restore the original sort order
-        orderBy: (studentsTable, { desc }) => [desc(studentsTable.id)],
+        orderBy: (studentColumn, { desc, asc }) => [
+          sort === "desc" ? desc(studentColumn.id) : asc(studentColumn.id),
+        ],
         with: {
           submissions: {
             limit: 1,
-            orderBy: (testSubmissionsTable, { desc }) => [desc(testSubmissionsTable.id)],
+            orderBy: (submissionColumn, { desc, asc }) => [
+              sort === "desc" ? desc(submissionColumn.id) : asc(submissionColumn.id),
+            ],
             with: {
               results: {
                 with: {
