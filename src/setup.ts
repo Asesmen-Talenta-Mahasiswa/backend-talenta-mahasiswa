@@ -8,5 +8,7 @@ declare module "bun" {
     DB_NAME: string;
     DB_URL: string;
     DB_CERT: string;
+    REDIS_PORT: string;
+    REDIS_HOST: string;
   }
 }

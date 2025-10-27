@@ -6,30 +6,6 @@ import { UpdateStudentModel } from "./model";
 import { InternalServerError } from "elysia";
 
 export abstract class StudentService {
-  static async getStudent(npm: string) {
-    try {
-      const student = await db.query.studentsTable.findFirst({
-        with: {
-          submissions: {
-            orderBy: (testSubmissionsTable, { desc }) => [desc(testSubmissionsTable.id)],
-            with: {
-              results: {
-                with: {
-                  test: true,
-                },
-              },
-            },
-          },
-        },
-        where: eq(studentsTable.npm, npm),
-      });
-      return student;
-    } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
-    }
-  }
-
   static async getStudents(
     page = 1,
     pageSize = 10,
@@ -127,6 +103,30 @@ export abstract class StudentService {
           totalPages,
         },
       };
+    } catch (error) {
+      DatabaseService.logDatabaseError(error);
+      throw new InternalServerError();
+    }
+  }
+
+  static async getStudent(npm: string) {
+    try {
+      const student = await db.query.studentsTable.findFirst({
+        with: {
+          submissions: {
+            orderBy: (testSubmissionsTable, { desc }) => [desc(testSubmissionsTable.id)],
+            with: {
+              results: {
+                with: {
+                  test: true,
+                },
+              },
+            },
+          },
+        },
+        where: eq(studentsTable.npm, npm),
+      });
+      return student;
     } catch (error) {
       DatabaseService.logDatabaseError(error);
       throw new InternalServerError();

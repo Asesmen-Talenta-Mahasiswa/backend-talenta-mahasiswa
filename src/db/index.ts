@@ -1,6 +1,11 @@
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
+import { RedisClient } from "bun";
+
+export const redis = new RedisClient(
+  `redis://${Bun.env.REDIS_HOST}:${Bun.env.REDIS_PORT}`
+);
 
 const client = postgres({
   prepare: false,

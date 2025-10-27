@@ -7,26 +7,14 @@ import {
   testInstructionSchema,
   testNoteSchema,
   optionSchema,
-  newTestSchema,
   newTestBodySchema,
+  updateTestBodySchema,
   testQuerySchema,
 } from "./model";
 import { commonResponseSchema } from "../../common/model";
-import { QuestionType, ResponseStatus } from "../../common/enum";
-import { enumValuesAsNonEmptyTuple } from "../../utils";
+import { ResponseStatus } from "../../common/enum";
 
 export const testEndpoint = new Elysia({ prefix: "/tests", tags: ["Test"] })
-  .all(
-    "/",
-    () => {
-      throw new NotFoundError();
-    },
-    {
-      detail: {
-        hide: true,
-      },
-    }
-  )
   .get(
     "",
     async ({ status, query }) => {
@@ -96,11 +84,80 @@ export const testEndpoint = new Elysia({ prefix: "/tests", tags: ["Test"] })
       },
     }
   )
-  .get("/:testId/instructions", () => {})
-  .get("/:testId/notes", () => {})
-  .get("/:testId/questions", () => {})
-  .get("/:testId/questions/{questionId}", () => {})
-  .get("/:testId/questions/{questionId}/options", () => {})
+  .get(
+    "/:testId/instructions",
+    async ({ params, status }) => {
+      const result = await TestService.getTestInstructions(params.testId);
+
+      return status(200, {
+        status: ResponseStatus.Success,
+        message: "Data instruksi tes berhasil diambil",
+        data: result,
+      });
+    },
+    {
+      params: testParamsSchema,
+      response: {
+        200: t.Object({
+          ...commonResponseSchema("success").properties,
+          data: t.Array(testInstructionSchema),
+        }),
+        422: commonResponseSchema("fail"),
+        500: commonResponseSchema("error"),
+      },
+    }
+  )
+  .get(
+    "/:testId/notes",
+    async ({ params, status }) => {
+      const result = await TestService.getTestNotes(params.testId);
+
+      return status(200, {
+        status: ResponseStatus.Success,
+        message: "Data catatan tes berhasil diambil",
+        data: result,
+      });
+    },
+    {
+      params: testParamsSchema,
+      response: {
+        200: t.Object({
+          ...commonResponseSchema("success").properties,
+          data: t.Array(testNoteSchema),
+        }),
+        422: commonResponseSchema("fail"),
+        500: commonResponseSchema("error"),
+      },
+    }
+  )
+  .get(
+    "/:testId/questions",
+    async ({ params, status }) => {
+      const result = await TestService.getTestQuestions(params.testId);
+
+      return status(200, {
+        status: ResponseStatus.Success,
+        message: "Data pertanyaan berhasil diambil",
+        data: result,
+      });
+    },
+    {
+      params: testParamsSchema,
+      response: {
+        200: t.Object({
+          ...commonResponseSchema("success").properties,
+          data: t.Array(
+            t.Object({
+              ...questionSchema.properties,
+              options: t.Array(optionSchema),
+            })
+          ),
+        }),
+        422: commonResponseSchema("fail"),
+        500: commonResponseSchema("error"),
+      },
+    }
+  )
   .post(
     "",
     async ({ body, status }) => {
@@ -137,6 +194,47 @@ export const testEndpoint = new Elysia({ prefix: "/tests", tags: ["Test"] })
           }),
         }),
         422: commonResponseSchema("fail"),
+        500: commonResponseSchema("error"),
+      },
+    }
+  )
+  .put(
+    "/:testId",
+    async ({ params, body, status }) => {
+      const updated = await TestService.updateTest(params.testId, body);
+
+      if (!updated) {
+        return status(404, {
+          status: ResponseStatus.Fail,
+          message: "Test tidak ditemukan",
+        });
+      }
+
+      return status(200, {
+        status: ResponseStatus.Success,
+        message: "Data tes berhasil diperbarui",
+        data: updated,
+      });
+    },
+    {
+      params: testParamsSchema,
+      body: updateTestBodySchema,
+      response: {
+        200: t.Object({
+          ...commonResponseSchema("success").properties,
+          data: t.Object({
+            ...testSchema.properties,
+            instructions: t.Array(testInstructionSchema),
+            notes: t.Array(testNoteSchema),
+            questions: t.Array(
+              t.Object({
+                ...questionSchema.properties,
+                options: t.Array(optionSchema),
+              })
+            ),
+          }),
+        }),
+        404: commonResponseSchema("fail"),
         500: commonResponseSchema("error"),
       },
     }

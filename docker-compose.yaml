@@ -12,6 +12,7 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql
 
+  # Each container hostname is service name by default so you need to set DB_HOST to 'postgres' in .env file
   redis:
     image: redis:8.2.2
     cpus: 1.0
