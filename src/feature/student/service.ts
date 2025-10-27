@@ -2,7 +2,7 @@ import { and, asc, desc, eq, ilike, inArray, or, sql } from "drizzle-orm";
 import db from "../../db";
 import { studentsTable } from "../../db/schema";
 import { DatabaseService } from "../../db/service";
-import { UpdateStudentModel } from "./model";
+import { NewStudentModel, UpdateStudentModel } from "./model";
 import { InternalServerError } from "elysia";
 
 export abstract class StudentService {
@@ -127,6 +127,21 @@ export abstract class StudentService {
         where: eq(studentsTable.npm, npm),
       });
       return student;
+    } catch (error) {
+      DatabaseService.logDatabaseError(error);
+      throw new InternalServerError();
+    }
+  }
+
+  static async createStudent(newStudent: NewStudentModel) {
+    try {
+      const result = await db.insert(studentsTable).values(newStudent).returning();
+
+      if (result.length === 0) {
+        return null;
+      }
+
+      return result[0];
     } catch (error) {
       DatabaseService.logDatabaseError(error);
       throw new InternalServerError();

@@ -2,6 +2,7 @@ import Elysia, { NotFoundError, t } from "elysia";
 import { StudentService } from "./service";
 import { ResponseStatus } from "../../common/enum";
 import {
+  newStudentSchema,
   npmParamsSchema,
   studentQuerySchema,
   studentSchema,
@@ -17,17 +18,6 @@ export const studentEndpoint = new Elysia({
   prefix: "/students",
   tags: ["Student"],
 })
-  .all(
-    "/",
-    () => {
-      throw new NotFoundError();
-    },
-    {
-      detail: {
-        hide: true,
-      },
-    }
-  )
   .get(
     "",
     async ({ query, status }) => {
@@ -124,6 +114,36 @@ export const studentEndpoint = new Elysia({
       },
     }
   )
+  .post(
+    "",
+    async ({ body, status }) => {
+      const newStudent = await StudentService.createStudent(body);
+
+      if (!newStudent) {
+        return status(422, {
+          status: ResponseStatus.Fail,
+          message: "Data mahasiswa gagal ditambahkan",
+        });
+      }
+
+      return status(201, {
+        status: ResponseStatus.Success,
+        message: "Data mahasiswa berhasil ditambahkan",
+        data: newStudent,
+      });
+    },
+    {
+      body: newStudentSchema,
+      response: {
+        201: t.Object({
+          ...commonResponseSchema("success").properties,
+          data: studentSchema,
+        }),
+        422: commonResponseSchema("fail"),
+        500: commonResponseSchema("error"),
+      },
+    }
+  )
   .patch(
     "/:npm",
     async ({ params, body, status }) => {
@@ -153,9 +173,7 @@ export const studentEndpoint = new Elysia({
     },
     {
       params: npmParamsSchema,
-      body: t.Omit(updateStudentSchema, ["id", "npm", "createdAt", "updatedAt"], {
-        error: "Request body tidak valid",
-      }),
+      body: updateStudentSchema,
       response: {
         201: t.Object({
           ...commonResponseSchema("success").properties,

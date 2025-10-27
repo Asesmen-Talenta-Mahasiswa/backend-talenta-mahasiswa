@@ -9,7 +9,7 @@ import { Degree, Faculty, Program } from "../../common/enum";
 
 export const studentSchema = createSelectSchema(studentsTable);
 
-export const newStudentSchema = createInsertSchema(studentsTable, {
+const _newStudentSchema = createInsertSchema(studentsTable, {
   npm: (schema) =>
     t.String({
       ...schema,
@@ -27,14 +27,19 @@ export const newStudentSchema = createInsertSchema(studentsTable, {
       examples: ["Budi Santoso", "Siti Aminah", "Agus Salim"],
     }),
   email: t.Optional(
-    t.Union([
-      t.String({
-        format: "email",
+    t.Union(
+      [
+        t.String({
+          format: "email",
+          error: "Email tidak valid",
+          examples: ["budi@example.com", "siti@example.com", "agus@example.com"],
+        }),
+        t.Null(),
+      ],
+      {
         error: "Email tidak valid",
-        examples: ["budi@example.com", "siti@example.com", "agus@example.com"],
-      }),
-      t.Null(),
-    ])
+      }
+    )
   ),
   year: (schema) =>
     t.Number({
@@ -70,8 +75,15 @@ export const newStudentSchema = createInsertSchema(studentsTable, {
       examples: [Degree.D3, Degree.D4, Degree.S1],
     }),
 });
+export const newStudentSchema = t.Omit(
+  _newStudentSchema,
+  ["id", "createdAt", "updatedAt"],
+  {
+    error: "Request body tidak valid",
+  }
+);
 
-export const updateStudentSchema = createUpdateSchema(studentsTable, {
+const _updateStudentSchema = createUpdateSchema(studentsTable, {
   npm: (schema) =>
     t.String({
       ...schema,
@@ -88,15 +100,21 @@ export const updateStudentSchema = createUpdateSchema(studentsTable, {
       error: "Nama tidak valid",
       examples: ["Budi Santoso", "Siti Aminah", "Agus Salim"],
     }),
-  email: (schema) =>
-    t.Optional(
-      t.String({
-        ...schema,
-        format: "email",
+  email: t.Optional(
+    t.Union(
+      [
+        t.String({
+          format: "email",
+          error: "Email tidak valid",
+          examples: ["budi@example.com", "siti@example.com", "agus@example.com"],
+        }),
+        t.Null(),
+      ],
+      {
         error: "Email tidak valid",
-        examples: ["budi@example.com", "siti@example.com", "agus@example.com"],
-      })
-    ),
+      }
+    )
+  ),
   year: (schema) =>
     t.Number({
       ...schema,
@@ -132,6 +150,14 @@ export const updateStudentSchema = createUpdateSchema(studentsTable, {
     }),
 });
 
+export const updateStudentSchema = t.Omit(
+  _updateStudentSchema,
+  ["id", "createdAt", "updatedAt"],
+  {
+    error: "Request body tidak valid",
+  }
+);
+
 export const npmParamsSchema = t.Object(
   {
     npm: t.String({
@@ -142,7 +168,7 @@ export const npmParamsSchema = t.Object(
       examples: ["2515061066", "2401234567", "2609876543"],
     }),
   },
-  { error: "Query tidak valid" }
+  { error: "NPM tidak valid" }
 );
 
 export const studentQuerySchema = t.Object(
