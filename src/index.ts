@@ -9,6 +9,7 @@ import { testEndpoint } from "./feature/test";
 import { logger } from "./logger";
 import { isDev } from "./common";
 import { resultEndpoint } from "./feature/result";
+import { userEndpoint } from "./feature/user";
 
 const app = new Elysia()
   // Documentation
@@ -93,5 +94,6 @@ const app = new Elysia()
   .use(studentEndpoint)
   .use(testEndpoint)
   .use(resultEndpoint)
+  .use(userEndpoint)
 
   .listen(Bun.env.PORT ?? 3000); // for fallback
