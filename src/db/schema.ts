@@ -14,6 +14,7 @@ import {
 } from "drizzle-orm/pg-core";
 import { PermissionLevel, QuestionType, SubmissionStatus } from "../common/enum";
 import { enumToPgEnum } from "../utils";
+import { randomUUIDv7 } from "bun";
 
 // --- ENUMS ---
 
@@ -34,7 +35,7 @@ export const submissionStatusEnum = pgEnum(
 export const usersTable = pgTable("users", {
   id: uuid()
     .primaryKey()
-    .default(sql`uuidv7()`),
+    .$default(() => randomUUIDv7()),
   username: varchar().notNull().unique(),
   password: text().notNull(), // hashed password
   permissionLevel: permissionLevelEnum("permission_level").notNull(),
@@ -49,7 +50,7 @@ export const studentsTable = pgTable(
   {
     id: uuid()
       .primaryKey()
-      .default(sql`uuidv7()`),
+      .$default(() => randomUUIDv7()),
     npm: varchar().notNull().unique(),
     name: varchar().notNull(),
     email: varchar(),
@@ -100,7 +101,7 @@ export const testsTable = pgTable(
 export const testInstructionsTable = pgTable("test_instructions", {
   id: uuid()
     .primaryKey()
-    .default(sql`uuidv7()`),
+    .$default(() => randomUUIDv7()),
   text: text().notNull(),
   order: integer().default(0).notNull(),
   testId: integer("test_id")
@@ -111,7 +112,7 @@ export const testInstructionsTable = pgTable("test_instructions", {
 export const testNotesTable = pgTable("test_notes", {
   id: uuid()
     .primaryKey()
-    .default(sql`uuidv7()`),
+    .$default(() => randomUUIDv7()),
   text: text().notNull(),
   order: integer().default(0).notNull(),
   testId: integer("test_id")
@@ -122,7 +123,7 @@ export const testNotesTable = pgTable("test_notes", {
 export const questionsTable = pgTable("questions", {
   id: uuid()
     .primaryKey()
-    .default(sql`uuidv7()`),
+    .$default(() => randomUUIDv7()),
   text: text().notNull(),
   type: questionTypeEnum().notNull(),
   testId: integer("test_id") // Formerly subtestId
@@ -133,7 +134,7 @@ export const questionsTable = pgTable("questions", {
 export const optionsTable = pgTable("options", {
   id: uuid()
     .primaryKey()
-    .default(sql`uuidv7()`),
+    .$default(() => randomUUIDv7()),
   text: text().notNull(),
   value: text().notNull(),
   order: integer().notNull().default(0),
@@ -145,7 +146,7 @@ export const optionsTable = pgTable("options", {
 export const testSubmissionsTable = pgTable("test_submissions", {
   id: uuid()
     .primaryKey()
-    .default(sql`uuidv7()`),
+    .$default(() => randomUUIDv7()),
   studentId: uuid("student_id")
     .notNull()
     .references(() => studentsTable.id, { onDelete: "cascade" }),
@@ -160,7 +161,7 @@ export const testSubmissionsTable = pgTable("test_submissions", {
 export const studentAnswersTable = pgTable("student_answers", {
   id: uuid()
     .primaryKey()
-    .default(sql`uuidv7()`),
+    .$default(() => randomUUIDv7()),
   submissionId: uuid("submission_id")
     .notNull()
     .references(() => testSubmissionsTable.id, { onDelete: "cascade" }),
@@ -176,7 +177,7 @@ export const studentAnswersTable = pgTable("student_answers", {
 export const submissionResultsTable = pgTable("submission_results", {
   id: uuid()
     .primaryKey()
-    .default(sql`uuidv7()`),
+    .$default(() => randomUUIDv7()),
   submissionId: uuid("submission_id")
     .notNull()
     .references(() => testSubmissionsTable.id, { onDelete: "cascade" }),

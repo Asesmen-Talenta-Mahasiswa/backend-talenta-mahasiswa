@@ -1,10 +1,9 @@
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
-
 CREATE TYPE "public"."permission_level_enum" AS ENUM('program', 'department', 'faculty', 'university', 'admin');--> statement-breakpoint
 CREATE TYPE "public"."question_type_enum" AS ENUM('multiple_choice', 'single_choice', 'likert');--> statement-breakpoint
 CREATE TYPE "public"."submission_status_enum" AS ENUM('in_progress', 'completed');--> statement-breakpoint
 CREATE TABLE "options" (
-	"id" uuid PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"text" text NOT NULL,
 	"value" text NOT NULL,
 	"order" integer DEFAULT 0 NOT NULL,
@@ -12,14 +11,14 @@ CREATE TABLE "options" (
 );
 --> statement-breakpoint
 CREATE TABLE "questions" (
-	"id" uuid PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"text" text NOT NULL,
 	"type" "question_type_enum" NOT NULL,
 	"test_id" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "student_answers" (
-	"id" uuid PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"submission_id" uuid NOT NULL,
 	"question_id" uuid NOT NULL,
 	"selected_option_id" uuid NOT NULL,
@@ -27,7 +26,7 @@ CREATE TABLE "student_answers" (
 );
 --> statement-breakpoint
 CREATE TABLE "students" (
-	"id" uuid PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"npm" varchar NOT NULL,
 	"name" varchar NOT NULL,
 	"email" varchar,
@@ -41,7 +40,7 @@ CREATE TABLE "students" (
 );
 --> statement-breakpoint
 CREATE TABLE "submission_results" (
-	"id" uuid PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"submission_id" uuid NOT NULL,
 	"test_id" integer NOT NULL,
 	"result_value" text NOT NULL,
@@ -49,21 +48,21 @@ CREATE TABLE "submission_results" (
 );
 --> statement-breakpoint
 CREATE TABLE "test_instructions" (
-	"id" uuid PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"text" text NOT NULL,
 	"order" integer DEFAULT 0 NOT NULL,
 	"test_id" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "test_notes" (
-	"id" uuid PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"text" text NOT NULL,
 	"order" integer DEFAULT 0 NOT NULL,
 	"test_id" integer NOT NULL
 );
 --> statement-breakpoint
 CREATE TABLE "test_submissions" (
-	"id" uuid PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"student_id" uuid NOT NULL,
 	"test_id" integer NOT NULL,
 	"status" "submission_status_enum" DEFAULT 'in_progress' NOT NULL,
@@ -81,7 +80,7 @@ CREATE TABLE "tests" (
 );
 --> statement-breakpoint
 CREATE TABLE "users" (
-	"id" uuid PRIMARY KEY DEFAULT uuidv7() NOT NULL,
+	"id" uuid PRIMARY KEY NOT NULL,
 	"username" varchar NOT NULL,
 	"password" text NOT NULL,
 	"permission_level" "permission_level_enum" NOT NULL,

@@ -1,5 +1,5 @@
 {
-  "id": "8a5ca454-6b66-4009-82a9-152d7cd2410b",
+  "id": "252bad86-6c2b-4572-955e-3d14387f357f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -12,8 +12,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "uuidv7()"
+          "notNull": true
         },
         "text": {
           "name": "text",
@@ -71,8 +70,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "uuidv7()"
+          "notNull": true
         },
         "text": {
           "name": "text",
@@ -124,8 +122,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "uuidv7()"
+          "notNull": true
         },
         "submission_id": {
           "name": "submission_id",
@@ -209,8 +206,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "uuidv7()"
+          "notNull": true
         },
         "npm": {
           "name": "npm",
@@ -371,8 +367,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "uuidv7()"
+          "notNull": true
         },
         "submission_id": {
           "name": "submission_id",
@@ -443,8 +438,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "uuidv7()"
+          "notNull": true
         },
         "text": {
           "name": "text",
@@ -496,8 +490,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "uuidv7()"
+          "notNull": true
         },
         "text": {
           "name": "text",
@@ -549,8 +542,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "uuidv7()"
+          "notNull": true
         },
         "student_id": {
           "name": "student_id",
@@ -712,8 +704,7 @@
           "name": "id",
           "type": "uuid",
           "primaryKey": true,
-          "notNull": true,
-          "default": "uuidv7()"
+          "notNull": true
         },
         "username": {
           "name": "username",
