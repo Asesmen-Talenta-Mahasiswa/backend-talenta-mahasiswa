@@ -117,8 +117,8 @@ jobs:
             DB_PASSWORD=${{ secrets.DB_PASSWORD }}
             DB_NAME=${{ secrets.DB_NAME }}
             DB_CERT="${{ secrets.DB_CERT }}"
-            REDIS_HOST="${{ secrets.REDIS_HOST }}"
-            REDIS_PORT="${{ secrets.REDIS_PORT }}"
+            REDIS_HOST=${{ secrets.REDIS_HOST }}
+            REDIS_PORT=${{ secrets.REDIS_PORT }}
 
       - name: "Show output"
         run: |
