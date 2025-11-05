@@ -24,7 +24,7 @@ export function formatDuration(nsBigInt: bigint): string {
 
 export function formatStatusCode(
   status: number | keyof StatusMap | undefined,
-  defaultStatusCode: number
+  defaultStatusCode: number,
 ): number {
   if (!status) return defaultStatusCode;
 

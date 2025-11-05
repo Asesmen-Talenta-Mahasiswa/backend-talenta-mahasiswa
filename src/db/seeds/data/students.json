@@ -1,0 +1,102 @@
+[
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000001",
+    "npm": "2500000001",
+    "name": "Andi Pratama",
+    "email": "andi.pratama@example.com",
+    "enrollmentYearId": 6,
+    "majorId": 22,
+    "facultyId": 3,
+    "degreeId": 3
+  },
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000002",
+    "npm": "2500000002",
+    "name": "Budi Santoso",
+    "email": "budi.santoso@example.com",
+    "enrollmentYearId": 6,
+    "majorId": 51,
+    "facultyId": 5,
+    "degreeId": 3
+  },
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000003",
+    "npm": "2500000003",
+    "name": "Citra Lestari",
+    "email": "citra.lestari@example.com",
+    "enrollmentYearId": 5,
+    "majorId": 26,
+    "facultyId": 3,
+    "degreeId": 3
+  },
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000004",
+    "npm": "2500000004",
+    "name": "Dewi Anggraini",
+    "email": "dewi.anggraini@example.com",
+    "enrollmentYearId": 7,
+    "majorId": 17,
+    "facultyId": 2,
+    "degreeId": 3
+  },
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000005",
+    "npm": "2500000005",
+    "name": "Eko Saputra",
+    "email": "eko.saputra@example.com",
+    "enrollmentYearId": 7,
+    "majorId": 43,
+    "facultyId": 5,
+    "degreeId": 3
+  },
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000006",
+    "npm": "2500000006",
+    "name": "Farah Nabila",
+    "email": "farah.nabila@example.com",
+    "enrollmentYearId": 5,
+    "majorId": 75,
+    "facultyId": 8,
+    "degreeId": 3
+  },
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000007",
+    "npm": "2500000007",
+    "name": "Gilang Ramadhan",
+    "email": "gilang.ramadhan@example.com",
+    "enrollmentYearId": 6,
+    "majorId": 47,
+    "facultyId": 5,
+    "degreeId": 3
+  },
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000008",
+    "npm": "2500000008",
+    "name": "Hana Safitri",
+    "email": "hana.safitri@example.com",
+    "enrollmentYearId": 6,
+    "majorId": 61,
+    "facultyId": 7,
+    "degreeId": 3
+  },
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000009",
+    "npm": "2500000009",
+    "name": "Iqbal Maulana",
+    "email": "iqbal.maulana@example.com",
+    "enrollmentYearId": 5,
+    "majorId": 51,
+    "facultyId": 5,
+    "degreeId": 3
+  },
+  {
+    "id": "018f8b20-1000-7a00-8a00-000000000010",
+    "npm": "2500000010",
+    "name": "Jasmine Putri",
+    "email": "jasmine.putri@example.com",
+    "enrollmentYearId": 7,
+    "majorId": 22,
+    "facultyId": 3,
+    "degreeId": 3
+  }
+]

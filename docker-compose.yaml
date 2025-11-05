@@ -22,29 +22,38 @@ services:
     volumes:
       - redis:/data
 
-  app:
-    build:
-      context: ./
-      dockerfile: Dockerfile_Dev
-    command: bun run dev
-    cpus: 1.0
-    mem_limit: 512m
-    env_file: ".env"
-    develop:
-      watch:
-        - action: sync
-          path: ./src
-          target: /app/src
-          ignore: node_modules/
-
-        - action: rebuild
-          path: package.json
+  drizzle-gate:
+    image: ghcr.io/drizzle-team/gateway:latest
+    restart: always
     ports:
-      - 3000:3000
-    depends_on:
-      - postgres
-      - redis
+      - "4983:4983"
+    volumes:
+      - drizzle-gateway:/app
+
+  # app:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile_Dev
+  #   command: bun run dev
+  #   cpus: 1.0
+  #   mem_limit: 512m
+  #   env_file: ".env.development.local"
+  #   develop:
+  #     watch:
+  #       - action: sync
+  #         path: ./src
+  #         target: /app/src
+  #         ignore: node_modules/
+
+  #       - action: rebuild
+  #         path: package.json
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - postgres
+  #     - redis
 
 volumes:
   pgdata:
   redis:
+  drizzle-gateway:

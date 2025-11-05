@@ -1,17 +1,20 @@
-import openapi from "@elysiajs/openapi";
+import { isProd } from "./env";
+import openapi, { fromTypes } from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import { version as apiVersion, author } from "../package.json";
 
-import { studentEndpoint } from "./feature/student";
-import { systemEndpoint } from "./feature/system";
+import { studentEndpoint } from "./endpoint/student";
+import { systemEndpoint } from "./endpoint/system";
 import { ResponseStatus } from "./common/enum";
-import { testEndpoint } from "./feature/test";
+import { testEndpoint } from "./endpoint/test";
 import { logger } from "./logger";
-import { isDev } from "./common";
-import { resultEndpoint } from "./feature/result";
-import { userEndpoint } from "./feature/user";
+import { resultEndpoint } from "./endpoint/result";
+import { userEndpoint } from "./endpoint/user";
+import { filterEndpoint } from "./endpoint/filter";
+import { errorHandleMiddleware } from "./middleware/errorHandle";
+import cors from "@elysiajs/cors";
 
-const app = new Elysia()
+new Elysia()
   // Documentation
   .use(
     openapi({
@@ -35,16 +38,28 @@ const app = new Elysia()
           },
         ],
       },
-    })
+    }),
+  )
+
+  .use(
+    cors({
+      origin: "http://localhost:3001",
+      methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: false,
+    }),
   )
 
   .use(
     logger({
-      showStartUpMessage: isDev ? "rich" : "simple",
-    })
+      showStartUpMessage: isProd ? "simple" : "rich",
+    }),
   )
 
+  .use(errorHandleMiddleware)
+
   .onError(({ error, code, status }) => {
+    // TODO: Start throw status() if it either fail or error, only return status() when it was success
     if (code === "VALIDATION") {
       const errMsg =
         error.customError ?? error.valueError?.message ?? "Request tidak valid";
@@ -91,6 +106,7 @@ const app = new Elysia()
   })
 
   .use(systemEndpoint)
+  .use(filterEndpoint)
   .use(studentEndpoint)
   .use(testEndpoint)
   .use(resultEndpoint)

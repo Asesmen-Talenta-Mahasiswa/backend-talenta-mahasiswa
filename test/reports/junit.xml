@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="bun test" tests="9" assertions="516" failures="0" skipped="0" time="0.042066245">
+  <testsuite name="src/tests/utils.test.ts" file="src/tests/utils.test.ts" tests="9" assertions="516" failures="0" skipped="0" time="0" hostname="ts0ra">
+    <testsuite name="src/utils/index.ts" file="src/tests/utils.test.ts" line="25" tests="9" assertions="516" failures="0" skipped="0" time="0.001" hostname="ts0ra">
+      <testcase name="enumToPgEnum works with string enum" classname="src/utils/index.ts" time="0.000275" file="src/tests/utils.test.ts" line="26" assertions="1" />
+      <testcase name="enumToPgEnum works with const object" classname="src/utils/index.ts" time="0.000117" file="src/tests/utils.test.ts" line="36" assertions="1" />
+      <testcase name="objectValues preserves order and values" classname="src/utils/index.ts" time="0.000048" file="src/tests/utils.test.ts" line="47" assertions="1" />
+      <testcase name="generateRandomUsername meets all constraints" classname="src/utils/index.ts" time="0.001539" file="src/tests/utils.test.ts" line="57" assertions="500" />
+      <testcase name="cleanFalsyArray filters falsy values and handles undefined" classname="src/utils/index.ts" time="0.000267" file="src/tests/utils.test.ts" line="69" assertions="2" />
+      <testcase name="buildConflictUpdateColumns maps to excluded.&lt;colName&gt;" classname="src/utils/index.ts" time="0.000374" file="src/tests/utils.test.ts" line="76" assertions="3" />
+      <testcase name="enumValuesAsNonEmptyTuple returns values for non-empty object" classname="src/utils/index.ts" time="0.000092" file="src/tests/utils.test.ts" line="85" assertions="1" />
+      <testcase name="enumValuesAsNonEmptyTuple throws for empty object" classname="src/utils/index.ts" time="0.000129" file="src/tests/utils.test.ts" line="91" assertions="1" />
+      <testcase name="hasAnyValue returns true if any key is not null/undefined" classname="src/utils/index.ts" time="0.000173" file="src/tests/utils.test.ts" line="97" assertions="6" />
+    </testsuite>
+  </testsuite>
+</testsuites>

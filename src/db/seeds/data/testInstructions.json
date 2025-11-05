@@ -1,0 +1,38 @@
+[
+    {
+        "id": "018f8b11-aaaa-7b00-8b00-000000000001",
+        "text": "Pilih 1 respon yang paling kamu sukai atau paling mungkin kamu lakukan dari 4 pilihan respon yang tersedia di setiap situasi.",
+        "order": 0,
+        "testId": 4
+    },
+    {
+        "id": "018f8b11-aaaa-7b00-8b00-000000000002",
+        "text": "Tentukan pilihan yang paling sesuai dengan karakteristik dan kebiasaanmu dari 2 opsi jawaban yang tersedia di setiap situasi.",
+        "order": 0,
+        "testId": 5
+    },
+    {
+        "id": "018f8b11-aaaa-7b00-8b00-000000000003",
+        "text": "Cermati setiap pernyataan dan renungkan seberapa cocok pernyataan tersebut dengan kondisi dirimu saat ini.",
+        "order": 0,
+        "testId": 6
+    },
+    {
+        "id": "018f8b11-aaaa-7b00-8b00-000000000004",
+        "text": "Jika pernyataan sangat sesuai, pilih angka 5 (iya banget).",
+        "order": 1,
+        "testId": 6
+    },
+    {
+        "id": "018f8b11-aaaa-7b00-8b00-000000000005",
+        "text": "Jika pernyataan tidak sesuai, pilih angka 1 (nggak juga).",
+        "order": 2,
+        "testId": 6
+    },
+    {
+        "id": "018f8b11-aaaa-7b00-8b00-000000000006",
+        "text": "Pilih angka di antara 1-5 sesuai dengan tingkat kesesuaianmu.",
+        "order": 3,
+        "testId": 6
+    }
+]

@@ -1,27 +1,34 @@
-import { drizzle } from "drizzle-orm/postgres-js";
+import type { ExtractTablesWithRelations } from "drizzle-orm";
+import type { PgTransaction } from "drizzle-orm/pg-core";
+import {
+  drizzle,
+  type PostgresJsDatabase,
+  type PostgresJsQueryResultHKT,
+} from "drizzle-orm/postgres-js";
+import { createSchemaFactory } from "drizzle-typebox";
+import { t } from "elysia";
 import postgres from "postgres";
+import { env } from "../env";
 import * as schema from "./schema";
-import { RedisClient } from "bun";
 
-export const redis = new RedisClient(
-  `redis://${Bun.env.REDIS_HOST}:${Bun.env.REDIS_PORT}`
-);
-
-const client = postgres({
+const client = postgres(env.DB_URL, {
   prepare: false,
-  host: Bun.env.DB_HOST,
-  port: parseInt(Bun.env.DB_PORT),
-  user: Bun.env.DB_USER,
-  password: Bun.env.DB_PASSWORD,
-  database: Bun.env.DB_NAME,
-  // refer to https://github.com/porsager/postgres#ssl for more info on SSL
-  ssl: Bun.env.NODE_ENV === "production" ? { rejectUnauthorized: false } : false,
+  max: env.DB_MIGRATING || env.DB_SEEDING ? 1 : undefined,
+  onnotice: env.DB_SEEDING ? () => {} : undefined,
 });
 
-const db = drizzle({
-  client,
-  casing: "snake_case",
-  schema,
-});
+const db = drizzle(client, { logger: false, schema });
+
+export const { createInsertSchema, createSelectSchema, createUpdateSchema } =
+  createSchemaFactory({ typeboxInstance: t });
+
+export type Database = PostgresJsDatabase<typeof schema> & {
+  $client: typeof client;
+};
+export type Transaction = PgTransaction<
+  PostgresJsQueryResultHKT,
+  typeof schema,
+  ExtractTablesWithRelations<typeof schema>
+>;
 
 export default db;

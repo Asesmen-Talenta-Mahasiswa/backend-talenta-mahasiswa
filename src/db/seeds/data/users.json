@@ -1,0 +1,52 @@
+[
+  {
+    "username": "admin_root",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "admin"
+  },
+  {
+    "username": "uni_mgr",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "university"
+  },
+  {
+    "username": "faculty_admin",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "faculty"
+  },
+  {
+    "username": "dept_head",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "department"
+  },
+  {
+    "username": "program_owner",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "program"
+  },
+  {
+    "username": "uni_ops",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "university"
+  },
+  {
+    "username": "faculty_ops",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "faculty"
+  },
+  {
+    "username": "dept_ops",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "department"
+  },
+  {
+    "username": "program_ops",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "program"
+  },
+  {
+    "username": "auditor",
+    "password": "$2b$10$CwTycUXWue0Thq9StjUM0uJ8eBrYqKqRR3YKHyCuXapnwMaijvOLa",
+    "role": "university"
+  }
+]

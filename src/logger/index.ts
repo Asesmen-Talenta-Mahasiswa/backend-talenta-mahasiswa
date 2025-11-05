@@ -1,6 +1,6 @@
-import Elysia, { ElysiaCustomStatusResponse } from "elysia";
-import pino from "pino";
-import PinoPretty, { PrettyOptions } from "pino-pretty";
+import Elysia from "elysia";
+// import pino from "pino";
+// import PinoPretty, { PrettyOptions } from "pino-pretty";
 import { version as ELYSIA_VERSION } from "elysia/package.json";
 import { version as APP_VERSION } from "../../package.json";
 import picocolors from "picocolors";
@@ -13,34 +13,60 @@ import {
   formatSymbol,
   formatTimestamp,
 } from "./formatter";
-import { isDev } from "../common";
+// import { isProd } from "../env";
 
 const serverStartTime = performance.now();
 
-const prettyOption: PrettyOptions = {
-  ignore: undefined,
-  minimumLevel: isDev ? "trace" : "info",
-  customPrettifiers: {},
-  messageFormat: "{levelLabel} - {if pid}{pid} - {end}url:{req.url}",
-};
+// const prettyOption: PrettyOptions = {
+//     ignore: undefined,
+//     minimumLevel: isProd ? "info" : "trace",
+//     customPrettifiers: {},
+//     messageFormat: "{levelLabel} - {if pid}{pid} - {end}url:{req.url}",
+// };
 
 type LoggerConfig = {
   showStartUpMessage?: false | "rich" | "simple";
 };
 
-const pretty = isDev ? PinoPretty(prettyOption) : undefined;
+// const pretty = isProd ? undefined : PinoPretty(prettyOption);
 
-const pinoLogger = pino(
-  {
-    level: isDev ? "trace" : "info",
-    formatters: {
-      level(label, _) {
-        return { level: label.toUpperCase() };
-      },
-    },
+// const pinoLogger = pino(
+//     {
+//         level: isProd ? "info" : "trace",
+//         formatters: {
+//             level(label, _) {
+//                 return { level: label.toUpperCase() };
+//             },
+//         },
+//     },
+//     // pretty
+// );
+
+export abstract class MyLogger {
+  static async error(section: string, message: string) {
+    const format =
+      picocolors.red("✖ ") +
+      formatTimestamp(new Date()) +
+      ` [${section.toUpperCase()}] ${message}`;
+    console.error(format);
   }
-  // pretty
-);
+
+  static async info(section: string, message: string) {
+    const format =
+      picocolors.yellow(picocolors.bold("! ")) +
+      formatTimestamp(new Date()) +
+      ` [${section.toUpperCase()}] ${message}`;
+    console.log(format);
+  }
+
+  static async warn(section: string, message: string) {
+    const format =
+      picocolors.blue("- ") +
+      formatTimestamp(new Date()) +
+      ` [${section.toUpperCase()}] ${message}`;
+    console.warn(format);
+  }
+}
 
 export function logger(config: LoggerConfig = {}) {
   const { showStartUpMessage = "simple" } = config;
@@ -58,12 +84,14 @@ export function logger(config: LoggerConfig = {}) {
       const duration = performance.now() - serverStartTime;
 
       if (showStartUpMessage === "simple") {
-        console.log(`🦊 Elysia v${ELYSIA_VERSION} started in ${duration.toFixed(0)} ms`);
+        console.log(
+          `🦊 Elysia v${ELYSIA_VERSION} started in ${duration.toFixed(0)} ms`,
+        );
         return;
       }
 
       const host = Bun.env.DB_HOST;
-      const port = parseInt(Bun.env.DB_PORT);
+      const port = Bun.env.DB_PORT;
       const user = "*****";
       const password = "*****";
       const dbName = Bun.env.DB_NAME;
@@ -72,34 +100,34 @@ export function logger(config: LoggerConfig = {}) {
       await Bun.write(
         Bun.stdout,
         `🦊 ${picocolors.green(
-          `${picocolors.bold("Elysia")} v${ELYSIA_VERSION}`
+          `${picocolors.bold("Elysia")} v${ELYSIA_VERSION}`,
         )} ${picocolors.gray("started in")} ${picocolors.bold(
-          duration.toFixed(0)
-        )} ms\n\n`
+          duration.toFixed(0),
+        )} ms\n\n`,
       );
       await Bun.write(
         Bun.stdout,
         `${picocolors.green(" ➜ ")} ${picocolors.bold(
-          "Name"
-        )}:     ${picocolors.whiteBright("RESTful API Asesmen Talenta Mahsiswa")}\n`
+          "Name",
+        )}:     ${picocolors.whiteBright("RESTful API Asesmen Talenta Mahsiswa")}\n`,
       );
       await Bun.write(
         Bun.stdout,
         `${picocolors.green(" ➜ ")} ${picocolors.bold("Server")}:   ${picocolors.blue(
-          server?.url.toString() ?? "unknown"
-        )}\n`
+          server?.url.toString() ?? "unknown",
+        )}\n`,
       );
       await Bun.write(
         Bun.stdout,
         `${picocolors.green(" ➜ ")} ${picocolors.bold("Database")}: ${picocolors.blue(
-          `${database}://${user}:${password}@${host}:${port}/${dbName}`
-        )}\n`
+          `${database}://${user}:${password}@${host}:${port}/${dbName}`,
+        )}\n`,
       );
       await Bun.write(
         Bun.stdout,
         `${picocolors.green(" ➜ ")} ${picocolors.bold("Version")}:  ${picocolors.green(
-          APP_VERSION
-        )}\n\n`
+          APP_VERSION,
+        )}\n\n`,
       );
     })
 
@@ -108,7 +136,9 @@ export function logger(config: LoggerConfig = {}) {
     })
 
     .onError({ as: "global" }, async ({ store, request, path, set, code }) => {
-      const duration = formatDuration(process.hrtime.bigint() - store.requestStartTime);
+      const duration = formatDuration(
+        process.hrtime.bigint() - store.requestStartTime,
+      );
       const method = formatMethod(request.method);
       const timestamp = formatTimestamp(new Date());
       const _path = formatPath(path);
@@ -121,52 +151,62 @@ export function logger(config: LoggerConfig = {}) {
       // pinoLogger.error({ duration, method, path, status, symbol });
     })
 
-    .onAfterHandle({ as: "global" }, async ({ responseValue, request, path, store }) => {
-      if (responseValue instanceof Response) {
-        if (responseValue.status < 300 && responseValue.status > 300) return;
-        if (!responseValue.headers.get("location")) return;
+    .onAfterHandle(
+      { as: "global" },
+      async ({ responseValue, request, path, store }) => {
+        if (responseValue instanceof Response) {
+          if (responseValue.status < 300 && responseValue.status > 300) return;
+          if (!responseValue.headers.get("location")) return;
 
-        store.isRedirected = true;
+          store.isRedirected = true;
 
-        const symbol = formatSymbol(responseValue.status);
-        const timestamp = formatTimestamp(new Date());
-        const method = formatMethod(request.method);
-        const _path = formatPath(path);
-        const status = formatColorStatusCode(responseValue.status);
-        const redirectPath = formatPath(
-          responseValue.headers.get("location") ?? "unknown"
+          const symbol = formatSymbol(responseValue.status);
+          const timestamp = formatTimestamp(new Date());
+          const method = formatMethod(request.method);
+          const _path = formatPath(path);
+          const status = formatColorStatusCode(responseValue.status);
+          const redirectPath = formatPath(
+            responseValue.headers.get("location") ?? "unknown",
+          );
+          const duration = formatDuration(
+            process.hrtime.bigint() - store.requestStartTime,
+          );
+          const logMsg = `${symbol} ${timestamp} ${method} ${_path} ${symbol} ${redirectPath} ${status} ${duration}\n`;
+          await Bun.write(Bun.stdout, logMsg);
+          return;
+        }
+        store.isRedirected = false;
+      },
+    )
+
+    .onAfterResponse(
+      { as: "global" },
+      async ({ store, request, path, set }) => {
+        const duration = formatDuration(
+          process.hrtime.bigint() - store.requestStartTime,
         );
-        const duration = formatDuration(process.hrtime.bigint() - store.requestStartTime);
-        const logMsg = `${symbol} ${timestamp} ${method} ${_path} ${symbol} ${redirectPath} ${status} ${duration}\n`;
+        const method = formatMethod(request.method);
+        const timestamp = formatTimestamp(new Date());
+        const status = formatStatusCode(set.status, 200);
+        const _path = formatPath(path);
+        const symbol = formatSymbol(status);
+        const _status = formatColorStatusCode(status);
+
+        if (status >= 500) return;
+        if (store.isRedirected) return;
+
+        const logMsg = `${symbol} ${timestamp} ${method} ${_path} ${_status} ${duration}\n`;
+
+        if (status >= 400) {
+          // pinoLogger.warn({ duration, method, path, status, symbol });
+          await Bun.write(Bun.stdout, logMsg);
+          return;
+        }
+
         await Bun.write(Bun.stdout, logMsg);
-        return;
-      }
-      store.isRedirected = false;
-    })
-
-    .onAfterResponse({ as: "global" }, async ({ store, request, path, set }) => {
-      const duration = formatDuration(process.hrtime.bigint() - store.requestStartTime);
-      const method = formatMethod(request.method);
-      const timestamp = formatTimestamp(new Date());
-      const status = formatStatusCode(set.status, 200);
-      const _path = formatPath(path);
-      const symbol = formatSymbol(status);
-      const _status = formatColorStatusCode(status);
-
-      if (status >= 500) return;
-      if (store.isRedirected) return;
-
-      const logMsg = `${symbol} ${timestamp} ${method} ${_path} ${_status} ${duration}\n`;
-
-      if (status >= 400) {
-        // pinoLogger.warn({ duration, method, path, status, symbol });
-        await Bun.write(Bun.stdout, logMsg);
-        return;
-      }
-
-      await Bun.write(Bun.stdout, logMsg);
-      // pinoLogger.info({ duration, method, path, status, symbol });
-    });
+        // pinoLogger.info({ duration, method, path, status, symbol });
+      },
+    );
 
   // Testing only
   // .all("/logger/testing", () => "Hi!")

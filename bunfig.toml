@@ -1,12 +1,12 @@
-# [env]
-# NODE_ENV = "test"
+[env]
+NODE_ENV = "test"
 # DATABASE_URL = "postgresql://localhost:5432/test_db"
 # LOG_LEVEL = "error"
 
 [test]
 # Test discovery
 root = "./src"
-preload = ["./setup/test-setup.ts", "./setup/global-mocks.ts"]
+preload = ["./test/setup/test-setup.ts", "./test/setup/global-mocks.ts"]
 
 # Execution settings
 smol = true
@@ -14,7 +14,7 @@ smol = true
 # Coverage configuration
 coverage = true
 coverageReporter = ["text", "lcov"]
-coverageDir = "./coverage"
+coverageDir = "./test/coverage"
 coverageThreshold = {
   lines = 0.85,      # 85% line coverage
   functions = 0.90,  # 90% function coverage
@@ -53,4 +53,4 @@ coveragePathIgnorePatterns = [
 
 # Reporter configuration
 [test.reporter]
-junit = "./reports/junit.xml"
+junit = "./test/reports/junit.xml"
