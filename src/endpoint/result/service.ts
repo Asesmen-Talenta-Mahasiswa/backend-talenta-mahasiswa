@@ -143,47 +143,27 @@ export abstract class ResultService {
         } satisfies FailResponseModel);
       }
 
-      // Helper to strip undefined values from update payloads
-      const pickDefined = <T extends Record<string, any>>(obj: T) =>
-        Object.fromEntries(
-          Object.entries(obj).filter(([, v]) => v !== undefined),
-        ) as Partial<T>;
-
       await db.transaction(async (tx) => {
-        // Create a map of existing answers by their ID
-        const oldAnswersMap = new Map(
-          (submission.answers ?? []).map((ans) => [ans.id, ans]),
-        );
+        // DELETE all existing answers for this submission (PUT behavior - replace entire resource)
+        await tx
+          .delete(testSubmissionAnswer)
+          .where(eq(testSubmissionAnswer.testSubmissionId, submissionId));
 
+        // INSERT all new answers
         for (const ans of answers) {
-          const { id, testSubmissionId: _ignored, ...rest } = ans as any;
+          const {
+            id: _ignored,
+            testSubmissionId: _alsoIgnored,
+            ...rest
+          } = ans as any;
 
-          if (id && oldAnswersMap.has(id)) {
-            // Update existing answer if it changed
-            const oldVal = oldAnswersMap.get(id)!;
-            const next = pickDefined(rest);
-            const changed =
-              (next.testQuestionId !== undefined &&
-                next.testQuestionId !== oldVal.testQuestionId) ||
-              (next.selectedOptionId !== undefined &&
-                next.selectedOptionId !== oldVal.selectedOptionId);
+          const payload = {
+            ...rest,
+            testSubmissionId: submissionId,
+          } as any;
 
-            if (changed) {
-              await tx
-                .update(testSubmissionAnswer)
-                .set(next)
-                .where(eq(testSubmissionAnswer.id, id));
-            }
-          } else {
-            // Insert new answer
-            const payload = {
-              ...rest,
-              testSubmissionId: submissionId,
-            } as any;
-            await tx.insert(testSubmissionAnswer).values(payload);
-          }
+          await tx.insert(testSubmissionAnswer).values(payload);
         }
-        // Note: We do NOT delete old answers that are not in the new data
       });
 
       // Return fresh snapshot of all answers for this submission

@@ -30,7 +30,7 @@ export const studentEndpoint = new Elysia({
         query.majorId,
         query.facultyId,
         query.degreeId,
-        query.sortDirection
+        query.sortDirection,
       );
 
       return status(200, {
@@ -55,7 +55,7 @@ export const studentEndpoint = new Elysia({
         422: failResponseModel,
         500: errorResponseModel,
       },
-    }
+    },
   )
   .get(
     "/:npm",
@@ -90,7 +90,7 @@ export const studentEndpoint = new Elysia({
         422: failResponseModel,
         500: errorResponseModel,
       },
-    }
+    },
   )
   .post(
     "",
@@ -124,7 +124,7 @@ export const studentEndpoint = new Elysia({
         422: failResponseModel,
         500: errorResponseModel,
       },
-    }
+    },
   )
   .patch(
     "/:npm",
@@ -160,5 +160,5 @@ export const studentEndpoint = new Elysia({
         422: failResponseModel,
         500: errorResponseModel,
       },
-    }
+    },
   );
