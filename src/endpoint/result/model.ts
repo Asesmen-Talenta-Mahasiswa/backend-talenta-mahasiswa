@@ -1,5 +1,9 @@
 import { t } from "elysia";
-import { testSubmissionModel, testSubmissionAnswerModel } from "../test/model";
+import {
+  testSubmissionModel,
+  testSubmissionAnswerModel,
+  testSubmissionResultModel,
+} from "../test/model";
 
 export const testSubmissionParamsModel = t.Object({
   submissionId: t.String({
@@ -20,4 +24,5 @@ export const testSubmissionAnswerParamsModel = t.Object({
 export const testSubmissionWithAnswersModel = t.Object({
   ...testSubmissionModel.properties,
   answers: t.Array(testSubmissionAnswerModel),
+  results: t.Array(testSubmissionResultModel),
 });

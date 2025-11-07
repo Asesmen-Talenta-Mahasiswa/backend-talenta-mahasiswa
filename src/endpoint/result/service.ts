@@ -22,6 +22,7 @@ export abstract class ResultService {
         where: (col, { eq }) => eq(col.id, submissionId),
         with: {
           answers: true,
+          results: true,
         },
       });
 
