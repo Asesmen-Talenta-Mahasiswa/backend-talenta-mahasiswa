@@ -1,0 +1,534 @@
+[
+    {
+        "id": "019a4ca6-683a-7000-a723-624cdf348708",
+        "text": "Cara saya agar lebih mudah memahami materi kuliah adalah dengan…",
+        "type": "single_choice",
+        "order": 0,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7000-a13c-650225f21cd7",
+        "text": "Jenis tugas kuliah yang menarik minat saya & membuat bersemangat mengerjakannya adalah…",
+        "type": "single_choice",
+        "order": 1,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7001-9400-f6c9f04a666b",
+        "text": "Saat  kerja kelompok, peran / bagian yang paling saya nikmati adalah…",
+        "type": "single_choice",
+        "order": 2,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7002-a62d-4b51b00876df",
+        "text": "Saya suka teman belajar yang …",
+        "type": "single_choice",
+        "order": 3,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7003-b1d3-19b00d6c7535",
+        "text": "Saat diminta membuat kelompok, saya akan memilih teman kelompok yang ..",
+        "type": "single_choice",
+        "order": 4,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7004-bd83-46bfa35fdbe8",
+        "text": "Peran yang paling saya nikmati saat presentasi adalah …",
+        "type": "single_choice",
+        "order": 5,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7005-b6bd-9f189a0f291c",
+        "text": "Saat kelompok saya menghadapi kesulitan dalam mengerjakan tugas, yang biasanya saya lakukan.. ",
+        "type": "single_choice",
+        "order": 6,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7006-827c-09db57449ade",
+        "text": "Saat membantu teman yang kesulitan belajar, saya biasanya…",
+        "type": "single_choice",
+        "order": 7,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7007-8bc7-5d303b169cae",
+        "text": "Saya tertarik untuk mengikuti kelas dengan karakteristik mengajar dosen yang …",
+        "type": "single_choice",
+        "order": 8,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7008-82a2-a1d456ee3738",
+        "text": "Kegiatan mahasiswa yang menarik minat saya …",
+        "type": "single_choice",
+        "order": 9,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-7009-bbc7-1dc981c8109c",
+        "text": "Saat punya waktu luang, saya lebih suka…",
+        "type": "single_choice",
+        "order": 10,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-700a-8838-39f2419ee28f",
+        "text": "Dalam 5 tahun kedepan, saya membayangkan akan menekuni jenis profesi …",
+        "type": "single_choice",
+        "order": 11,
+        "testId": 4
+    },
+    {
+        "id": "019a4ca6-683c-700b-83bd-0e5930565ff3",
+        "text": "Ide akan lebih mudah datang jika:",
+        "type": "single_choice",
+        "order": 0,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-700c-9011-cc88e1b19f4b",
+        "text": "Belajar akan lebih efektif di tempat yang suasananya:",
+        "type": "single_choice",
+        "order": 1,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-700d-8c9c-6583b036baa7",
+        "text": "Lebih bersemangat belajar di kelas yang suasananya:",
+        "type": "single_choice",
+        "order": 2,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-700e-a9d1-23e5641ca2b0",
+        "text": "Lebih mudah memahami materi pelajaran jika:",
+        "type": "single_choice",
+        "order": 3,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-700f-aab9-2a9ba1c71471",
+        "text": "Lebih enak mengulang pelajaran dengan cara:",
+        "type": "single_choice",
+        "order": 4,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7010-8f24-331152f5f3e3",
+        "text": "Lebih bersemangat jika mengerjakan tugas:",
+        "type": "single_choice",
+        "order": 5,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7011-a64c-de6657a8c2c8",
+        "text": "Waktu kosong terasa lebih menyenangkan jika digunakan untuk:",
+        "type": "single_choice",
+        "order": 6,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7012-af09-11eec60cae7a",
+        "text": "Cara saya mempersiapkan bahan presentasi:",
+        "type": "single_choice",
+        "order": 7,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7013-8a9b-cd87ccaf9b34",
+        "text": "Cara saya mencatat penjelasan dosen:",
+        "type": "single_choice",
+        "order": 8,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7014-83d7-809b9411dd74",
+        "text": "Belajar akan lebih seru jika:",
+        "type": "single_choice",
+        "order": 9,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7015-bc68-5092b166bca9",
+        "text": "Kontribusi saya dalam tugas kelompok biasanya:",
+        "type": "single_choice",
+        "order": 10,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7016-a1eb-994e48b5c732",
+        "text": "Saat membuat catatan mandiri, saya lebih sering:",
+        "type": "single_choice",
+        "order": 11,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7017-bc70-97f70cd659e5",
+        "text": "Topik diskusi yang membuat saya bersemangat:",
+        "type": "single_choice",
+        "order": 12,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7018-a8c5-ec4c9cd8e107",
+        "text": "Materi kuliah akan lebih mudah saya pahami jika:",
+        "type": "single_choice",
+        "order": 13,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7019-9966-e9d4cd746c91",
+        "text": "Jika terdapat perbedaan pendapat saat berdiskusi, saya lebih memilih:",
+        "type": "single_choice",
+        "order": 14,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-701a-b7f0-9438187714ee",
+        "text": "Jika diminta untuk menilai presentasi kelompok lain, saya lebih memperhatikan:",
+        "type": "single_choice",
+        "order": 15,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-701b-a860-254e731b043b",
+        "text": "Menurut saya bantuan terbaik untuk teman yang sulit memahami pelajaran adalah:",
+        "type": "single_choice",
+        "order": 16,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-701c-a6a7-bc1c9a1338a7",
+        "text": "Jika dalam kelompok ada teman yang kurang berkontribusi, yang akan saya lakukan:",
+        "type": "single_choice",
+        "order": 17,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-701d-9067-e27fae9bc087",
+        "text": "Dalam kelompok belajar, yang paling penting buat saya:",
+        "type": "single_choice",
+        "order": 18,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-701e-8da8-eb24e39d9141",
+        "text": "Dalam memilih teman dekat, saya lebih tertarik pada:",
+        "type": "single_choice",
+        "order": 19,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-701f-890b-a24a98031c17",
+        "text": "Saat teman curhat, saya akan:",
+        "type": "single_choice",
+        "order": 20,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7020-b505-66f47bd2c174",
+        "text": "Pola saya menulis makalah:",
+        "type": "single_choice",
+        "order": 21,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7021-884f-b7d7a0da53ca",
+        "text": "Jika ada beberapa tugas dalam waktu bersamaan, saya biasanya",
+        "type": "single_choice",
+        "order": 22,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7022-b816-60ac18483be1",
+        "text": "Dalam mengatur kegiatan sehari-hari, saya lebih suka:",
+        "type": "single_choice",
+        "order": 23,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7023-9bdd-f5c31aba0cdf",
+        "text": "Saya lebih suka alur diskusi yang:",
+        "type": "single_choice",
+        "order": 24,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7024-919e-fab067e498ce",
+        "text": "Saat ada janjian mengerjakan tugas kelompok:",
+        "type": "single_choice",
+        "order": 25,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7025-9f47-922b77a5422f",
+        "text": "Cara saya mempersiapkan diri saat menjadi presenter:",
+        "type": "single_choice",
+        "order": 26,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7026-8141-c4892d9f57d3",
+        "text": "Saat mengulang membaca materi kuliah:",
+        "type": "single_choice",
+        "order": 27,
+        "testId": 5
+    },
+    {
+        "id": "019a4ca6-683c-7027-be37-01fbb86ed9d6",
+        "text": "Secara umum, saya merasa puas dengan kualitas diri saya saat ini",
+        "type": "likert",
+        "order": 0,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7028-a778-81fe3685fb75",
+        "text": "Saya sering menginginkan kehidupan seperti orang yang terlihat lebih beruntung.",
+        "type": "likert",
+        "order": 1,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7029-b795-d5229d48fbe8",
+        "text": "Saya mampu menerima kekurangan saya tanpa harus membenci diri sendiri",
+        "type": "likert",
+        "order": 2,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-702a-993d-372bb1de2e6e",
+        "text": "Ada hal-hal dalam diri saya yang membuat saya terus merasa insecure (rendah diri)",
+        "type": "likert",
+        "order": 3,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-702b-bda4-107e05b1daa2",
+        "text": "Saya sudah mampu berdamai dengan hampir semua pengalaman buruk di masa lalu",
+        "type": "likert",
+        "order": 4,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-702c-a620-aef92b6f9ba1",
+        "text": "Masih banyak kejadian di masa lalu yang ingin saya ubah karena membuat saya kecewa saat mengingatnya",
+        "type": "likert",
+        "order": 5,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-702d-b1ec-7776b680d0dc",
+        "text": "Saya punya cara sendiri dalam menentukan apa yang penting bagi hidup saya.",
+        "type": "likert",
+        "order": 6,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-702e-8534-b199139e5664",
+        "text": "Saya gampang overthinking (berpikir berlebihan) setelah mendapat penilaian negatif dari orang lain.",
+        "type": "likert",
+        "order": 7,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-702f-b7be-2cf88984fb55",
+        "text": "Saya berani memilih keputusan meski berbeda dari kebanyakan orang",
+        "type": "likert",
+        "order": 8,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7030-99c6-3fbc68281915",
+        "text": "Seringkali saya mengikuti apa kata orang meskipun tidak sesuai dengan keinginan saya",
+        "type": "likert",
+        "order": 9,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7031-8e5d-cbb36b064774",
+        "text": "Saya akan tetap berkata jujur meskipun tidak sesuai dengan harapan orang lain",
+        "type": "likert",
+        "order": 10,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7032-a63b-93bc6f1d5b27",
+        "text": "Seringkali saya menyesuaikan perilaku agar bisa diterima di lingkungan sosial",
+        "type": "likert",
+        "order": 11,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7033-afb0-5c5acbc7fc65",
+        "text": "Saya sudah memiliki rencana dengan langkah yang jelas untuk mencapai cita - cita di masa depan",
+        "type": "likert",
+        "order": 12,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7034-abdb-a6945fdfba31",
+        "text": "Saat ini saya tidak tahu dengan pasti apa yang ingin saya capai di masa depan",
+        "type": "likert",
+        "order": 13,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7035-a125-db0c4ff66145",
+        "text": "Saya berani memilih keputusan meski berbeda dari kebanyakan orang",
+        "type": "likert",
+        "order": 14,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7036-9a08-db49032bcafe",
+        "text": "Rasanya tidak banyak momen berharga dari perjalanan hidup yang telah saya lalu",
+        "type": "likert",
+        "order": 15,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7037-aa34-32a006e5d43b",
+        "text": "Optimis dan yakin, bahwa di masa depan saya akan menjadi pribadi yang berguna bagi banyak orang.",
+        "type": "likert",
+        "order": 16,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7038-971f-78529feabef7",
+        "text": "Jika melihat kondisi diri saat ini, rasanya di masa depan saya akan kesulitan untuk bisa sukses.",
+        "type": "likert",
+        "order": 17,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7039-9750-013786f3f1c0",
+        "text": "Saya merasakan banyak perubahan positif pada diri saya dalam 1 tahun terakhir",
+        "type": "likert",
+        "order": 18,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-703a-8eaf-186ef3bf8f61",
+        "text": "Beberapa kebiasaan buruk masih menghambat saya untuk berkembang",
+        "type": "likert",
+        "order": 19,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-703b-8c93-a756a9868937",
+        "text": "Saya rutin melakukan evaluasi & refleksi diri, untuk semakin memahami bakat serta potensi yang dimilik",
+        "type": "likert",
+        "order": 20,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-703c-b335-329814271f5b",
+        "text": "Saya belum menyadari apa saja potensi diri yang perlu saya kembangkan",
+        "type": "likert",
+        "order": 21,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-703d-a97d-e0b10bbd289c",
+        "text": "Saya senang mencari tantangan dengan mencoba berbagai pengalaman baru",
+        "type": "likert",
+        "order": 22,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-703e-955b-bf80be80c72e",
+        "text": "Seringkali saya menghindar untuk mencoba hal - hal baru, karena takut gagal.",
+        "type": "likert",
+        "order": 23,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-703f-b5d5-c83f550f3458",
+        "text": "Saya mampu menata lingkungan agar mememberikan suasana yang kondusif untuk saya belajar.",
+        "type": "likert",
+        "order": 24,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7040-ab97-94bd5b2da4f6",
+        "text": "Seringkali saya merasa kewalahan untuk menghadapi tuntutan lingkungan kepada saya",
+        "type": "likert",
+        "order": 25,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7041-8ff7-14ce6b4a77dc",
+        "text": "Saya mampu menyelesaikan semua tanggung jawab sehari - hari tanpa merasa kewalahan.",
+        "type": "likert",
+        "order": 26,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7042-a81d-29f237dedacc",
+        "text": "Seringkali saya merasa memiliki terlalu banyak kegiatan, sehingga sulit mengaturnya",
+        "type": "likert",
+        "order": 27,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7043-a593-13de379f5665",
+        "text": "Saya termasuk orang yang jeli menemukan peluang dan kesempatan yang ada disekitar",
+        "type": "likert",
+        "order": 28,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7044-a6f5-81dea5793dcb",
+        "text": "Seringkali saya terlambat menyadari jika ternyata di sekitar saya terdapat banyak kesempatan & peluang baik",
+        "type": "likert",
+        "order": 29,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7045-beb7-a7315b68b5ca",
+        "text": "Saya memiliki beberapa teman yang benar - benar dipercaya untuk menyimpan rahasia.",
+        "type": "likert",
+        "order": 30,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7046-bebb-836405f20909",
+        "text": "Rasanya orang - orang di sekitar saya tidak benar - benar bisa memahami saya",
+        "type": "likert",
+        "order": 31,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7047-a584-7f8dc89b7c09",
+        "text": "Saya merasa mampu dan nyaman untuk menunjukkan perhatian secara langsung kepada orang lain.",
+        "type": "likert",
+        "order": 32,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7048-9f1d-0ece8b4d2656",
+        "text": "Seringkali saya menjadi orang yang diabaikan di lingkaran pertemanan",
+        "type": "likert",
+        "order": 33,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-7049-8b20-78ad2fa81738",
+        "text": "Mudah bagi saya untuk meredam ego dan mengalah agar perdebatan tidak berlaut - larut.",
+        "type": "likert",
+        "order": 34,
+        "testId": 6
+    },
+    {
+        "id": "019a4ca6-683c-704a-bf7b-2de926a1b1f7",
+        "text": "Seringkali kesabaran saya berkurang saat menghadapi orang yang pemikirannya tidak sejalan dengan saya.",
+        "type": "likert",
+        "order": 35,
+        "testId": 6
+    }
+]

@@ -1,0 +1,15 @@
+export { default as user } from "./user";
+export { default as student } from "./student";
+export { default as test } from "./test";
+export { default as testInstruction } from "./testInstruction";
+export { default as testNote } from "./testNote";
+export { default as testQuestion } from "./testQuestion";
+export { default as testQuestionOption } from "./testQuestionOption";
+export { default as testSubmission } from "./testSubmission";
+export { default as testSubmissionAnswer } from "./testSubmissionAnswer";
+export { default as testSubmissionResult } from "./testSubmissionResult";
+export { default as enrollmentYear } from "./enrollmentYear";
+export { default as faculty } from "./faculty";
+export { default as degree } from "./degree";
+export { default as major } from "./major";
+export { default as department } from "./department";

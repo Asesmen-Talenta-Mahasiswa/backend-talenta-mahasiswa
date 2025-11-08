@@ -1,0 +1,1990 @@
+[
+    {
+        "id": "019a4ca6-683c-704b-9ef4-516529ec207c",
+        "text": "Membaca lalu membuat rangkuman yang mudah dibaca ulang.",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683a-7000-a723-624cdf348708"
+    },
+    {
+        "id": "019a4ca6-683c-704c-ad52-d22c09d4f3af",
+        "text": "Mencari sumber informasi lain yang dapat membantu memahami materi tersebut",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683a-7000-a723-624cdf348708"
+    },
+    {
+        "id": "019a4ca6-683c-704d-9016-72d1178a7385",
+        "text": "Membuat diagram, mindmap atau catatan kreatif lainnya dengan warna dan gambar.",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683a-7000-a723-624cdf348708"
+    },
+    {
+        "id": "019a4ca6-683c-704e-a854-18256f63a347",
+        "text": "Diskusi kelompok sambil memimpin pembicaraan agar semua memahami.",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683a-7000-a723-624cdf348708"
+    },
+    {
+        "id": "019a4ca6-683c-704f-a76c-cd17777a326a",
+        "text": "Tugas yang disertai dengan instruksi pengerjaan yang jelas.",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7000-a13c-650225f21cd7"
+    },
+    {
+        "id": "019a4ca6-683c-7050-9f34-a6837c0d1b86",
+        "text": "Tugas yang menantang saya untuk berpikir kritis dan mendalam.",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7000-a13c-650225f21cd7"
+    },
+    {
+        "id": "019a4ca6-683c-7051-968f-2a1c799d1e51",
+        "text": "Tugas yang memberikan saya kebebasan untuk ide unik dan kreatif.",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7000-a13c-650225f21cd7"
+    },
+    {
+        "id": "019a4ca6-683c-7052-a3ff-692fb3a77225",
+        "text": "Proyek kelompok yang memberi kesempatan saya mengatur strategi dan memandu kelompok",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7000-a13c-650225f21cd7"
+    },
+    {
+        "id": "019a4ca6-683c-7053-a93e-c969382c9217",
+        "text": "Menangani bagian teknis, seperti merapikan makalah atau bahan presentasi",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7001-9400-f6c9f04a666b"
+    },
+    {
+        "id": "019a4ca6-683c-7054-849a-b46732eddf55",
+        "text": "Mengumpulkan informasi dan data serta mengkonsep cara pengerjaan tugas",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7001-9400-f6c9f04a666b"
+    },
+    {
+        "id": "019a4ca6-683c-7055-81a9-e55d0a89164e",
+        "text": "Mencari ide-ide segar agar tugas lebih menarik dan unik.",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7001-9400-f6c9f04a666b"
+    },
+    {
+        "id": "019a4ca6-683c-7056-a9d5-f097078612e0",
+        "text": "Mengarahkan kelompok dan mengatur strategi pengerjaan tugas",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7001-9400-f6c9f04a666b"
+    },
+    {
+        "id": "019a4ca6-683c-7057-9de0-92c04fe55c69",
+        "text": "Bisa membantu saya menyelesaikan tugas secara praktis dan cepat",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7002-a62d-4b51b00876df"
+    },
+    {
+        "id": "019a4ca6-683c-7058-b8f2-4f2824a2a9c7",
+        "text": "Bisa mengimbangi saya untuk berdiskusi serta menganalisis permasalah secara mendalam",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7002-a62d-4b51b00876df"
+    },
+    {
+        "id": "019a4ca6-683c-7059-a06f-89126d3a358e",
+        "text": "Bisa memahami manfaat dari ide - ide unik yang saya miliki",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7002-a62d-4b51b00876df"
+    },
+    {
+        "id": "019a4ca6-683c-705a-84b6-56b441c778c7",
+        "text": "Punya semangat tinggi, aktif, dan mampu memotivasi saya",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7002-a62d-4b51b00876df"
+    },
+    {
+        "id": "019a4ca6-683c-705b-b883-9006787681ca",
+        "text": "Cekatan serta mampu untuk bekerja dengan sistematis & terstruktur",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7003-b1d3-19b00d6c7535"
+    },
+    {
+        "id": "019a4ca6-683c-705c-ae87-16b9e7ac7a3f",
+        "text": "Pintar mencari referensi lain atau tambahan data untuk memperkuat tugas.",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7003-b1d3-19b00d6c7535"
+    },
+    {
+        "id": "019a4ca6-683c-705d-a223-175ede2f52fe",
+        "text": "Asik diajak berdiskusi untuk mengembangkan ide baru, tidak \"anti\" dengan ide baru.",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7003-b1d3-19b00d6c7535"
+    },
+    {
+        "id": "019a4ca6-683c-705e-a852-7e53aa5f5f03",
+        "text": "Mudah memahami arahan yang saya berikan.",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7003-b1d3-19b00d6c7535"
+    },
+    {
+        "id": "019a4ca6-683c-705f-85e3-474e29e755ee",
+        "text": "Menyusun slide dan mempersiapkan teknis presentasi",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7004-bd83-46bfa35fdbe8"
+    },
+    {
+        "id": "019a4ca6-683c-7060-9b19-a56569aec921",
+        "text": "Mengumpulkan teori/literatur untuk isi presentasi",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7004-bd83-46bfa35fdbe8"
+    },
+    {
+        "id": "019a4ca6-683c-7061-9d8e-d306163f2d7e",
+        "text": "Mengkreasikan tampilan slide presentasi agar lebih estetik & mudah dipahami.",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7004-bd83-46bfa35fdbe8"
+    },
+    {
+        "id": "019a4ca6-683c-7062-9116-09b8aa0802c0",
+        "text": "Mengkoordinir & memoderatori/memimpin jalannya presentasi",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7004-bd83-46bfa35fdbe8"
+    },
+    {
+        "id": "019a4ca6-683c-7063-941f-6b03b8b7150e",
+        "text": "Memberikan saran praktis yang bisa langsung di terapkan",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7005-b6bd-9f189a0f291c"
+    },
+    {
+        "id": "019a4ca6-683c-7064-9c04-dc5824beb3e5",
+        "text": "Menganalisis apa yang menjadi sumber dari kesulitan yang ada",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7005-b6bd-9f189a0f291c"
+    },
+    {
+        "id": "019a4ca6-683c-7065-8fb4-7b0c802640f6",
+        "text": "Merenung memikirkan ide kreatif untuk menghadapi kesulitan tersebut.",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7005-b6bd-9f189a0f291c"
+    },
+    {
+        "id": "019a4ca6-683c-7066-8ab2-6752847c7ac1",
+        "text": "Memotivasi teman - teman lain agar tetap bersemangat meskipun ada kesulitan.",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7005-b6bd-9f189a0f291c"
+    },
+    {
+        "id": "019a4ca6-683c-7067-bcb9-cb3f43df33ab",
+        "text": "Menjelaskan materi dengan cara yang mudah dan praktis.",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7006-827c-09db57449ade"
+    },
+    {
+        "id": "019a4ca6-683c-7068-a339-255501b003ac",
+        "text": "Memberi pemahaman mendalam dengan konsep dan teori.",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7006-827c-09db57449ade"
+    },
+    {
+        "id": "019a4ca6-683c-7069-a77b-caf852180719",
+        "text": "Menjelaskan dengan cara  menarik, seperti gambar atau contoh yang unik",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7006-827c-09db57449ade"
+    },
+    {
+        "id": "019a4ca6-683c-706a-8557-2cb7c25c9b39",
+        "text": "Membuat strategi belajar bersama dan memotivasinya untuk mencoba.",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7006-827c-09db57449ade"
+    },
+    {
+        "id": "019a4ca6-683c-706b-931f-576915758972",
+        "text": "Memberikan contoh nyata dan langsung menunjukkan cara penerapannya.",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7007-8bc7-5d303b169cae"
+    },
+    {
+        "id": "019a4ca6-683c-706c-98bd-926e87d52233",
+        "text": "Mengajak berpikir kritis dengan teori dan kajian yang mendalam.",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7007-8bc7-5d303b169cae"
+    },
+    {
+        "id": "019a4ca6-683c-706d-b9ed-7231df0d40de",
+        "text": "Memberikan materi pelajaran & tugas yang mendorong mahasiswa untuk berpikir kreatif",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7007-8bc7-5d303b169cae"
+    },
+    {
+        "id": "019a4ca6-683c-706e-a23d-460598224313",
+        "text": "Menciptakan suasana kompetisi di kelas",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7007-8bc7-5d303b169cae"
+    },
+    {
+        "id": "019a4ca6-683c-706f-8218-402b2b652cb1",
+        "text": "Komunitas yang fokus pada keterampilan teknis, seperti klub olahraga atau laboratorium.",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7008-82a2-a1d456ee3738"
+    },
+    {
+        "id": "019a4ca6-683c-7070-a99d-aecc500c0d73",
+        "text": "Komunitas akademik seperti kelompok riset atau diskusi ilmiah.",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7008-82a2-a1d456ee3738"
+    },
+    {
+        "id": "019a4ca6-683c-7071-8007-2369a45a3890",
+        "text": "Komunitas yang menekankan seni, kreativitas, atau desain.",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7008-82a2-a1d456ee3738"
+    },
+    {
+        "id": "019a4ca6-683c-7072-bed0-fd93c0df911c",
+        "text": "Komunitas wirausaha atau organisasi kepemimpinan.",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7008-82a2-a1d456ee3738"
+    },
+    {
+        "id": "019a4ca6-683d-7000-a83a-9d2c6fa2b149",
+        "text": "Beraktivitas yang tidak terlalu banyak menyita pikiran serta langsung terlihat hasilnya seperti olahraga atau masak.",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7009-bbc7-1dc981c8109c"
+    },
+    {
+        "id": "019a4ca6-683d-7001-9352-9bbb0cd4be60",
+        "text": "Mengasah pikiran dengan membaca buku atau menonton video edukatif.",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7009-bbc7-1dc981c8109c"
+    },
+    {
+        "id": "019a4ca6-683d-7002-80f3-e7e27eaefaaa",
+        "text": "Membuat karya / project pribadi seperti menggambar, menulis, atau editing video.",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7009-bbc7-1dc981c8109c"
+    },
+    {
+        "id": "019a4ca6-683d-7003-a938-f6a325055917",
+        "text": "Merencanakan ide proyek atau usaha kecil-kecilan.",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7009-bbc7-1dc981c8109c"
+    },
+    {
+        "id": "019a4ca6-683d-7004-826d-c853ad2b362f",
+        "text": "Praktisi : profesi  yang menerapkan ilmu secara praktis",
+        "value": "praktisi",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-700a-8838-39f2419ee28f"
+    },
+    {
+        "id": "019a4ca6-683d-7005-9e84-54354859c0d0",
+        "text": "Akademisi : profesi yang meneliti & mengembangkan ilmu",
+        "value": "akademisi",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-700a-8838-39f2419ee28f"
+    },
+    {
+        "id": "019a4ca6-683d-7006-b086-0e54e8512e15",
+        "text": "Pekerja kreatif : profesi yang membuat menciptakan berbagai produk & karya kreatif.",
+        "value": "pekerja_kreatif",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-700a-8838-39f2419ee28f"
+    },
+    {
+        "id": "019a4ca6-683d-7007-99d1-114783c9b6ca",
+        "text": "Wirausaha : profesi yang membangun bisnis secara mandiri.",
+        "value": "wirausaha",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-700a-8838-39f2419ee28f"
+    },
+    {
+        "id": "019a4ca6-683e-7000-9c05-ba7d2f1551fe",
+        "text": "Berdiskusi",
+        "value": "E",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-700b-83bd-0e5930565ff3"
+    },
+    {
+        "id": "019a4ca6-683e-7001-bb13-5b980b1dfb4e",
+        "text": "Merenung sendiri",
+        "value": "I",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-700b-83bd-0e5930565ff3"
+    },
+    {
+        "id": "019a4ca6-683e-7002-aaaa-2f58416345cf",
+        "text": "Ramai & bersemangat",
+        "value": "E",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-700c-9011-cc88e1b19f4b"
+    },
+    {
+        "id": "019a4ca6-683e-7003-a5b6-c8a3db5bb823",
+        "text": "Sunyi & menenangkan",
+        "value": "I",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-700c-9011-cc88e1b19f4b"
+    },
+    {
+        "id": "019a4ca6-683e-7004-8f93-1c691e83efee",
+        "text": "Aktif & interaktif",
+        "value": "E",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-700d-8c9c-6583b036baa7"
+    },
+    {
+        "id": "019a4ca6-683e-7005-bbbd-7d1d2b318a6b",
+        "text": "Tenang & teratur",
+        "value": "I",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-700d-8c9c-6583b036baa7"
+    },
+    {
+        "id": "019a4ca6-683e-7006-a7c6-3a53da6f25e5",
+        "text": "Aktif mengikuti diskusi & tanya jawab di kelas",
+        "value": "E",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-700e-a9d1-23e5641ca2b0"
+    },
+    {
+        "id": "019a4ca6-683e-7007-8648-dddf391a3c79",
+        "text": "Mendengarkan, membaca & mencatat sendiri",
+        "value": "I",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-700e-a9d1-23e5641ca2b0"
+    },
+    {
+        "id": "019a4ca6-683e-7008-a57e-5dc7287b0afe",
+        "text": "Diskusi & tanya jawab dengan teman",
+        "value": "E",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-700f-aab9-2a9ba1c71471"
+    },
+    {
+        "id": "019a4ca6-683e-7009-8ef9-824655686d4b",
+        "text": "Membaca ulang catatan sendiri",
+        "value": "I",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-700f-aab9-2a9ba1c71471"
+    },
+    {
+        "id": "019a4ca6-683e-700a-a265-107bb1143e0e",
+        "text": "Tugas kelompok",
+        "value": "E",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7010-8f24-331152f5f3e3"
+    },
+    {
+        "id": "019a4ca6-683e-700b-be10-dfd120895d2f",
+        "text": "Tugas individu",
+        "value": "I",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7010-8f24-331152f5f3e3"
+    },
+    {
+        "id": "019a4ca6-683e-700c-b68e-23d3c9f519b4",
+        "text": "Jalan - jalan bersama teman - teman",
+        "value": "E",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7011-a64c-de6657a8c2c8"
+    },
+    {
+        "id": "019a4ca6-683e-700d-bcf8-8773287c7639",
+        "text": "Santai di rumah sendirian",
+        "value": "I",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7011-a64c-de6657a8c2c8"
+    },
+    {
+        "id": "019a4ca6-683e-700e-b772-2514c7c91da7",
+        "text": "Menyusun poin - poin yang jelas & terstruktur",
+        "value": "S",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7012-af09-11eec60cae7a"
+    },
+    {
+        "id": "019a4ca6-683e-700f-8f2f-3e6c7cd58194",
+        "text": "Mengembangkan presentasi dengan alur yang unik & kreatif",
+        "value": "N",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7012-af09-11eec60cae7a"
+    },
+    {
+        "id": "019a4ca6-683e-7010-ae1d-2cd692497003",
+        "text": "Sesuai dengan kata - kata yang digunakan dosen",
+        "value": "S",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7013-8a9b-cd87ccaf9b34"
+    },
+    {
+        "id": "019a4ca6-683e-7011-8207-1fa4398d57c0",
+        "text": "Meringkas dengan bahasa saya sendiri",
+        "value": "N",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7013-8a9b-cd87ccaf9b34"
+    },
+    {
+        "id": "019a4ca6-683e-7012-9e6c-e582c919a203",
+        "text": "Melakukan praktik nyata & simulasi langsung",
+        "value": "S",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7014-83d7-809b9411dd74"
+    },
+    {
+        "id": "019a4ca6-683e-7013-ac62-a003bbbac726",
+        "text": "Diminta mengembangkan ide baru yang kreatif",
+        "value": "N",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7014-83d7-809b9411dd74"
+    },
+    {
+        "id": "019a4ca6-683e-7014-8c54-24b34736badb",
+        "text": "Menyumbang data, informasi, sumber referensi",
+        "value": "S",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7015-bc68-5092b166bca9"
+    },
+    {
+        "id": "019a4ca6-683e-7015-b0dd-5aacec78d525",
+        "text": "Ide kreatif tentang cara mengerjakan tugas",
+        "value": "N",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7015-bc68-5092b166bca9"
+    },
+    {
+        "id": "019a4ca6-683e-7016-8483-240e031337e3",
+        "text": "Menyalin ulang detail dari buku/catatan",
+        "value": "S",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7016-a1eb-994e48b5c732"
+    },
+    {
+        "id": "019a4ca6-683e-7017-8e0d-6621e04a530a",
+        "text": "Membuat diagram / ilustrasi untuk menangkap ide utamanya",
+        "value": "N",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7016-a1eb-994e48b5c732"
+    },
+    {
+        "id": "019a4ca6-683e-7018-a67b-6b401dd5b88c",
+        "text": "Tips - tips praktis yang bisa langsung diterapkan",
+        "value": "S",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7017-bc70-97f70cd659e5"
+    },
+    {
+        "id": "019a4ca6-683e-7019-8344-257955583726",
+        "text": "Ide - ide besar yang inspiratif",
+        "value": "N",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7017-bc70-97f70cd659e5"
+    },
+    {
+        "id": "019a4ca6-683e-701a-829c-5c089684dee6",
+        "text": "Dosen memberi contoh nyata dan praktis",
+        "value": "S",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7018-a8c5-ec4c9cd8e107"
+    },
+    {
+        "id": "019a4ca6-683e-701b-8bf6-8c28ad84ab4e",
+        "text": "Dosen memberi analogi - analogi kreatif",
+        "value": "N",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7018-a8c5-ec4c9cd8e107"
+    },
+    {
+        "id": "019a4ca6-683e-701c-8c7b-488bb725842e",
+        "text": "Mempertahankan argumen yang saya yakini benar",
+        "value": "T",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7019-9966-e9d4cd746c91"
+    },
+    {
+        "id": "019a4ca6-683e-701d-9bc9-473016bfb998",
+        "text": "Menjaga agar suasana tetap harmonis",
+        "value": "F",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7019-9966-e9d4cd746c91"
+    },
+    {
+        "id": "019a4ca6-683e-701e-a77a-f2b1df0d44d9",
+        "text": "Kualitas struktur logika & isi materi",
+        "value": "T",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-701a-b7f0-9438187714ee"
+    },
+    {
+        "id": "019a4ca6-683e-701f-8f94-e53f34e15246",
+        "text": "Usaha, semangat & kerjasama kelompok",
+        "value": "F",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-701a-b7f0-9438187714ee"
+    },
+    {
+        "id": "019a4ca6-683e-7020-9664-0b56802896ba",
+        "text": "Menjelaskan materi dengan sistematis & rasional agar dia mudah memahami",
+        "value": "T",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-701b-a860-254e731b043b"
+    },
+    {
+        "id": "019a4ca6-683e-7021-815d-10aad0398118",
+        "text": "Memberikan dorongan & semangat agar dia mau terus mencoba",
+        "value": "F",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-701b-a860-254e731b043b"
+    },
+    {
+        "id": "019a4ca6-683e-7022-8416-16d69c212bd7",
+        "text": "Mengingatkan bagian tugas yang menjadi tanggung jawabnya serta batas waktu pengerjaan tugas",
+        "value": "T",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-701c-a6a7-bc1c9a1338a7"
+    },
+    {
+        "id": "019a4ca6-683e-7023-add6-1be721b3ea66",
+        "text": "Mengajak berdiskusi untuk memahami alasan mengapa ia kurang berkontribusi",
+        "value": "F",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-701c-a6a7-bc1c9a1338a7"
+    },
+    {
+        "id": "019a4ca6-683e-7024-968d-4e188637a727",
+        "text": "Efisiensi kerja supaya cepat selesai",
+        "value": "T",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-701d-9067-e27fae9bc087"
+    },
+    {
+        "id": "019a4ca6-683e-7025-a3ea-ea4ff5e72c7e",
+        "text": "Kebersamaan agar semua merasa dihargai",
+        "value": "F",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-701d-9067-e27fae9bc087"
+    },
+    {
+        "id": "019a4ca6-683e-7026-9f6b-517aa59b42db",
+        "text": "Orang yang berpikir logis, kritis dan konsisten",
+        "value": "T",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-701e-8da8-eb24e39d9141"
+    },
+    {
+        "id": "019a4ca6-683e-7027-ac13-e83ff455cbd0",
+        "text": "Orang yang peduli dan bisa memahami perasaan saya",
+        "value": "F",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-701e-8da8-eb24e39d9141"
+    },
+    {
+        "id": "019a4ca6-683e-7028-8ba6-4594130e7b8b",
+        "text": "Memberikan solusi praktis yang bisa langsung diterapkan",
+        "value": "T",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-701f-890b-a24a98031c17"
+    },
+    {
+        "id": "019a4ca6-683e-7029-87b8-b8685910bd21",
+        "text": "Memberikan semangat & dukungan emosi",
+        "value": "F",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-701f-890b-a24a98031c17"
+    },
+    {
+        "id": "019a4ca6-683e-702a-9f04-1d7ab50893ac",
+        "text": "Membuat outline terstruktur sebelum menulis",
+        "value": "J",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7020-b505-66f47bd2c174"
+    },
+    {
+        "id": "019a4ca6-683e-702b-bfac-19d160ba291f",
+        "text": "Menulis ide yang muncul dulu, lalu merapikan belakangan",
+        "value": "P",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7020-b505-66f47bd2c174"
+    },
+    {
+        "id": "019a4ca6-683e-702c-b43e-93d43e1b2b50",
+        "text": "Menyusun strategi dan jadwal pengerjaan tugas dengan teratur",
+        "value": "J",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7021-884f-b7d7a0da53ca"
+    },
+    {
+        "id": "019a4ca6-683e-702d-8f9d-9c8300bc370d",
+        "text": "Mengerjakan secara fleksibel sesuai mana yang terasa mudah dulu",
+        "value": "P",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7021-884f-b7d7a0da53ca"
+    },
+    {
+        "id": "019a4ca6-683e-702e-87b2-47c442a5e3ec",
+        "text": "Kegiatan dengan rutinitas yang cenderung terjawal",
+        "value": "J",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7022-b816-60ac18483be1"
+    },
+    {
+        "id": "019a4ca6-683e-702f-857c-ca6184acc379",
+        "text": "Jadwal kegiatan yang cenderung fleksibel sesuai kondisi harian",
+        "value": "P",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7022-b816-60ac18483be1"
+    },
+    {
+        "id": "019a4ca6-683e-7030-8ba8-7b41ea7fed41",
+        "text": "Alur serta poin - poin pembahasannya jelas",
+        "value": "J",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7023-9bdd-f5c31aba0cdf"
+    },
+    {
+        "id": "019a4ca6-683e-7031-8779-4b809beaf050",
+        "text": "Mengalir bebas saja",
+        "value": "P",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7023-9bdd-f5c31aba0cdf"
+    },
+    {
+        "id": "019a4ca6-683e-7032-82f2-845e5ca67cec",
+        "text": "Mencoba mencari informasi dan mempersiapkan materi tugas sebelum bertemu teman kelompok",
+        "value": "J",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7024-919e-fab067e498ce"
+    },
+    {
+        "id": "019a4ca6-683e-7033-9aa0-dfae8448220f",
+        "text": "Mulai bekerja setelah bertemu dengan teman kelompok",
+        "value": "P",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7024-919e-fab067e498ce"
+    },
+    {
+        "id": "019a4ca6-683e-7034-98f9-53e3b34f06b8",
+        "text": "Merencanakan kalimat yang akan disampaikan dengan detail setiap slidenya",
+        "value": "J",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7025-9f47-922b77a5422f"
+    },
+    {
+        "id": "019a4ca6-683e-7035-a7ee-6eb4027f6dba",
+        "text": "Mempersiapkan beberapa kalimat kunci & mengembangkannya saat presentasi",
+        "value": "P",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7025-9f47-922b77a5422f"
+    },
+    {
+        "id": "019a4ca6-683e-7036-b532-89e7768b7898",
+        "text": "Membaca sesuai dengan urutan bab buku / artikel",
+        "value": "J",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7026-8141-c4892d9f57d3"
+    },
+    {
+        "id": "019a4ca6-683e-7037-bbf0-eccc788a19d5",
+        "text": "Membaca acak sesuai dengan keinginan",
+        "value": "P",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7026-8141-c4892d9f57d3"
+    },
+    {
+        "id": "019a4ca6-683f-7000-9d12-943304ef3dfc",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7027-be37-01fbb86ed9d6"
+    },
+    {
+        "id": "019a4ca6-683f-7001-bb49-b88d4b6949cd",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7027-be37-01fbb86ed9d6"
+    },
+    {
+        "id": "019a4ca6-683f-7002-a7ff-6c3c1932b1ee",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7027-be37-01fbb86ed9d6"
+    },
+    {
+        "id": "019a4ca6-683f-7003-976b-373008e20ca4",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7027-be37-01fbb86ed9d6"
+    },
+    {
+        "id": "019a4ca6-683f-7004-90f8-a7495237b01b",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7027-be37-01fbb86ed9d6"
+    },
+    {
+        "id": "019a4ca6-683f-7005-bcaa-4461ae9bbc9f",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7028-a778-81fe3685fb75"
+    },
+    {
+        "id": "019a4ca6-683f-7006-9072-f14b47bcf06e",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7028-a778-81fe3685fb75"
+    },
+    {
+        "id": "019a4ca6-683f-7007-afb2-d49024d6f1bf",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7028-a778-81fe3685fb75"
+    },
+    {
+        "id": "019a4ca6-683f-7008-a781-50a38698d613",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7028-a778-81fe3685fb75"
+    },
+    {
+        "id": "019a4ca6-683f-7009-a3fb-590597160e57",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7028-a778-81fe3685fb75"
+    },
+    {
+        "id": "019a4ca6-683f-700a-8f8a-8735d54cf926",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7029-b795-d5229d48fbe8"
+    },
+    {
+        "id": "019a4ca6-683f-700b-afd1-bb77b136dffb",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7029-b795-d5229d48fbe8"
+    },
+    {
+        "id": "019a4ca6-683f-700c-8b53-2c60a8cbf002",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7029-b795-d5229d48fbe8"
+    },
+    {
+        "id": "019a4ca6-683f-700d-8f44-c752cdaa602a",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7029-b795-d5229d48fbe8"
+    },
+    {
+        "id": "019a4ca6-683f-700e-93e2-26306ceb3b60",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7029-b795-d5229d48fbe8"
+    },
+    {
+        "id": "019a4ca6-683f-700f-8a96-7a4c419413a2",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-702a-993d-372bb1de2e6e"
+    },
+    {
+        "id": "019a4ca6-683f-7010-8936-7b1141698270",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-702a-993d-372bb1de2e6e"
+    },
+    {
+        "id": "019a4ca6-683f-7011-b0b2-b664cc6d822e",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-702a-993d-372bb1de2e6e"
+    },
+    {
+        "id": "019a4ca6-683f-7012-aec8-4e8b2ae81c06",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-702a-993d-372bb1de2e6e"
+    },
+    {
+        "id": "019a4ca6-683f-7013-9ec4-2a39b79e5913",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-702a-993d-372bb1de2e6e"
+    },
+    {
+        "id": "019a4ca6-683f-7014-8536-493ed8a6666c",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-702b-bda4-107e05b1daa2"
+    },
+    {
+        "id": "019a4ca6-683f-7015-ae54-21559349d403",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-702b-bda4-107e05b1daa2"
+    },
+    {
+        "id": "019a4ca6-683f-7016-9f60-cdb401df5a59",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-702b-bda4-107e05b1daa2"
+    },
+    {
+        "id": "019a4ca6-683f-7017-91e6-f020cd6b8d06",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-702b-bda4-107e05b1daa2"
+    },
+    {
+        "id": "019a4ca6-683f-7018-852f-a2959e41e935",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-702b-bda4-107e05b1daa2"
+    },
+    {
+        "id": "019a4ca6-683f-7019-b3c0-113be93a2e1e",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-702c-a620-aef92b6f9ba1"
+    },
+    {
+        "id": "019a4ca6-683f-701a-822a-d180853ec330",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-702c-a620-aef92b6f9ba1"
+    },
+    {
+        "id": "019a4ca6-683f-701b-a5b5-cbc266e91efa",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-702c-a620-aef92b6f9ba1"
+    },
+    {
+        "id": "019a4ca6-683f-701c-80c3-0fbaa4e0de97",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-702c-a620-aef92b6f9ba1"
+    },
+    {
+        "id": "019a4ca6-683f-701d-bfd8-cacb17fddb5b",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-702c-a620-aef92b6f9ba1"
+    },
+    {
+        "id": "019a4ca6-683f-701e-816d-64af07089a9e",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-702d-b1ec-7776b680d0dc"
+    },
+    {
+        "id": "019a4ca6-683f-701f-8a53-61006a86ff65",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-702d-b1ec-7776b680d0dc"
+    },
+    {
+        "id": "019a4ca6-683f-7020-a785-31a2e7d60409",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-702d-b1ec-7776b680d0dc"
+    },
+    {
+        "id": "019a4ca6-683f-7021-b47c-36d19ff36060",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-702d-b1ec-7776b680d0dc"
+    },
+    {
+        "id": "019a4ca6-683f-7022-9d9d-b2c7ae0871e4",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-702d-b1ec-7776b680d0dc"
+    },
+    {
+        "id": "019a4ca6-683f-7023-af94-4bfe7bf936bb",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-702e-8534-b199139e5664"
+    },
+    {
+        "id": "019a4ca6-683f-7024-b2a6-96338b1832ba",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-702e-8534-b199139e5664"
+    },
+    {
+        "id": "019a4ca6-683f-7025-9a4c-cc9be2736709",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-702e-8534-b199139e5664"
+    },
+    {
+        "id": "019a4ca6-683f-7026-accb-e9797b112223",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-702e-8534-b199139e5664"
+    },
+    {
+        "id": "019a4ca6-683f-7027-90d9-e1c51a2ab64d",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-702e-8534-b199139e5664"
+    },
+    {
+        "id": "019a4ca6-683f-7028-9fe3-83fdecf385f0",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-702f-b7be-2cf88984fb55"
+    },
+    {
+        "id": "019a4ca6-683f-7029-a277-1cca7a8787ea",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-702f-b7be-2cf88984fb55"
+    },
+    {
+        "id": "019a4ca6-683f-702a-8418-4639f5c4b958",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-702f-b7be-2cf88984fb55"
+    },
+    {
+        "id": "019a4ca6-683f-702b-bbcb-a5022f7a0d30",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-702f-b7be-2cf88984fb55"
+    },
+    {
+        "id": "019a4ca6-683f-702c-9779-848bea882b3b",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-702f-b7be-2cf88984fb55"
+    },
+    {
+        "id": "019a4ca6-683f-702d-9562-2e110d7d2026",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7030-99c6-3fbc68281915"
+    },
+    {
+        "id": "019a4ca6-683f-702e-988a-3075cb281501",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7030-99c6-3fbc68281915"
+    },
+    {
+        "id": "019a4ca6-683f-702f-812e-1eeb460b6646",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7030-99c6-3fbc68281915"
+    },
+    {
+        "id": "019a4ca6-683f-7030-9cd5-9c1a54656635",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7030-99c6-3fbc68281915"
+    },
+    {
+        "id": "019a4ca6-683f-7031-a486-78edb177cf3e",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7030-99c6-3fbc68281915"
+    },
+    {
+        "id": "019a4ca6-683f-7032-8c7a-5ee8c7607ca9",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7031-8e5d-cbb36b064774"
+    },
+    {
+        "id": "019a4ca6-683f-7033-9f42-f394299aee45",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7031-8e5d-cbb36b064774"
+    },
+    {
+        "id": "019a4ca6-683f-7034-b286-6eec6b4993f1",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7031-8e5d-cbb36b064774"
+    },
+    {
+        "id": "019a4ca6-683f-7035-8719-7b1b6b821f99",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7031-8e5d-cbb36b064774"
+    },
+    {
+        "id": "019a4ca6-683f-7036-9722-086c4407437a",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7031-8e5d-cbb36b064774"
+    },
+    {
+        "id": "019a4ca6-683f-7037-b882-5764f8c8ed09",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7032-a63b-93bc6f1d5b27"
+    },
+    {
+        "id": "019a4ca6-683f-7038-9d76-92a42a056286",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7032-a63b-93bc6f1d5b27"
+    },
+    {
+        "id": "019a4ca6-683f-7039-bf80-eb26464d8915",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7032-a63b-93bc6f1d5b27"
+    },
+    {
+        "id": "019a4ca6-683f-703a-9919-de8b474fcb55",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7032-a63b-93bc6f1d5b27"
+    },
+    {
+        "id": "019a4ca6-683f-703b-b992-edb20198286c",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7032-a63b-93bc6f1d5b27"
+    },
+    {
+        "id": "019a4ca6-683f-703c-a4d3-392437cb4365",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7033-afb0-5c5acbc7fc65"
+    },
+    {
+        "id": "019a4ca6-683f-703d-800a-cdb244b89b7f",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7033-afb0-5c5acbc7fc65"
+    },
+    {
+        "id": "019a4ca6-683f-703e-a675-b1574910a6c9",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7033-afb0-5c5acbc7fc65"
+    },
+    {
+        "id": "019a4ca6-683f-703f-a6c0-15cd2ea4233b",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7033-afb0-5c5acbc7fc65"
+    },
+    {
+        "id": "019a4ca6-683f-7040-a228-1af437ecf61a",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7033-afb0-5c5acbc7fc65"
+    },
+    {
+        "id": "019a4ca6-683f-7041-9697-f88f3139364e",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7034-abdb-a6945fdfba31"
+    },
+    {
+        "id": "019a4ca6-683f-7042-9215-07a3928bc115",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7034-abdb-a6945fdfba31"
+    },
+    {
+        "id": "019a4ca6-683f-7043-aed9-d56ca2173d68",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7034-abdb-a6945fdfba31"
+    },
+    {
+        "id": "019a4ca6-683f-7044-b5ce-3d46e425f2c7",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7034-abdb-a6945fdfba31"
+    },
+    {
+        "id": "019a4ca6-683f-7045-853a-0f0b1cfad839",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7034-abdb-a6945fdfba31"
+    },
+    {
+        "id": "019a4ca6-683f-7046-beb1-125cde304e2b",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7035-a125-db0c4ff66145"
+    },
+    {
+        "id": "019a4ca6-683f-7047-ab57-9b14493de4e0",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7035-a125-db0c4ff66145"
+    },
+    {
+        "id": "019a4ca6-683f-7048-b30d-df0a8b7aacc9",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7035-a125-db0c4ff66145"
+    },
+    {
+        "id": "019a4ca6-683f-7049-9d5c-4b885ef8a6ed",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7035-a125-db0c4ff66145"
+    },
+    {
+        "id": "019a4ca6-683f-704a-8f50-6a8588e22d3d",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7035-a125-db0c4ff66145"
+    },
+    {
+        "id": "019a4ca6-683f-704b-993e-9aebb10422cf",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7036-9a08-db49032bcafe"
+    },
+    {
+        "id": "019a4ca6-683f-704c-a98d-7f4b9dd82ccd",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7036-9a08-db49032bcafe"
+    },
+    {
+        "id": "019a4ca6-683f-704d-af5f-29687e239dfc",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7036-9a08-db49032bcafe"
+    },
+    {
+        "id": "019a4ca6-683f-704e-877a-7d2a47f01118",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7036-9a08-db49032bcafe"
+    },
+    {
+        "id": "019a4ca6-683f-704f-ae07-1a6468880ea7",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7036-9a08-db49032bcafe"
+    },
+    {
+        "id": "019a4ca6-683f-7050-98ed-bf7883b66684",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7037-aa34-32a006e5d43b"
+    },
+    {
+        "id": "019a4ca6-683f-7051-9b8f-7356b6817dbd",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7037-aa34-32a006e5d43b"
+    },
+    {
+        "id": "019a4ca6-683f-7052-9105-f0b9b20208e8",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7037-aa34-32a006e5d43b"
+    },
+    {
+        "id": "019a4ca6-683f-7053-bf2d-2ec376fb051e",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7037-aa34-32a006e5d43b"
+    },
+    {
+        "id": "019a4ca6-683f-7054-b04f-af0941bada7a",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7037-aa34-32a006e5d43b"
+    },
+    {
+        "id": "019a4ca6-683f-7055-a31c-fb3af790f36a",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7038-971f-78529feabef7"
+    },
+    {
+        "id": "019a4ca6-683f-7056-9073-af3e57141b78",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7038-971f-78529feabef7"
+    },
+    {
+        "id": "019a4ca6-683f-7057-8561-89c7b60a9b3b",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7038-971f-78529feabef7"
+    },
+    {
+        "id": "019a4ca6-683f-7058-8e55-e47c68983d14",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7038-971f-78529feabef7"
+    },
+    {
+        "id": "019a4ca6-683f-7059-8815-1ea30a022727",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7038-971f-78529feabef7"
+    },
+    {
+        "id": "019a4ca6-683f-705a-8e87-b5ab7b255d44",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7039-9750-013786f3f1c0"
+    },
+    {
+        "id": "019a4ca6-683f-705b-844e-dfa781fba5c9",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7039-9750-013786f3f1c0"
+    },
+    {
+        "id": "019a4ca6-683f-705c-a0d4-c218058371f6",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7039-9750-013786f3f1c0"
+    },
+    {
+        "id": "019a4ca6-683f-705d-8602-b27428591e7d",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7039-9750-013786f3f1c0"
+    },
+    {
+        "id": "019a4ca6-683f-705e-ae5e-7859108eeba3",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7039-9750-013786f3f1c0"
+    },
+    {
+        "id": "019a4ca6-683f-705f-b78d-48b2770d5204",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-703a-8eaf-186ef3bf8f61"
+    },
+    {
+        "id": "019a4ca6-683f-7060-bb96-1efb5d6212eb",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-703a-8eaf-186ef3bf8f61"
+    },
+    {
+        "id": "019a4ca6-683f-7061-8b1a-6fdd1efd774e",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-703a-8eaf-186ef3bf8f61"
+    },
+    {
+        "id": "019a4ca6-683f-7062-8ce0-4da443a613f1",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-703a-8eaf-186ef3bf8f61"
+    },
+    {
+        "id": "019a4ca6-683f-7063-a9f5-32cd1959f647",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-703a-8eaf-186ef3bf8f61"
+    },
+    {
+        "id": "019a4ca6-683f-7064-8950-758c3731feab",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-703b-8c93-a756a9868937"
+    },
+    {
+        "id": "019a4ca6-683f-7065-a897-3aeb0e9ee552",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-703b-8c93-a756a9868937"
+    },
+    {
+        "id": "019a4ca6-683f-7066-ad59-46dbdc1ab173",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-703b-8c93-a756a9868937"
+    },
+    {
+        "id": "019a4ca6-683f-7067-84c5-27cc76d663ec",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-703b-8c93-a756a9868937"
+    },
+    {
+        "id": "019a4ca6-683f-7068-a45e-e3a84bc48a80",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-703b-8c93-a756a9868937"
+    },
+    {
+        "id": "019a4ca6-683f-7069-8959-e960c6996812",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-703c-b335-329814271f5b"
+    },
+    {
+        "id": "019a4ca6-683f-706a-961f-830fa97d14b5",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-703c-b335-329814271f5b"
+    },
+    {
+        "id": "019a4ca6-683f-706b-9dcb-e03f2573368f",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-703c-b335-329814271f5b"
+    },
+    {
+        "id": "019a4ca6-683f-706c-97d3-f3235c230ea4",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-703c-b335-329814271f5b"
+    },
+    {
+        "id": "019a4ca6-683f-706d-9673-7b733c17b2fa",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-703c-b335-329814271f5b"
+    },
+    {
+        "id": "019a4ca6-683f-706e-824e-72c6886b358d",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-703d-a97d-e0b10bbd289c"
+    },
+    {
+        "id": "019a4ca6-683f-706f-bc84-2208551bacef",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-703d-a97d-e0b10bbd289c"
+    },
+    {
+        "id": "019a4ca6-683f-7070-8df1-d7b8a3fc20d8",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-703d-a97d-e0b10bbd289c"
+    },
+    {
+        "id": "019a4ca6-683f-7071-a570-e4ce3b82242d",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-703d-a97d-e0b10bbd289c"
+    },
+    {
+        "id": "019a4ca6-683f-7072-b5d9-d679dfecdeff",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-703d-a97d-e0b10bbd289c"
+    },
+    {
+        "id": "019a4ca6-683f-7073-b94d-bed6f4316d79",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-703e-955b-bf80be80c72e"
+    },
+    {
+        "id": "019a4ca6-683f-7074-9213-d816b30e1fa4",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-703e-955b-bf80be80c72e"
+    },
+    {
+        "id": "019a4ca6-683f-7075-be3c-93b1fd40b594",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-703e-955b-bf80be80c72e"
+    },
+    {
+        "id": "019a4ca6-683f-7076-80ac-6b642bf1993d",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-703e-955b-bf80be80c72e"
+    },
+    {
+        "id": "019a4ca6-683f-7077-9b0e-75da64b9f353",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-703e-955b-bf80be80c72e"
+    },
+    {
+        "id": "019a4ca6-683f-7078-b0b3-4fcb0271f107",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-703f-b5d5-c83f550f3458"
+    },
+    {
+        "id": "019a4ca6-683f-7079-977b-b21355a775c3",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-703f-b5d5-c83f550f3458"
+    },
+    {
+        "id": "019a4ca6-683f-707a-9b4d-a900818c7d94",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-703f-b5d5-c83f550f3458"
+    },
+    {
+        "id": "019a4ca6-683f-707b-85e2-cd3e6214402d",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-703f-b5d5-c83f550f3458"
+    },
+    {
+        "id": "019a4ca6-683f-707c-8965-d5be8aec3915",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-703f-b5d5-c83f550f3458"
+    },
+    {
+        "id": "019a4ca6-683f-707d-8c74-58af2f7d465d",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7040-ab97-94bd5b2da4f6"
+    },
+    {
+        "id": "019a4ca6-683f-707e-998c-c7e275fb224c",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7040-ab97-94bd5b2da4f6"
+    },
+    {
+        "id": "019a4ca6-683f-707f-9871-67cd69571a6d",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7040-ab97-94bd5b2da4f6"
+    },
+    {
+        "id": "019a4ca6-683f-7080-814a-3a2cce8cfa8a",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7040-ab97-94bd5b2da4f6"
+    },
+    {
+        "id": "019a4ca6-683f-7081-8c8e-5ee1318efbfa",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7040-ab97-94bd5b2da4f6"
+    },
+    {
+        "id": "019a4ca6-683f-7082-ac30-85a4188956c6",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7041-8ff7-14ce6b4a77dc"
+    },
+    {
+        "id": "019a4ca6-683f-7083-95c7-5d38bf568ee9",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7041-8ff7-14ce6b4a77dc"
+    },
+    {
+        "id": "019a4ca6-683f-7084-9979-662ee18c7fe8",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7041-8ff7-14ce6b4a77dc"
+    },
+    {
+        "id": "019a4ca6-683f-7085-9e38-cae0f4c7bb76",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7041-8ff7-14ce6b4a77dc"
+    },
+    {
+        "id": "019a4ca6-683f-7086-86b3-fd750a439c8e",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7041-8ff7-14ce6b4a77dc"
+    },
+    {
+        "id": "019a4ca6-683f-7087-a7a6-e0e8ed77ce5c",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7042-a81d-29f237dedacc"
+    },
+    {
+        "id": "019a4ca6-683f-7088-9799-ca26256ae368",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7042-a81d-29f237dedacc"
+    },
+    {
+        "id": "019a4ca6-683f-7089-a33d-1b003fad9537",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7042-a81d-29f237dedacc"
+    },
+    {
+        "id": "019a4ca6-683f-708a-a573-d5988b2187be",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7042-a81d-29f237dedacc"
+    },
+    {
+        "id": "019a4ca6-683f-708b-ae7d-302354ab7708",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7042-a81d-29f237dedacc"
+    },
+    {
+        "id": "019a4ca6-683f-708c-b088-7761c0d025f9",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7043-a593-13de379f5665"
+    },
+    {
+        "id": "019a4ca6-683f-708d-9f99-724b9ee05906",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7043-a593-13de379f5665"
+    },
+    {
+        "id": "019a4ca6-683f-708e-9bd8-366afa989f79",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7043-a593-13de379f5665"
+    },
+    {
+        "id": "019a4ca6-683f-708f-bcc0-3729e73fb59c",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7043-a593-13de379f5665"
+    },
+    {
+        "id": "019a4ca6-683f-7090-8243-c56b7de72e27",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7043-a593-13de379f5665"
+    },
+    {
+        "id": "019a4ca6-683f-7091-8511-37673f9e2bbd",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7044-a6f5-81dea5793dcb"
+    },
+    {
+        "id": "019a4ca6-683f-7092-8a20-6821c74b65ec",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7044-a6f5-81dea5793dcb"
+    },
+    {
+        "id": "019a4ca6-683f-7093-9a1e-85d9180cea6c",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7044-a6f5-81dea5793dcb"
+    },
+    {
+        "id": "019a4ca6-683f-7094-a58b-176acae703f1",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7044-a6f5-81dea5793dcb"
+    },
+    {
+        "id": "019a4ca6-683f-7095-a141-1b48574f9b44",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7044-a6f5-81dea5793dcb"
+    },
+    {
+        "id": "019a4ca6-683f-7096-a824-8d8d16ba3d8b",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7045-beb7-a7315b68b5ca"
+    },
+    {
+        "id": "019a4ca6-683f-7097-8b27-53e0b5d3780e",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7045-beb7-a7315b68b5ca"
+    },
+    {
+        "id": "019a4ca6-683f-7098-b24c-034e2f0405e1",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7045-beb7-a7315b68b5ca"
+    },
+    {
+        "id": "019a4ca6-683f-7099-af29-14bea0700143",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7045-beb7-a7315b68b5ca"
+    },
+    {
+        "id": "019a4ca6-683f-709a-b991-d14798ec13ba",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7045-beb7-a7315b68b5ca"
+    },
+    {
+        "id": "019a4ca6-683f-709b-b58d-f292939ec985",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7046-bebb-836405f20909"
+    },
+    {
+        "id": "019a4ca6-683f-709c-b2d6-d31b6d3accea",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7046-bebb-836405f20909"
+    },
+    {
+        "id": "019a4ca6-683f-709d-b339-18711785889c",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7046-bebb-836405f20909"
+    },
+    {
+        "id": "019a4ca6-683f-709e-a46d-fa1bc554925f",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7046-bebb-836405f20909"
+    },
+    {
+        "id": "019a4ca6-683f-709f-89d3-258c5427eb72",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7046-bebb-836405f20909"
+    },
+    {
+        "id": "019a4ca6-683f-70a0-aaf5-16e1a7f88cb9",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7047-a584-7f8dc89b7c09"
+    },
+    {
+        "id": "019a4ca6-683f-70a1-bdea-1fa15a757054",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7047-a584-7f8dc89b7c09"
+    },
+    {
+        "id": "019a4ca6-683f-70a2-88f4-4bbfab6249b6",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7047-a584-7f8dc89b7c09"
+    },
+    {
+        "id": "019a4ca6-683f-70a3-982a-1ea627b81876",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7047-a584-7f8dc89b7c09"
+    },
+    {
+        "id": "019a4ca6-683f-70a4-94d8-583c982ace4f",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7047-a584-7f8dc89b7c09"
+    },
+    {
+        "id": "019a4ca6-683f-70a5-baba-0556990889d3",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7048-9f1d-0ece8b4d2656"
+    },
+    {
+        "id": "019a4ca6-683f-70a6-ab66-2120612f81f2",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7048-9f1d-0ece8b4d2656"
+    },
+    {
+        "id": "019a4ca6-683f-70a7-8059-6c5c225c37e8",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7048-9f1d-0ece8b4d2656"
+    },
+    {
+        "id": "019a4ca6-683f-70a8-94a3-781a96e284dc",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7048-9f1d-0ece8b4d2656"
+    },
+    {
+        "id": "019a4ca6-683f-70a9-a602-37d2eb1f919c",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7048-9f1d-0ece8b4d2656"
+    },
+    {
+        "id": "019a4ca6-683f-70aa-97be-31faaff8b595",
+        "text": "Gak juga",
+        "value": "1",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-7049-8b20-78ad2fa81738"
+    },
+    {
+        "id": "019a4ca6-683f-70ab-a625-1a66909d69a8",
+        "text": "",
+        "value": "2",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-7049-8b20-78ad2fa81738"
+    },
+    {
+        "id": "019a4ca6-683f-70ac-812f-426494721465",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-7049-8b20-78ad2fa81738"
+    },
+    {
+        "id": "019a4ca6-683f-70ad-8190-53a614c35ea0",
+        "text": "",
+        "value": "4",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-7049-8b20-78ad2fa81738"
+    },
+    {
+        "id": "019a4ca6-683f-70ae-8388-c959a86960a2",
+        "text": "Iya banget",
+        "value": "5",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-7049-8b20-78ad2fa81738"
+    },
+    {
+        "id": "019a4ca6-6840-7000-b2e2-02a8de1f740d",
+        "text": "Gak juga",
+        "value": "5",
+        "order": 0,
+        "testQuestionId": "019a4ca6-683c-704a-bf7b-2de926a1b1f7"
+    },
+    {
+        "id": "019a4ca6-6840-7001-b4e9-a2b74bc98b33",
+        "text": "",
+        "value": "4",
+        "order": 1,
+        "testQuestionId": "019a4ca6-683c-704a-bf7b-2de926a1b1f7"
+    },
+    {
+        "id": "019a4ca6-6840-7002-9247-8d973bf52f6d",
+        "text": "",
+        "value": "3",
+        "order": 2,
+        "testQuestionId": "019a4ca6-683c-704a-bf7b-2de926a1b1f7"
+    },
+    {
+        "id": "019a4ca6-6840-7003-87b7-59dc528e5f08",
+        "text": "",
+        "value": "2",
+        "order": 3,
+        "testQuestionId": "019a4ca6-683c-704a-bf7b-2de926a1b1f7"
+    },
+    {
+        "id": "019a4ca6-6840-7004-88d2-cbb271b560a4",
+        "text": "Iya banget",
+        "value": "1",
+        "order": 4,
+        "testQuestionId": "019a4ca6-683c-704a-bf7b-2de926a1b1f7"
+    }
+]

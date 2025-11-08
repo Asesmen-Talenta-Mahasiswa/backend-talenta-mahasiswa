@@ -1,10 +1,14 @@
 import { defineConfig } from "drizzle-kit";
+import { env } from "./src/env";
 
 export default defineConfig({
-  out: "./drizzle",
-  schema: "./src/db/schema.ts",
+  out: "./src/db/migrations",
+  schema: "./src/db/schema/index.ts",
   dialect: "postgresql",
   dbCredentials: {
-    url: process.env.DB_URL,
+    url: env.DB_URL,
   },
+  // extensionsFilters: ["pg_trgm"], // bugged
+  verbose: true,
+  strict: true,
 });

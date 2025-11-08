@@ -1,0 +1,33 @@
+FROM oven/bun:1.3.1 AS build
+
+WORKDIR /app
+
+# Cache packages installation
+COPY package.json package.json
+COPY bun.lock bun.lock
+COPY drizzle.config.ts drizzle.config.ts
+COPY tsconfig.json tsconfig.json
+COPY ./src ./src
+
+RUN bun install
+
+ENV NODE_ENV=production
+
+RUN bun build \
+	--compile \
+	--minify-whitespace \
+	--minify-syntax \
+	--outfile server \
+	src/index.ts
+
+FROM gcr.io/distroless/base
+
+WORKDIR /app
+
+COPY --from=build /app/server server
+
+ENV NODE_ENV=production
+
+CMD ["./server"]
+
+EXPOSE 3000
