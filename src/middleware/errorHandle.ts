@@ -14,6 +14,7 @@ function handleValidationError(error: Readonly<ValidationError>) {
 export const errorHandleMiddleware = new Elysia({
   name: "middleware/errorHandle",
 }).onError({ as: "global" }, ({ code, error, status }) => {
+  console.log(error);
   if (code === "VALIDATION") {
     const data = handleValidationError(error);
     return status(422, {
