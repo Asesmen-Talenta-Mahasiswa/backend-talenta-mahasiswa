@@ -1,7 +1,6 @@
 CREATE SCHEMA IF NOT EXISTS assessment;
---> statement-breakpoint
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
---> statement-breakpoint
+
 CREATE TABLE "assessment"."degree" (
 	"id" serial PRIMARY KEY NOT NULL,
 	"name" text NOT NULL,
@@ -92,12 +91,7 @@ CREATE TABLE "assessment"."test_submission" (
 	"test_id" integer NOT NULL,
 	"status" text NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
-	"completed_at" timestamp,
-	CONSTRAINT "test_submission_main_test_only" CHECK (EXISTS (
-        SELECT 1 FROM "assessment".test
-        WHERE "assessment".test.id = "assessment"."test_submission"."test_id"
-        AND "assessment".test.parent_id IS NULL
-      ))
+	"completed_at" timestamp
 );
 --> statement-breakpoint
 CREATE TABLE "assessment"."test_submission_answer" (
