@@ -1,5 +1,5 @@
 {
-  "id": "477067d1-6ca4-428c-8d5e-7971affa5805",
+  "id": "10e8062e-6260-47a0-a993-04722c52a16f",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -772,7 +772,12 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {},
       "policies": {},
-      "checkConstraints": {},
+      "checkConstraints": {
+        "test_submission_main_test_only": {
+          "name": "test_submission_main_test_only",
+          "value": "EXISTS (\n        SELECT 1 FROM \"assessment\".test\n        WHERE \"assessment\".test.id = \"assessment\".\"test_submission\".\"test_id\"\n        AND \"assessment\".test.parent_id IS NULL\n      )"
+        }
+      },
       "isRLSEnabled": false
     },
     "assessment.test_submission_answer": {
