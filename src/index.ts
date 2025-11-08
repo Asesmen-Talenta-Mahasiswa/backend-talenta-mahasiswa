@@ -1,4 +1,4 @@
-import { isProd } from "./env";
+import { env, isProd } from "./env";
 import openapi, { fromTypes } from "@elysiajs/openapi";
 import { Elysia } from "elysia";
 import { version as apiVersion, author } from "../package.json";
@@ -45,10 +45,10 @@ new Elysia({
 
   .use(
     cors({
-      origin: "http://localhost:3001",
+      origin: [env.ORIGIN, "http://localhost:3000"],
       methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
-      credentials: false,
+      credentials: true,
     }),
   )
 
