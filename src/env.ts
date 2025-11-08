@@ -7,21 +7,29 @@ export const envSchema = Type.Object({
     {
       default: "development",
       error: "NODE_ENV must be one of 'development', 'production', or 'test'",
-    }
+    },
   ),
 
-  DB_HOST: Type.String({ error: "DB_HOST is not defined in environment variables" }),
+  DB_HOST: Type.String({
+    error: "DB_HOST is not defined in environment variables",
+  }),
   DB_PORT: Type.Number({
     minimum: 1,
     maximum: 65535,
     error: "DB_PORT is not defined in environment variables",
   }),
-  DB_NAME: Type.String({ error: "DB_NAME is not defined in environment variables" }),
-  DB_USER: Type.String({ error: "DB_USER is not defined in environment variables" }),
+  DB_NAME: Type.String({
+    error: "DB_NAME is not defined in environment variables",
+  }),
+  DB_USER: Type.String({
+    error: "DB_USER is not defined in environment variables",
+  }),
   DB_PASSWORD: Type.String({
     error: "DB_PASSWORD is not defined in environment variables",
   }),
-  DB_URL: Type.String({ error: "DB_URL is not defined in environment variables" }),
+  DB_URL: Type.String({
+    error: "DB_URL is not defined in environment variables",
+  }),
 
   REDIS_PORT: Type.Number({
     minimum: 1,
@@ -40,14 +48,20 @@ export const envSchema = Type.Object({
     default: "false",
     error: `You must set DB_SEEDING to "true" when running seeds`,
   }),
+
+  ORIGIN: Type.String({
+    error: "ORIGIN is not defined in environment variables",
+  }),
 });
 
 export function parseEnv<T extends TObject>(
   schema: T,
-  env: Record<string, string | undefined>
+  env: Record<string, string | undefined>,
 ): Static<T> {
   const cleaned = Object.fromEntries(
-    Object.entries(env).filter(([key]) => Object.keys(schema.properties).includes(key))
+    Object.entries(env).filter(([key]) =>
+      Object.keys(schema.properties).includes(key),
+    ),
   );
   const converted = Value.Convert(schema, Value.Default(schema, cleaned));
   const isValid = Value.Check(schema, converted);
@@ -56,7 +70,7 @@ export function parseEnv<T extends TObject>(
     throw new Error(
       `Invalid environment variables: ${[...errors]
         .map((e) => `${e.path}: ${e.message}`)
-        .join(", ")}`
+        .join(", ")}`,
     );
   }
 
