@@ -13,6 +13,7 @@ import {
   formatSymbol,
   formatTimestamp,
 } from "./formatter";
+import { env } from "../env";
 // import { isProd } from "../env";
 
 const serverStartTime = performance.now();
@@ -84,18 +85,11 @@ export function logger(config: LoggerConfig = {}) {
       const duration = performance.now() - serverStartTime;
 
       if (showStartUpMessage === "simple") {
-        console.log(
-          `🦊 Elysia v${ELYSIA_VERSION} started in ${duration.toFixed(0)} ms`,
+        console.info(
+          `🦊 Elysia v${ELYSIA_VERSION} started in ${duration.toFixed(0)} ms at ${server?.url.toString() ?? "unknown"}`,
         );
         return;
       }
-
-      const host = Bun.env.DB_HOST;
-      const port = Bun.env.DB_PORT;
-      const user = "*****";
-      const password = "*****";
-      const dbName = Bun.env.DB_NAME;
-      const database = "postgresql";
 
       await Bun.write(
         Bun.stdout,
@@ -120,7 +114,7 @@ export function logger(config: LoggerConfig = {}) {
       await Bun.write(
         Bun.stdout,
         `${picocolors.green(" ➜ ")} ${picocolors.bold("Database")}: ${picocolors.blue(
-          `${database}://${user}:${password}@${host}:${port}/${dbName}`,
+          `${env.DB_URL}`,
         )}\n`,
       );
       await Bun.write(

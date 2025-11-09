@@ -115,4 +115,4 @@ new Elysia({
   .use(resultEndpoint)
   .use(userEndpoint)
 
-  .listen(Bun.env.PORT ?? 3000); // for fallback
+  .listen(env.PORT ?? 3002); // for fallback

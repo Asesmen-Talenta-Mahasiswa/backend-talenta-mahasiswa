@@ -13,11 +13,11 @@ RUN bun install
 ENV NODE_ENV=production
 
 RUN bun build \
-	--compile \
-	--minify-whitespace \
-	--minify-syntax \
-	--outfile server \
-	src/index.ts
+  --compile \
+  --minify-whitespace \
+  --minify-syntax \
+  --outfile server \
+  src/index.ts
 
 FROM gcr.io/distroless/base
 
@@ -29,4 +29,4 @@ ENV NODE_ENV=production
 
 CMD ["./server"]
 
-EXPOSE 3000
+EXPOSE 3002
