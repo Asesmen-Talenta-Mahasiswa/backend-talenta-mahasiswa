@@ -2,6 +2,7 @@ import { ElysiaCustomStatusResponse, InternalServerError } from "elysia";
 import { version as apiVersion, author } from "../../../package.json";
 import { DatabaseService } from "../../db/service";
 import { type SystemInfoModel } from "./model";
+import { env, isProd } from "../../env";
 
 export abstract class SystemService {
   static getSystemInfo() {
@@ -14,7 +15,7 @@ export abstract class SystemService {
       author: author,
       description:
         "Backend API for the Center for Character and Ethics Development (CCED) University of Lampung assessment system.",
-      environment: Bun.env.NODE_ENV ?? "development",
+      environment: isProd ? "production" : "development",
       docs: {
         ui: "/docs",
         json: "/docs/json",
