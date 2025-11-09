@@ -19,6 +19,12 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      - name: Compute tags
+        id: vars
+        run: |
+          echo "TAG_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+          echo "TAG_TIME=$(date +%Y%m%d%H%M%S)" >> $GITHUB_OUTPUT
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
@@ -26,5 +32,7 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            mhmdazkanfl/asesmen-backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/asesmen-backend:${{ steps.vars.outputs.TAG_TIME }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/asesmen-backend:${{ steps.vars.outputs.TAG_SHORT }}
+            ${{ secrets.DOCKERHUB_USERNAME }}/asesmen-backend:latest
           platforms: linux/amd64
