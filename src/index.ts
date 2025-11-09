@@ -20,6 +20,7 @@ new Elysia({
   // Documentation
   .use(
     openapi({
+      enabled: isProd ? false : true,
       path: "/docs",
       documentation: {
         openapi: "3.0.3",
@@ -45,11 +46,10 @@ new Elysia({
 
   .use(
     cors({
-      origin: [env.ORIGIN, "http://localhost:3000"],
+      origin: [env.ORIGIN, "http://localhost:3002"],
       methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
-      aot: false,
     }),
   )
 
