@@ -14,6 +14,8 @@ import { filterEndpoint } from "./endpoint/filter";
 import { errorHandleMiddleware } from "./middleware/errorHandle";
 import cors from "@elysiajs/cors";
 
+console.log(env.ORIGIN);
+
 new Elysia({
   prefix: "/api/v1",
 })
