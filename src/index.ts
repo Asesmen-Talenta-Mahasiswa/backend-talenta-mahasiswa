@@ -20,6 +20,7 @@ new Elysia({
   // Documentation
   .use(
     openapi({
+      enabled: isProd ? false : true,
       path: "/docs",
       documentation: {
         openapi: "3.0.3",
