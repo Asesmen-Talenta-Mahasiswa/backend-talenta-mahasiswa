@@ -14,8 +14,6 @@ import { filterEndpoint } from "./endpoint/filter";
 import { errorHandleMiddleware } from "./middleware/errorHandle";
 import cors from "@elysiajs/cors";
 
-console.log(env.ORIGIN);
-
 new Elysia({
   prefix: "/api/v1",
 })
@@ -51,6 +49,7 @@ new Elysia({
       methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
+      aot: false,
     }),
   )
 
