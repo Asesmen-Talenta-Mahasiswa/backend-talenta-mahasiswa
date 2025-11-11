@@ -8,8 +8,6 @@ export { default as testQuestionOption } from "./testQuestionOption";
 export { default as testSubmission } from "./testSubmission";
 export { default as testSubmissionAnswer } from "./testSubmissionAnswer";
 export { default as testSubmissionResult } from "./testSubmissionResult";
-export { default as enrollmentYear } from "./enrollmentYear";
 export { default as faculty } from "./faculty";
-export { default as degree } from "./degree";
 export { default as major } from "./major";
 export { default as department } from "./department";

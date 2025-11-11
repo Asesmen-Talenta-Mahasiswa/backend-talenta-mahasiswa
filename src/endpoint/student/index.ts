@@ -26,10 +26,9 @@ export const studentEndpoint = new Elysia({
         query.page,
         query.pageSize,
         query.search,
-        query.enrollmentYearId,
         query.majorId,
+        query.departmentId,
         query.facultyId,
-        query.degreeId,
         query.sortDirection,
       );
 

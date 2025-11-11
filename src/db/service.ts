@@ -48,9 +48,7 @@ export abstract class DatabaseService {
   static async seedDatabase() {
     MyLogger.info("database", "Seeding database");
     for (const table of [
-      schema.degree,
       schema.department,
-      schema.enrollmentYear,
       schema.faculty,
       schema.major,
       schema.student,
@@ -79,9 +77,7 @@ export abstract class DatabaseService {
 
     try {
       result = await db.transaction(async (tx) => {
-        await seeds.degree(tx);
         await seeds.department(tx);
-        await seeds.enrollmentYear(tx);
         await seeds.faculty(tx);
         await seeds.major(tx);
         await seeds.student(tx);
@@ -105,9 +101,7 @@ export abstract class DatabaseService {
 
   static async resetDatabase() {
     for (const table of [
-      schema.degree,
       schema.department,
-      schema.enrollmentYear,
       schema.faculty,
       schema.major,
       schema.student,

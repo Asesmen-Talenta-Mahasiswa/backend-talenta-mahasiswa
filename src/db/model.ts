@@ -8,25 +8,11 @@ import {
 import { spreads } from "../utils";
 import * as schema from "./schema";
 
-const degree = createInsertSchema(schema.degree, {
-  name: t.String({
-    minLength: 1,
-    error: "Nama jenjang pendidikan harus berupa text dan tidak boleh kosong",
-    examples: ["S1"],
-  }),
-});
 const department = createInsertSchema(schema.department, {
   name: t.String({
     minLength: 1,
     error: "Nama jurusan harus berupa text dan tidak boleh kosong",
     examples: ["Teknik Elektro"],
-  }),
-});
-const enrollmentYear = createInsertSchema(schema.enrollmentYear, {
-  name: t.String({
-    minLength: 1,
-    error: "Tahun angkatan harus berupa text dan tidak boleh kosong",
-    examples: ["2025"],
   }),
 });
 const faculty = createInsertSchema(schema.faculty, {
@@ -72,11 +58,6 @@ const student = createInsertSchema(schema.student, {
       },
     ),
   ),
-  enrollmentYearId: t.Number({
-    minimum: 1,
-    error: "ID angkatan harus berupa angka dan tidak boleh negatif atau nol",
-    examples: [1],
-  }),
   majorId: t.Number({
     minimum: 1,
     error: "ID program harus berupa angka dan tidak boleh negatif atau nol",
@@ -87,17 +68,11 @@ const student = createInsertSchema(schema.student, {
     error: "ID fakultas harus berupa angka dan tidak boleh negatif atau nol",
     examples: [1],
   }),
-  degreeId: t.Number({
+  departmentId: t.Number({
     minimum: 1,
-    error:
-      "ID jenjang pendidikan harus berupa angka dan tidak boleh negatif atau nol",
+    error: "ID jurusan harus berupa angka dan tidak boleh negatif atau nol",
     examples: [1],
   }),
-  // departmentId: t.Number({
-  //   minimum: 1,
-  //   error: "Id jurusan harus berupa angka dan tidak boleh negatif atau nol",
-  //   examples: [1],
-  // }),
 });
 const test = createInsertSchema(schema.test, {
   name: t.String({
@@ -328,9 +303,7 @@ const user = createInsertSchema(schema.user, {
 export const dbModel = {
   select: spreads(
     {
-      degree: schema.degree,
       department: schema.department,
-      enrollmentYear: schema.enrollmentYear,
       faculty: schema.faculty,
       major: schema.major,
       student: schema.student,
@@ -348,9 +321,7 @@ export const dbModel = {
   ),
   insert: spreads(
     {
-      degree: degree,
       department: department,
-      enrollmentYear: enrollmentYear,
       faculty: faculty,
       major: major,
       student: student,

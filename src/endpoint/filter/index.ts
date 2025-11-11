@@ -1,4 +1,5 @@
 import Elysia, { t } from "elysia";
+import { ResponseStatus } from "../../common/constant";
 import {
   errorResponseModel,
   failResponseModel,
@@ -6,7 +7,6 @@ import {
 } from "../../common/model";
 import { studentFilterModel } from "./model";
 import { FilterService } from "./service";
-import { ResponseStatus } from "../../common/constant";
 
 export const filterEndpoint = new Elysia({
   prefix: "/filters",
@@ -17,11 +17,9 @@ export const filterEndpoint = new Elysia({
     const result = await FilterService.getStudentFilter();
 
     return status(200, {
-      status: "success",
+      status: ResponseStatus.Success,
       data: {
-        degrees: result.degrees,
         departments: result.departments,
-        enrollmentYears: result.enrollmentYears,
         faculties: result.faculties,
         majors: result.majors,
       },

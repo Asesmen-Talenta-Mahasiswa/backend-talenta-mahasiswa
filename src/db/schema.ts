@@ -31,13 +31,8 @@ export const user = assessmentSchema.table("user", {
 });
 
 // ============================================================================
-// Lookup Tables (Degree, Faculty, Major, Department, EnrollmentYear)
+// Lookup Tables (Department, Faculty, Major)
 // ============================================================================
-export const degree = assessmentSchema.table("degree", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull().unique(),
-});
-
 export const faculty = assessmentSchema.table("faculty", {
   id: serial("id").primaryKey(),
   name: text("name").notNull().unique(),
@@ -49,11 +44,6 @@ export const major = assessmentSchema.table("major", {
 });
 
 export const department = assessmentSchema.table("department", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull().unique(),
-});
-
-export const enrollmentYear = assessmentSchema.table("enrollment_year", {
   id: serial("id").primaryKey(),
   name: text("name").notNull().unique(),
 });
@@ -70,18 +60,15 @@ export const student = assessmentSchema.table(
     npm: text("npm").notNull().unique(),
     name: text("name").notNull(),
     email: text("email"),
-    enrollmentYearId: integer("enrollment_year_id")
-      .notNull()
-      .references(() => enrollmentYear.id, { onDelete: "restrict" }),
     majorId: integer("major_id")
       .notNull()
       .references(() => major.id, { onDelete: "restrict" }),
+    departmentId: integer("department_id")
+      .notNull()
+      .references(() => department.id, { onDelete: "restrict" }),
     facultyId: integer("faculty_id")
       .notNull()
       .references(() => faculty.id, { onDelete: "restrict" }),
-    degreeId: integer("degree_id")
-      .notNull()
-      .references(() => degree.id, { onDelete: "restrict" }),
     createdAt: timestamp("created_at", { mode: "string" })
       .notNull()
       .defaultNow(),
@@ -97,29 +84,24 @@ export const student = assessmentSchema.table(
     ),
 
     // single-column btree indexes for filters
-    index("students_enrollment_year_idx").on(column.enrollmentYearId),
     index("students_major_idx").on(column.majorId),
+    index("students_department_idx").on(column.departmentId),
     index("students_faculty_idx").on(column.facultyId),
-    index("students_degree_idx").on(column.degreeId),
   ],
 );
 
 export const studentRelations = relations(student, ({ one, many }) => ({
-  enrollmentYear: one(enrollmentYear, {
-    fields: [student.enrollmentYearId],
-    references: [enrollmentYear.id],
-  }),
   major: one(major, {
     fields: [student.majorId],
     references: [major.id],
   }),
+  department: one(department, {
+    fields: [student.departmentId],
+    references: [department.id],
+  }),
   faculty: one(faculty, {
     fields: [student.facultyId],
     references: [faculty.id],
-  }),
-  degree: one(degree, {
-    fields: [student.degreeId],
-    references: [degree.id],
   }),
   submissions: many(testSubmission),
 }));

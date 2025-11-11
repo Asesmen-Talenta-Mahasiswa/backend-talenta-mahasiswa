@@ -12,9 +12,7 @@ console.log("Seeding database...");
 
 console.log("Truncating tables...");
 for (const table of [
-  schema.degree,
   schema.department,
-  schema.enrollmentYear,
   schema.faculty,
   schema.major,
   schema.student,
@@ -38,9 +36,7 @@ for (const table of [
 console.log("Seeding tables...");
 const result = await db.transaction(async (tx) => {
   console.log("Seeding degree");
-  await seeds.degree(tx);
   await seeds.department(tx);
-  await seeds.enrollmentYear(tx);
   await seeds.faculty(tx);
   await seeds.major(tx);
   await seeds.student(tx);

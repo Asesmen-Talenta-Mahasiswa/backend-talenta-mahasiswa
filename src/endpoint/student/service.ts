@@ -1,8 +1,7 @@
 import { and, eq, ilike, inArray, or, sql } from "drizzle-orm";
-import { InternalServerError, status } from "elysia";
+import { status } from "elysia";
 import db from "../../db";
 import { student as studentsTable } from "../../db/schema";
-import { DatabaseService } from "../../db/service";
 import type { NewStudentModel, UpdateStudentModel } from "./model";
 import type { FailResponseModel } from "../../common/model";
 import { SystemService } from "../system/service";
@@ -12,10 +11,9 @@ export abstract class StudentService {
     page = 1,
     pageSize = 10,
     search = "",
-    enrollmentYearIds: number[] = [],
     majorIds: number[] = [],
+    departmentIds: number[] = [],
     facultyIds: number[] = [],
-    degreeIds: number[] = [],
     sortDirection: "asc" | "desc" = "desc",
   ) {
     try {
@@ -31,11 +29,8 @@ export abstract class StudentService {
           facultyIds.length > 0
             ? inArray(studentsTable.facultyId, facultyIds)
             : undefined,
-          enrollmentYearIds.length > 0
-            ? inArray(studentsTable.enrollmentYearId, enrollmentYearIds)
-            : undefined,
-          degreeIds.length > 0
-            ? inArray(studentsTable.degreeId, degreeIds)
+          departmentIds.length > 0
+            ? inArray(studentsTable.departmentId, departmentIds)
             : undefined,
         ),
       );
@@ -113,43 +108,33 @@ export abstract class StudentService {
 
   static async createStudent(newStudent: NewStudentModel) {
     try {
-      const enrollmentYearFound = db.query.enrollmentYear.findFirst({
-        where: (col, { eq }) => eq(col.id, newStudent.enrollmentYearId),
-      });
       const majorIdFound = db.query.major.findFirst({
         where: (col, { eq }) => eq(col.id, newStudent.majorId),
       });
+      const departmentIdFound = db.query.department.findFirst({
+        where: (col, { eq }) => eq(col.id, newStudent.departmentId),
+      });
       const facultyIdFound = db.query.faculty.findFirst({
         where: (col, { eq }) => eq(col.id, newStudent.facultyId),
-      });
-      const degreeIdFound = db.query.degree.findFirst({
-        where: (col, { eq }) => eq(col.id, newStudent.degreeId),
       });
       const npmFound = db.query.student.findFirst({
         columns: { id: true },
         where: (col, { eq }) => eq(col.npm, newStudent.npm),
       });
 
-      const [enrollmentYear, major, faculty, degree, npm] = await Promise.all([
-        enrollmentYearFound,
+      const [major, department, faculty, npm] = await Promise.all([
         majorIdFound,
+        departmentIdFound,
         facultyIdFound,
-        degreeIdFound,
         npmFound,
       ]);
 
       const data = [];
-      if (!enrollmentYear) {
-        data.push({
-          field: "enrollmentYear",
-          message: "Tahun angkatan tidak ditemukan",
-        });
-      }
 
-      if (!major) {
+      if (!department) {
         data.push({
-          field: "major",
-          message: "Program studi tidak ditemukan",
+          field: "department",
+          message: "Jurusan tidak ditemukan",
         });
       }
 
@@ -160,14 +145,7 @@ export abstract class StudentService {
         });
       }
 
-      if (!degree) {
-        data.push({
-          field: "degree",
-          message: "Jenjang pendidikan tidak ditemukan",
-        });
-      }
-
-      if (!enrollmentYear || !major || !faculty || !degree) {
+      if (!department || !major || !faculty) {
         throw status(422, {
           status: "fail",
           data,
