@@ -1,6 +1,5 @@
 import Elysia, { t } from "elysia";
 import { StudentService } from "./service";
-import { ResponseStatus } from "../../common/enum";
 import {
   newStudentModel,
   studentModel,
@@ -14,6 +13,7 @@ import {
   failResponseModel,
   successResponseModel,
 } from "../../common/model";
+import { ResponseStatus } from "../../common/constant";
 
 export const studentEndpoint = new Elysia({
   prefix: "/students",

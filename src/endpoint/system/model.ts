@@ -1,24 +1,27 @@
-import { t } from "elysia";
+import Elysia, { t } from "elysia";
 import { successResponseModel } from "../../common/model";
 import { ServiceStatus } from "../../common/constant";
 
 const systemInfoSchema = t.Object({
-  name: t.String(),
-  version: t.String(),
-  description: t.String(),
-  environment: t.String(),
-  docs: t.Object({ ui: t.String(), json: t.String() }),
-  runtime: t.Object({
-    bun: t.String(),
-    platform: t.String(),
-    isBun: t.Boolean(),
-  }),
-  author: t.Object({
+  status: successResponseModel,
+  data: t.Object({
     name: t.String(),
-    email: t.String({ format: "email" }),
+    version: t.String(),
+    description: t.String(),
+    environment: t.String(),
+    docs: t.Object({ ui: t.String(), json: t.String() }),
+    runtime: t.Object({
+      bun: t.String(),
+      platform: t.String(),
+      isBun: t.Boolean(),
+    }),
+    author: t.Object({
+      name: t.String(),
+      email: t.String({ format: "email" }),
+    }),
+    serverTime: t.String(),
+    uptimeSeconds: t.Number(),
   }),
-  serverTime: t.String(),
-  uptimeSeconds: t.Number(),
 });
 
 export const seedDatabaseSchema = t.Object(
@@ -30,7 +33,7 @@ export const seedDatabaseSchema = t.Object(
   },
   {
     error: "Invalid request",
-  }
+  },
 );
 
 export const getSystemInfoSchema = t.Object({
@@ -49,7 +52,13 @@ export const getSystemHealthSchema = t.Object({
   }),
 });
 
-export const getSystemEchoSchema = t.Literal("Hello world!");
+export const systemModel = new Elysia({
+  name: "model/system",
+  seed: "model/system/RvdV2D",
+}).model({
+  "system.health": t.Literal("Healthy!"),
+  "system.info": systemInfoSchema,
+});
 
 export type SystemInfoModel = typeof systemInfoSchema.static;
 export type SeedDatabaseModel = typeof seedDatabaseSchema.static;

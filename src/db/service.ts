@@ -2,64 +2,17 @@ import {
   DrizzleError,
   DrizzleQueryError,
   TransactionRollbackError,
+  getTableName,
   sql,
 } from "drizzle-orm";
 import db from ".";
-import { ServiceStatus } from "../common/enum";
-// import { reset } from "drizzle-seed";
-// import { schema } from "./schema";
-// import { seedResult, seedStudent, seedTest, seedUser } from "./seed";
-import type { SeedDatabaseModel } from "../endpoint/system/model";
 import { MyLogger } from "../logger";
 import { InternalServerError, status } from "elysia";
 
+import * as schema from "../db/schema";
+import * as seeds from "../db/seeds";
+
 export abstract class DatabaseService {
-  static logDatabaseError(error: any) {
-    if (!error.cause) {
-      console.error("Drizzle error:", error.message);
-      if (error instanceof DrizzleQueryError) {
-        return "Database query error";
-      }
-
-      if (error instanceof TransactionRollbackError) {
-        return "Database transaction error";
-      }
-
-      if (error instanceof DrizzleError) {
-        return "Database error";
-      }
-    }
-
-    if ("code" in error.cause) {
-      let message;
-      switch (error.cause.code) {
-        case "ECONNREFUSED":
-          console.error("Database connection refused:", error.cause.message);
-          message = "Database connection refused";
-          break;
-        case "ENOTFOUND":
-          console.error("Database host not found:", error.cause.message);
-          message = "Database host not found";
-          break;
-        case "ETIMEDOUT":
-          console.error("Database connection timed out:", error.cause.message);
-          message = "Database connection timed out";
-          break;
-        case "EHOSTUNREACH":
-          console.error("Database host unreachable:", error.cause.message);
-          message = "Database host unreachable";
-          break;
-        default:
-          console.error("Database error:", error.cause.message);
-      }
-      message = message ?? "Database error occurred";
-      return message;
-    }
-
-    console.error("Full error:", error);
-    return "Unknown database error";
-  }
-
   static errorHandle(error: unknown) {
     if (
       error instanceof DrizzleQueryError ||
@@ -73,11 +26,8 @@ export abstract class DatabaseService {
       ) {
         switch (error.cause.code) {
           case "ECONNREFUSED":
-            MyLogger.error("database", (error.cause as any).message);
           case "ENOTFOUND":
-            MyLogger.error("database", (error.cause as any).message);
           case "ETIMEDOUT":
-            MyLogger.error("database", (error.cause as any).message);
           case "EHOSTUNREACH":
             MyLogger.error("database", (error.cause as any).message);
             throw status(
@@ -89,47 +39,99 @@ export abstract class DatabaseService {
             throw new InternalServerError();
         }
       }
+
+      MyLogger.error("database", (error.cause as any).message);
+      throw new InternalServerError();
     }
   }
 
-  static async checkConnection() {
+  static async seedDatabase() {
+    MyLogger.info("database", "Seeding database");
+    for (const table of [
+      schema.degree,
+      schema.department,
+      schema.enrollmentYear,
+      schema.faculty,
+      schema.major,
+      schema.student,
+      schema.test,
+      schema.testInstruction,
+      schema.testNote,
+      schema.testQuestion,
+      schema.testQuestionOption,
+      schema.testSubmission,
+      schema.testSubmissionAnswer,
+      schema.testSubmissionResult,
+      schema.user,
+    ]) {
+      try {
+        await db.execute(
+          sql.raw(
+            `TRUNCATE TABLE "assessment"."${getTableName(table)}" RESTART IDENTITY CASCADE`,
+          ),
+        );
+      } catch (error) {
+        throw new InternalServerError();
+      }
+    }
+
+    let result = false;
+
     try {
-      const checkUptimeStatement = sql`SELECT
-        floor(extract(epoch from now() - pg_postmaster_start_time()) / 3600) || ':' ||
-        to_char(to_timestamp(extract(epoch from now() - pg_postmaster_start_time())),'MI:SS')
-        AS server_uptime;`;
-      const result = await db.execute(checkUptimeStatement);
-
-      return {
-        status: ServiceStatus.Healthy,
-        uptime: result[0].server_uptime as string,
-        message: "Database connection is healthy",
-      };
-    } catch (err) {
-      const message = this.logDatabaseError(err);
-
-      return {
-        status: ServiceStatus.Bad,
-        uptime: "00:00:00",
-        message,
-      };
+      result = await db.transaction(async (tx) => {
+        await seeds.degree(tx);
+        await seeds.department(tx);
+        await seeds.enrollmentYear(tx);
+        await seeds.faculty(tx);
+        await seeds.major(tx);
+        await seeds.student(tx);
+        await seeds.test(tx);
+        await seeds.testInstruction(tx);
+        await seeds.testNote(tx);
+        await seeds.testQuestion(tx);
+        await seeds.testQuestionOption(tx);
+        await seeds.testSubmission(tx);
+        await seeds.testSubmissionAnswer(tx);
+        await seeds.testSubmissionResult(tx);
+        await seeds.user(tx);
+        return true;
+      });
+    } catch (error) {
+      throw new InternalServerError();
     }
-  }
 
-  static async seedDatabase(config: SeedDatabaseModel) {
-    // const studentResult = config.student ? await seedStudent() : false;
-    // const userResult = config.user ? await seedUser() : false;
-    // const testResult = config.test ? await seedTest() : false;
-    // const resultResult = config.result ? await seedResult() : false;
-    // return {
-    //   student: studentResult,
-    //   user: userResult,
-    //   testResult: testResult,
-    //   resultResult: resultResult,
-    // };
+    return result;
   }
 
   static async resetDatabase() {
-    // await reset(db, schema);
+    for (const table of [
+      schema.degree,
+      schema.department,
+      schema.enrollmentYear,
+      schema.faculty,
+      schema.major,
+      schema.student,
+      schema.test,
+      schema.testInstruction,
+      schema.testNote,
+      schema.testQuestion,
+      schema.testQuestionOption,
+      schema.testSubmission,
+      schema.testSubmissionAnswer,
+      schema.testSubmissionResult,
+      schema.user,
+    ]) {
+      try {
+        await db.execute(
+          sql.raw(
+            `TRUNCATE TABLE "assessment"."${getTableName(table)}" RESTART IDENTITY CASCADE`,
+          ),
+        );
+      } catch (error) {
+        throw new InternalServerError();
+      }
+    }
+
+    return true;
   }
 }

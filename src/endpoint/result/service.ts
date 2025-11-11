@@ -2,9 +2,11 @@ import { InternalServerError, status } from "elysia";
 import db from "../../db";
 import { DatabaseService } from "../../db/service";
 import { eq, TransactionRollbackError } from "drizzle-orm";
-import testSubmission from "../../db/schema/testSubmission";
-import testSubmissionAnswer from "../../db/schema/testSubmissionAnswer";
-import testSubmissionResult from "../../db/schema/testSubmissionResult";
+import {
+  testSubmission,
+  testSubmissionAnswer,
+  testSubmissionResult,
+} from "../../db/schema";
 import type {
   NewTestSubmissionAnswerModel,
   NewTestSubmissionModel,
@@ -28,8 +30,7 @@ export abstract class ResultService {
 
       return submission ?? null;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -46,8 +47,7 @@ export abstract class ResultService {
       // Perdimensi nilai nya adalah persentase (30/30*100%) kemudian nanti di rata-rata per tingkat
       // 9. Dimensi PWB (self acceptance, autonomy, purpose in life, personal growth, environmental mastery, positive relationship with others)
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -60,8 +60,7 @@ export abstract class ResultService {
       if (result.length === 0) return null;
       return result[0];
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -76,8 +75,7 @@ export abstract class ResultService {
       if (result.length === 0) return null;
       return result[0];
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -92,8 +90,7 @@ export abstract class ResultService {
       if (result.length === 0) return null;
       return result[0];
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -114,8 +111,7 @@ export abstract class ResultService {
       if (result.length === 0) return null;
       return result[0];
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -179,8 +175,6 @@ export abstract class ResultService {
       return updated?.answers ?? [];
     } catch (error) {
       SystemService.errorHandle(error);
-      DatabaseService.logDatabaseError(error);
-      if (error instanceof TransactionRollbackError) return null;
     }
   }
 }

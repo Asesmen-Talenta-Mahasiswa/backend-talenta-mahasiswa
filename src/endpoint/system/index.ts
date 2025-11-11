@@ -1,18 +1,14 @@
-import Elysia, { NotFoundError, t } from "elysia";
-import { ResponseStatus } from "../../common/enum";
-import {
-  getSystemEchoSchema,
-  getSystemHealthSchema,
-  getSystemInfoSchema,
-  seedDatabaseSchema,
-} from "./model";
+import Elysia, { t } from "elysia";
+import { systemModel } from "./model";
 import { SystemService } from "./service";
 import { DatabaseService } from "../../db/service";
+import { ResponseStatus } from "../../common/constant";
 
 export const systemEndpoint = new Elysia({
   prefix: "/system",
   tags: ["System"],
 })
+  .use(systemModel)
   .get(
     "",
     ({ status }) => {
@@ -20,7 +16,6 @@ export const systemEndpoint = new Elysia({
 
       return status(200, {
         status: ResponseStatus.Success,
-        message: "Service metadata retrieved",
         data: systemInfo,
       });
     },
@@ -31,37 +26,14 @@ export const systemEndpoint = new Elysia({
           "Returns metadata and runtime information about this backend service, including version, environment, documentation endpoints, and uptime.",
       },
       response: {
-        200: getSystemInfoSchema,
-      },
-    },
-  )
-  .get(
-    "/health",
-    async () => {
-      const result = await SystemService.getHealth();
-
-      return {
-        status: ResponseStatus.Success,
-        message: "Health check successful",
-        data: result,
-      };
-    },
-    {
-      detail: {
-        summary: "Service Health Check",
-        description:
-          "Returns the health status of each service used by this app.",
-      },
-      response: {
-        200: getSystemHealthSchema,
+        200: "system.info",
       },
     },
   )
   .get(
     "/echo",
     ({ status }) => {
-      // echo service to test the API
-      return status(200, "Hello world!");
+      return status(200, "Healthy!");
     },
     {
       detail: {
@@ -69,55 +41,31 @@ export const systemEndpoint = new Elysia({
         description: "A simple echo endpoint to test if the API is reachable.",
       },
       response: {
-        200: getSystemEchoSchema,
+        200: "system.health",
       },
     },
   )
   .post(
     "/seed-db",
-    async ({ query }) => {
-      const result = await DatabaseService.seedDatabase(query);
-      return {
-        status: ResponseStatus.Success,
-        message: "Database has been seeded",
-        data: result,
-      };
+    async () => {
+      const result = await DatabaseService.seedDatabase();
+      return result;
     },
     {
       detail: {
-        summary: "Seed Database with Sample Data",
-        description:
-          "Seeds the database with sample student data for testing purposes.",
+        summary: "Seed Database",
       },
-      query: seedDatabaseSchema,
     },
   )
   .post(
     "/reset-db",
-    async ({ query }) => {
-      if (query.areYouSure) await DatabaseService.resetDatabase();
-      return {
-        status: ResponseStatus.Success,
-        message: query.areYouSure
-          ? "Database has been reset"
-          : "Database reset cancelled",
-      };
+    async () => {
+      const result = await DatabaseService.resetDatabase();
+      return result;
     },
     {
       detail: {
         summary: "Reset Database",
-        description:
-          "Resets the database by dropping and recreating all tables.",
       },
-      query: t.Object(
-        {
-          areYouSure: t.Optional(
-            t.Boolean({ default: false, error: "Invalid flags" }),
-          ),
-        },
-        {
-          error: "Invalid request",
-        },
-      ),
     },
   );

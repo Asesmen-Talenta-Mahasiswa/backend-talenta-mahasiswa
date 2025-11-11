@@ -18,11 +18,14 @@ import type {
   TestQuestionOptionModel,
   UpdateTestBodyModel,
 } from "./model";
-import testTable from "../../db/schema/test";
-import testInstructionTable from "../../db/schema/testInstruction";
-import testNoteTable from "../../db/schema/testNote";
-import testQuestionTable from "../../db/schema/testQuestion";
-import testQuestionOptionTable from "../../db/schema/testQuestionOption";
+import {
+  test as testTable,
+  testInstruction as testInstructionTable,
+  testNote as testNoteTable,
+  testQuestion as testQuestionTable,
+  testQuestionOption as testQuestionOptionTable,
+} from "../../db/schema";
+import { SystemService } from "../system/service";
 
 export abstract class TestService {
   static async getTests(
@@ -61,8 +64,7 @@ export abstract class TestService {
         tests,
       };
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -83,8 +85,7 @@ export abstract class TestService {
       });
       return test;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -102,8 +103,7 @@ export abstract class TestService {
 
       return instructions.instructions;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -121,8 +121,7 @@ export abstract class TestService {
 
       return notes.notes;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -144,8 +143,7 @@ export abstract class TestService {
 
       return questions.questions;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -157,6 +155,18 @@ export abstract class TestService {
       const _newTest = (({ instructions, notes, questions, ...rest }) => rest)(
         newTest,
       );
+
+      // const { newInstruction, newNotes, newQuestions, _newTest } = (({
+      //   instructions,
+      //   notes,
+      //   questions,
+      //   ...rest
+      // }) => ({
+      //   newInstruction: instructions,
+      //   newNotes: notes,
+      //   newQuestions: questions,
+      //   _newTest: rest,
+      // }))(newTest);
 
       const result = await db.transaction(async (tx) => {
         const [test] = await tx.insert(testTable).values(_newTest).returning();
@@ -235,9 +245,7 @@ export abstract class TestService {
 
       return result;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      if (error instanceof TransactionRollbackError) return null;
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -476,9 +484,7 @@ export abstract class TestService {
 
       return updated ?? null;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      if (error instanceof TransactionRollbackError) return null;
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 }

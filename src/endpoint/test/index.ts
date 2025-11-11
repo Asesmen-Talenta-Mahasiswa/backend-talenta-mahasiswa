@@ -1,6 +1,5 @@
 import Elysia, { t } from "elysia";
 import { TestService } from "./service";
-import { ResponseStatus } from "../../common/enum";
 import {
   newTestBodyModel,
   testBodyModel,
@@ -18,6 +17,7 @@ import {
   failResponseModel,
   successResponseModel,
 } from "../../common/model";
+import { ResponseStatus } from "../../common/constant";
 
 export const testEndpoint = new Elysia({ prefix: "/tests", tags: ["Test"] })
   .get(

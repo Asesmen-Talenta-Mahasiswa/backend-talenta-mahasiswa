@@ -1,11 +1,9 @@
 import Elysia, { t } from "elysia";
-import { ResponseStatus } from "../../common/enum";
 import {
   errorResponseModel,
   failResponseModel,
   successResponseModel,
 } from "../../common/model";
-import PuppeteerService from "../../puppeteer/service";
 import {
   newTestSubmissionAnswerModel,
   newTestSubmissionModel,
@@ -21,6 +19,7 @@ import {
   testSubmissionWithAnswersModel,
 } from "./model";
 import { ResultService } from "./service";
+import { ResponseStatus } from "../../common/constant";
 
 export const resultEndpoint = new Elysia({
   prefix: "/results",
@@ -62,53 +61,6 @@ export const resultEndpoint = new Elysia({
         422: failResponseModel,
         500: errorResponseModel,
       },
-    },
-  )
-  .post(
-    "/test-submission/:submissionId/pdf",
-    async ({ body, params }) => {
-      const pdf = await PuppeteerService.generateNextJSPDF({
-        url: "http://localhost:3001/assessment/talenta-mahasiswa/result",
-        localStorageData: body,
-        format: "A4",
-        landscape: false,
-        printBackground: true,
-        // Wait for the main content to load
-        waitForSelector: "h2 ::-p-text(Checkout)", // Change this to your actual content selector
-        // Additional wait time for charts, animations, etc.
-        hideHeaderFooter: true,
-        viewport: {
-          width: 5_000,
-          height: 5_000,
-        },
-        waitForTimeout: 0,
-        margin: {
-          top: "0px",
-          right: "0px",
-          bottom: "0px",
-          left: "0px",
-        },
-      });
-
-      const buffer = new Uint8Array(pdf);
-
-      return new Response(buffer, {
-        status: 200,
-        headers: {
-          "Content-Type": "application/pdf",
-          // force download
-          "Content-Disposition": 'attachment; filename="report.pdf"',
-          "Content-Length": String(buffer.length),
-          // help some browsers and clients
-          "X-Content-Type-Options": "nosniff",
-          // If this endpoint will be fetched from JS in another origin, expose this header:
-          // 'Access-Control-Expose-Headers': 'Content-Disposition'
-        },
-      });
-    },
-    {
-      params: testSubmissionParamsModel,
-      body: t.Any(),
     },
   )
   .post(

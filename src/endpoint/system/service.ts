@@ -1,8 +1,7 @@
 import { ElysiaCustomStatusResponse, InternalServerError } from "elysia";
 import { version as apiVersion, author } from "../../../package.json";
 import { DatabaseService } from "../../db/service";
-import { type SystemInfoModel } from "./model";
-import { env, isProd } from "../../env";
+import { isProd } from "../../env";
 
 export abstract class SystemService {
   static getSystemInfo() {
@@ -27,20 +26,10 @@ export abstract class SystemService {
       },
       serverTime: now,
       uptimeSeconds,
-    } satisfies SystemInfoModel;
-  }
-
-  static async getHealth() {
-    // health check for each component/service.
-    // e.g. db connection, redis, etc.
-    const dbResult = await DatabaseService.checkConnection();
-
-    return {
-      database: dbResult,
     };
   }
 
-  static errorHandle(error: unknown) {
+  static errorHandle(error: unknown): never {
     DatabaseService.errorHandle(error);
     if (error instanceof ElysiaCustomStatusResponse) {
       throw error;

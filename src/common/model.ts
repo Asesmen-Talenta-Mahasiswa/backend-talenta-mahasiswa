@@ -1,5 +1,5 @@
 import { t } from "elysia";
-import { ResponseStatus } from "./enum";
+import { ResponseStatus } from "./constant";
 
 export const successResponseModel = t.Literal(ResponseStatus.Success);
 export const failResponseModel = t.Object({

@@ -3,7 +3,8 @@ import db from "../../db";
 import { DatabaseService } from "../../db/service";
 import { eq, asc, desc } from "drizzle-orm";
 import type { NewUserModel, UpdateUserModel } from "./model";
-import userSchema from "../../db/schema/user";
+import { user as userSchema } from "../../db/schema";
+import { SystemService } from "../system/service";
 
 export abstract class UserService {
   static async getUsers(page = 1, pageSize = 10, sort = "desc") {
@@ -29,8 +30,7 @@ export abstract class UserService {
         users,
       };
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -44,8 +44,7 @@ export abstract class UserService {
 
       return safeUser;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -64,8 +63,7 @@ export abstract class UserService {
 
       return safeUser;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -90,8 +88,7 @@ export abstract class UserService {
 
       return safeUser;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 }

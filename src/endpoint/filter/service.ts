@@ -1,7 +1,5 @@
-import { status } from "elysia";
 import db from "../../db";
-import { DatabaseService } from "../../db/service";
-import { FailResponseModel } from "../../common/model";
+import { SystemService } from "../system/service";
 
 export abstract class FilterService {
   static async getStudentFilter() {
@@ -28,8 +26,7 @@ export abstract class FilterService {
         majors: e,
       };
     } catch (error) {
-      DatabaseService.errorHandle(error);
-      throw status(500);
+      SystemService.errorHandle(error);
     }
   }
 }

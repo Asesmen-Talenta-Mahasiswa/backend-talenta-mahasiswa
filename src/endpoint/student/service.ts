@@ -1,11 +1,7 @@
 import { and, eq, ilike, inArray, or, sql } from "drizzle-orm";
-import {
-  ElysiaCustomStatusResponse,
-  InternalServerError,
-  status,
-} from "elysia";
+import { InternalServerError, status } from "elysia";
 import db from "../../db";
-import studentsTable from "../../db/schema/student";
+import { student as studentsTable } from "../../db/schema";
 import { DatabaseService } from "../../db/service";
 import type { NewStudentModel, UpdateStudentModel } from "./model";
 import type { FailResponseModel } from "../../common/model";
@@ -86,8 +82,7 @@ export abstract class StudentService {
         },
       };
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -112,8 +107,7 @@ export abstract class StudentService {
       });
       return student;
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 
@@ -216,8 +210,7 @@ export abstract class StudentService {
 
       return result[0];
     } catch (error) {
-      DatabaseService.logDatabaseError(error);
-      throw new InternalServerError();
+      SystemService.errorHandle(error);
     }
   }
 }

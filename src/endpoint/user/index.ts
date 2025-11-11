@@ -1,6 +1,5 @@
 import Elysia, { t } from "elysia";
 import { UserService } from "./service";
-import { ResponseStatus } from "../../common/enum";
 import {
   userParamsSchema,
   userQuerySchema,
@@ -13,6 +12,7 @@ import {
   failResponseModel,
   successResponseModel,
 } from "../../common/model";
+import { ResponseStatus } from "../../common/constant";
 
 export const userEndpoint = new Elysia({ prefix: "/users", tags: ["User"] })
   .get(
@@ -21,7 +21,7 @@ export const userEndpoint = new Elysia({ prefix: "/users", tags: ["User"] })
       const { pagination, users } = await UserService.getUsers(
         query.page,
         query.pageSize,
-        query.sortDirection
+        query.sortDirection,
       );
 
       return status(200, {
@@ -46,7 +46,7 @@ export const userEndpoint = new Elysia({ prefix: "/users", tags: ["User"] })
         422: failResponseModel,
         500: errorResponseModel,
       },
-    }
+    },
   )
   .get(
     "/:userId",
@@ -80,7 +80,7 @@ export const userEndpoint = new Elysia({ prefix: "/users", tags: ["User"] })
         422: failResponseModel,
         500: errorResponseModel,
       },
-    }
+    },
   )
   .post(
     "",
@@ -113,7 +113,7 @@ export const userEndpoint = new Elysia({ prefix: "/users", tags: ["User"] })
         422: failResponseModel,
         500: errorResponseModel,
       },
-    }
+    },
   )
   .patch(
     "/:userId",
@@ -147,5 +147,5 @@ export const userEndpoint = new Elysia({ prefix: "/users", tags: ["User"] })
         422: failResponseModel,
         500: errorResponseModel,
       },
-    }
+    },
   );

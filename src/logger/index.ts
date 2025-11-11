@@ -1,72 +1,117 @@
 import Elysia from "elysia";
-// import pino from "pino";
-// import PinoPretty, { PrettyOptions } from "pino-pretty";
 import { version as ELYSIA_VERSION } from "elysia/package.json";
 import { version as APP_VERSION } from "../../package.json";
-import picocolors from "picocolors";
-import {
-  formatColorStatusCode,
-  formatDuration,
-  formatMethod,
-  formatPath,
-  formatStatusCode,
-  formatSymbol,
-  formatTimestamp,
-} from "./formatter";
 import { env } from "../env";
-// import { isProd } from "../env";
-
-const serverStartTime = performance.now();
-
-// const prettyOption: PrettyOptions = {
-//     ignore: undefined,
-//     minimumLevel: isProd ? "info" : "trace",
-//     customPrettifiers: {},
-//     messageFormat: "{levelLabel} - {if pid}{pid} - {end}url:{req.url}",
-// };
+import { serverStartTime } from "..";
 
 type LoggerConfig = {
   showStartUpMessage?: false | "rich" | "simple";
 };
 
-// const pretty = isProd ? undefined : PinoPretty(prettyOption);
+function isJSON(value: unknown): boolean {
+  if (typeof value === "string") {
+    try {
+      JSON.parse(value);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  return false;
+}
 
-// const pinoLogger = pino(
-//     {
-//         level: isProd ? "info" : "trace",
-//         formatters: {
-//             level(label, _) {
-//                 return { level: label.toUpperCase() };
-//             },
-//         },
-//     },
-//     // pretty
-// );
+function formatMessage(message: unknown): { text: string; isJSON: boolean } {
+  if (isJSON(message)) {
+    try {
+      const parsed = JSON.parse(message as string);
+      return {
+        text: JSON.stringify(parsed, null, 2),
+        isJSON: true,
+      };
+    } catch {
+      return {
+        text: String(message),
+        isJSON: false,
+      };
+    }
+  }
+  if (typeof message === "object" && message !== null) {
+    try {
+      return {
+        text: JSON.stringify(message, null, 2),
+        isJSON: true,
+      };
+    } catch {
+      return {
+        text: String(message),
+        isJSON: false,
+      };
+    }
+  }
+  return {
+    text: String(message),
+    isJSON: false,
+  };
+}
 
 export abstract class MyLogger {
-  static async error(section: string, message: string) {
-    const format =
-      picocolors.red("✖ ") +
-      formatTimestamp(new Date()) +
-      ` [${section.toUpperCase()}] ${message}`;
-    console.error(format);
+  static async debug(section: string, message: unknown) {
+    const timestamp = new Date().toLocaleString();
+    const { text, isJSON } = formatMessage(message);
+    const separator = isJSON ? "\n" : " ";
+    console.debug(`${timestamp} [${section.toUpperCase()}]${separator}${text}`);
   }
 
-  static async info(section: string, message: string) {
-    const format =
-      picocolors.yellow(picocolors.bold("! ")) +
-      formatTimestamp(new Date()) +
-      ` [${section.toUpperCase()}] ${message}`;
-    console.log(format);
+  static async error(section: string, message: unknown) {
+    const timestamp = new Date().toLocaleString();
+    const { text, isJSON } = formatMessage(message);
+    const separator = isJSON ? "\n" : " ";
+    console.error(`${timestamp} [${section.toUpperCase()}]${separator}${text}`);
   }
 
-  static async warn(section: string, message: string) {
-    const format =
-      picocolors.blue("- ") +
-      formatTimestamp(new Date()) +
-      ` [${section.toUpperCase()}] ${message}`;
-    console.warn(format);
+  static async warn(section: string, message: unknown) {
+    const timestamp = new Date().toLocaleString();
+    const { text, isJSON } = formatMessage(message);
+    const separator = isJSON ? "\n" : " ";
+    console.warn(`${timestamp} [${section.toUpperCase()}]${separator}${text}`);
   }
+
+  static async info(section: string, message: unknown) {
+    const timestamp = new Date().toLocaleString();
+    const { text, isJSON } = formatMessage(message);
+    const separator = isJSON ? "\n" : " ";
+    console.info(`${timestamp} [${section.toUpperCase()}]${separator}${text}`);
+  }
+}
+
+function formatDuration(ns: bigint | number): string {
+  const value = typeof ns === "bigint" ? Number(ns) : ns;
+
+  if (Number.isNaN(value) || !Number.isFinite(value)) return "NaN";
+  if (value < 0) return `-${formatDuration(-value)}`;
+
+  const NS_IN_US = 1_000;
+  const NS_IN_MS = 1_000_000;
+  const NS_IN_S = 1_000_000_000;
+
+  let formatted: number;
+  let unit: string;
+
+  if (value < NS_IN_US) {
+    formatted = value;
+    unit = "ns";
+  } else if (value < NS_IN_MS) {
+    formatted = value / NS_IN_US;
+    unit = "µs"; // microseconds
+  } else if (value < NS_IN_S) {
+    formatted = value / NS_IN_MS;
+    unit = "ms";
+  } else {
+    formatted = value / NS_IN_S;
+    unit = "s";
+  }
+
+  return `${formatted.toFixed(2)}${unit}`;
 }
 
 export function logger(config: LoggerConfig = {}) {
@@ -82,139 +127,94 @@ export function logger(config: LoggerConfig = {}) {
     .onStart(async ({ server }) => {
       if (!showStartUpMessage) return;
 
-      const duration = performance.now() - serverStartTime;
+      const duration = (performance.now() - serverStartTime).toFixed(2);
+      const url = server?.url.toString() ?? "unknown";
 
       if (showStartUpMessage === "simple") {
         console.info(
-          `🦊 Elysia v${ELYSIA_VERSION} started in ${duration.toFixed(0)} ms at ${server?.url.toString() ?? "unknown"}`,
+          `🦊 Elysia v${ELYSIA_VERSION} started in ${duration}ms at ${url}`,
         );
         return;
       }
 
-      await Bun.write(
-        Bun.stdout,
-        `🦊 ${picocolors.green(
-          `${picocolors.bold("Elysia")} v${ELYSIA_VERSION}`,
-        )} ${picocolors.gray("started in")} ${picocolors.bold(
-          duration.toFixed(0),
-        )} ms\n\n`,
-      );
-      await Bun.write(
-        Bun.stdout,
-        `${picocolors.green(" ➜ ")} ${picocolors.bold(
-          "Name",
-        )}:     ${picocolors.whiteBright("RESTful API Asesmen Talenta Mahsiswa")}\n`,
-      );
-      await Bun.write(
-        Bun.stdout,
-        `${picocolors.green(" ➜ ")} ${picocolors.bold("Server")}:   ${picocolors.blue(
-          server?.url.toString() ?? "unknown",
-        )}\n`,
-      );
-      await Bun.write(
-        Bun.stdout,
-        `${picocolors.green(" ➜ ")} ${picocolors.bold("Database")}: ${picocolors.blue(
-          `${env.DB_URL}`,
-        )}\n`,
-      );
-      await Bun.write(
-        Bun.stdout,
-        `${picocolors.green(" ➜ ")} ${picocolors.bold("Version")}:  ${picocolors.green(
-          APP_VERSION,
-        )}\n\n`,
-      );
+      console.info(`Elysia v${ELYSIA_VERSION} started in ${duration}ms\n`);
+
+      console.info(` ➜  Server   : ${url}`);
+      console.info(` ➜  Database : ${env.DB_URL}`);
+      console.info(` ➜  Version  : ${APP_VERSION}\n`);
     })
 
     .onRequest(async ({ store }) => {
       store.requestStartTime = process.hrtime.bigint();
     })
 
-    .onError({ as: "global" }, async ({ store, request, path, set, code }) => {
+    .onError(async ({ store, request, path, set, code }) => {
       const duration = formatDuration(
         process.hrtime.bigint() - store.requestStartTime,
       );
-      const method = formatMethod(request.method);
-      const timestamp = formatTimestamp(new Date());
-      const _path = formatPath(path);
-      let status = formatStatusCode(set.status, 500);
-      if (typeof code === "number") status = code;
-      const symbol = formatSymbol(status);
-      const _status = formatColorStatusCode(status);
-      const logMsg = `${symbol} ${timestamp} ${method} ${_path} ${_status} ${duration}\n`;
-      await Bun.write(Bun.stderr, logMsg);
-      // pinoLogger.error({ duration, method, path, status, symbol });
+      const method = request.method;
+      const timestamp = new Date().toLocaleString();
+      const statusCode =
+        typeof code === "number" && code >= 500
+          ? code
+          : !set.status && typeof set.status === "number" && set.status >= 500
+            ? set.status
+            : 500;
+
+      console.error(
+        `${timestamp} | [ERROR] | ${statusCode} | ${method} | ${path} | ${duration} |`,
+      );
     })
 
-    .onAfterHandle(
-      { as: "global" },
-      async ({ responseValue, request, path, store }) => {
-        if (responseValue instanceof Response) {
-          if (responseValue.status < 300 && responseValue.status > 300) return;
-          if (!responseValue.headers.get("location")) return;
+    .onAfterHandle(async ({ responseValue, request, path, store }) => {
+      if (responseValue instanceof Response) {
+        if (responseValue.status < 400 && responseValue.status > 300) return;
+        if (!responseValue.headers.get("location")) return;
 
-          store.isRedirected = true;
+        store.isRedirected = true;
 
-          const symbol = formatSymbol(responseValue.status);
-          const timestamp = formatTimestamp(new Date());
-          const method = formatMethod(request.method);
-          const _path = formatPath(path);
-          const status = formatColorStatusCode(responseValue.status);
-          const redirectPath = formatPath(
-            responseValue.headers.get("location") ?? "unknown",
-          );
-          const duration = formatDuration(
-            process.hrtime.bigint() - store.requestStartTime,
-          );
-          const logMsg = `${symbol} ${timestamp} ${method} ${_path} ${symbol} ${redirectPath} ${status} ${duration}\n`;
-          await Bun.write(Bun.stdout, logMsg);
-          return;
-        }
-        store.isRedirected = false;
-      },
-    )
-
-    .onAfterResponse(
-      { as: "global" },
-      async ({ store, request, path, set }) => {
         const duration = formatDuration(
           process.hrtime.bigint() - store.requestStartTime,
         );
-        const method = formatMethod(request.method);
-        const timestamp = formatTimestamp(new Date());
-        const status = formatStatusCode(set.status, 200);
-        const _path = formatPath(path);
-        const symbol = formatSymbol(status);
-        const _status = formatColorStatusCode(status);
+        const method = request.method;
+        const timestamp = new Date().toLocaleString();
+        const statusCode = responseValue.status;
+        const redirectPath = responseValue.headers.get("location") ?? "unknown";
 
-        if (status >= 500) return;
-        if (store.isRedirected) return;
+        console.info(
+          `${timestamp} | [REDIRECTED] | ${statusCode} | ${method} | ${path} ➜ ${redirectPath} | ${duration} |`,
+        );
+        return;
+      }
+      store.isRedirected = false;
+    })
 
-        const logMsg = `${symbol} ${timestamp} ${method} ${_path} ${_status} ${duration}\n`;
+    .onAfterResponse(async ({ store, request, path, set }) => {
+      if (store.isRedirected) return;
 
-        if (status >= 400) {
-          // pinoLogger.warn({ duration, method, path, status, symbol });
-          await Bun.write(Bun.stdout, logMsg);
-          return;
-        }
+      const statusCode =
+        set.status && typeof set.status === "number" ? set.status : 200;
 
-        await Bun.write(Bun.stdout, logMsg);
-        // pinoLogger.info({ duration, method, path, status, symbol });
-      },
-    );
+      if (statusCode >= 500) return;
 
-  // Testing only
-  // .all("/logger/testing", () => "Hi!")
+      const duration = formatDuration(
+        process.hrtime.bigint() - store.requestStartTime,
+      );
+      const method = request.method;
+      const timestamp = new Date().toLocaleString();
 
-  // .get("/logger/success", ({ status }) => status(204, "Success Status"))
-  // .get("/logger/fail", ({ status }) => status(404, "Fail Status"))
-  // .get("/logger/error", ({ status }) => {
-  //   throw status(502, "Error Status");
-  // })
+      if (statusCode >= 400) {
+        console.warn(
+          `${timestamp} | [FAIL] | ${statusCode} | ${method} | ${path} | ${duration} |`,
+        );
+        return;
+      }
 
-  // .get("/logger/redirect-point", (c) => c.status("Accepted", "Redirected!"))
-  // .post("/logger/redirect-test", ({ redirect }) =>
-  //   redirect("/logger/redirect-point", 303)
-  // );
+      console.info(
+        `${timestamp} | [SUCCESS] | ${statusCode} | ${method} | ${path} | ${duration} |`,
+      );
+    })
+    .as("global");
 
   return log;
 }
