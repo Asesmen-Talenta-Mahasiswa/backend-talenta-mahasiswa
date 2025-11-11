@@ -1,4 +1,4 @@
-import { and, eq, ilike, inArray, or, sql } from "drizzle-orm";
+import { and, eq, ilike, inArray, like, or, sql } from "drizzle-orm";
 import { status } from "elysia";
 import db from "../../db";
 import { student as studentsTable } from "../../db/schema";
@@ -19,7 +19,7 @@ export abstract class StudentService {
     try {
       const whereClause = and(
         or(
-          search ? ilike(studentsTable.npm, `%${search}%`) : undefined,
+          search ? like(studentsTable.npm, `${search}%`) : undefined,
           search ? ilike(studentsTable.name, `%${search}%`) : undefined,
         ),
         and(
@@ -45,10 +45,8 @@ export abstract class StudentService {
         with: {
           submissions: {
             limit: 1,
-            orderBy: (submissionColumn, { desc, asc }) => [
-              sortDirection === "desc"
-                ? desc(submissionColumn.id)
-                : asc(submissionColumn.id),
+            orderBy: (submissionColumn, { desc }) => [
+              desc(submissionColumn.id),
             ],
             with: {
               results: {

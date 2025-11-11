@@ -17,6 +17,9 @@ export const envSchema = Type.Object({
     maximum: 65535,
     error: "PORT is not defined in environment variables",
   }),
+  API_KEY: Type.String({
+    error: "API_KEY is not defined in environment variables",
+  }),
 
   DB_HOST: Type.String({
     error: "DB_HOST is not defined in environment variables",

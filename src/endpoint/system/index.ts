@@ -3,6 +3,8 @@ import { systemModel } from "./model";
 import { SystemService } from "./service";
 import { DatabaseService } from "../../db/service";
 import { ResponseStatus } from "../../common/constant";
+import { env } from "../../env";
+import { type FailResponseModel } from "../../common/model";
 
 export const systemEndpoint = new Elysia({
   prefix: "/system",
@@ -45,9 +47,32 @@ export const systemEndpoint = new Elysia({
       },
     },
   )
+  .guard({
+    headers: t.Object({
+      "x-api-key": t.String({
+        minLength: 1,
+        error: "API key harus berupa text dan tidak boleh kosong",
+        description: "API Key for authentication",
+      }),
+    }),
+    beforeHandle({ headers, status }) {
+      if (headers["x-api-key"] !== env.API_KEY) {
+        return status(401, {
+          status: ResponseStatus.Fail,
+          data: [
+            {
+              field: "x-api-key",
+              message: "API key tidak valid",
+            },
+          ],
+        } satisfies FailResponseModel);
+      }
+    },
+  })
   .post(
     "/seed-db",
     async () => {
+      console.log("Seeding database...");
       const result = await DatabaseService.seedDatabase();
       return result;
     },
