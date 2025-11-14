@@ -20,6 +20,25 @@ export const envSchema = Type.Object({
   API_KEY: Type.String({
     error: "API_KEY is not defined in environment variables",
   }),
+  APP_ID: Type.String({
+    error:
+      "APP_ID is not defined in environment variables and must be a valid UUID",
+  }),
+  APP_USERNAME: Type.String({
+    error: "APP_USERNAME is not defined in environment variables",
+  }),
+  APP_PASSWORD: Type.String({
+    error: "APP_PASSWORD is not defined in environment variables",
+  }),
+  JWT_SSO_SECRET: Type.String({
+    error: "JWT_SSO_SECRET is not defined in environment variables",
+  }),
+  JWT_SECRET: Type.String({
+    error: "JWT_SECRET is not defined in environment variables",
+  }),
+  ONEDATA_URL: Type.String({
+    error: "ONEDATA_URL is not defined in environment variables",
+  }),
 
   DB_HOST: Type.String({
     error: "DB_HOST is not defined in environment variables",
@@ -58,6 +77,16 @@ export const envSchema = Type.Object({
   DB_SEEDING: Type.Boolean({
     default: "false",
     error: `You must set DB_SEEDING to "true" when running seeds`,
+  }),
+
+  COOKIE_SECRET_ONE: Type.String({
+    error: "COOKIE_SECRET_ONE is not defined in environment variables",
+  }),
+  COOKIE_SECRET_TWO: Type.String({
+    error: "COOKIE_SECRET_TWO is not defined in environment variables",
+  }),
+  COOKIE_SECRET_THREE: Type.String({
+    error: "COOKIE_SECRET_THREE is not defined in environment variables",
   }),
 });
 

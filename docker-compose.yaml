@@ -3,6 +3,7 @@ services:
     image: postgres:18
     cpus: 1.0
     mem_limit: 512m
+    restart: always
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_DB: ${DB_NAME}
@@ -16,6 +17,7 @@ services:
   redis:
     image: redis:8.2.2
     cpus: 1.0
+    restart: always
     mem_limit: 512m
     ports:
       - ${REDIS_PORT}:6379

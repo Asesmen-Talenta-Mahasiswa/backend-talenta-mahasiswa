@@ -1,42 +1,9 @@
 {
-  "id": "9522b46d-85cf-454d-bbff-ae6b60e6c2d1",
+  "id": "49b98cff-16b2-4d0b-a03b-2ebf945e0384",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "assessment.degree": {
-      "name": "degree",
-      "schema": "assessment",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "degree_name_unique": {
-          "name": "degree_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
     "assessment.department": {
       "name": "department",
       "schema": "assessment",
@@ -54,45 +21,28 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "department_name_idx": {
+          "name": "department_name_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "department_name_unique": {
           "name": "department_name_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "name"
-          ]
-        }
-      },
-      "policies": {},
-      "checkConstraints": {},
-      "isRLSEnabled": false
-    },
-    "assessment.enrollment_year": {
-      "name": "enrollment_year",
-      "schema": "assessment",
-      "columns": {
-        "id": {
-          "name": "id",
-          "type": "serial",
-          "primaryKey": true,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "text",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "enrollment_year_name_unique": {
-          "name": "enrollment_year_name_unique",
           "nullsNotDistinct": false,
           "columns": [
             "name"
@@ -120,7 +70,23 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "faculty_name_idx": {
+          "name": "faculty_name_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
@@ -132,6 +98,152 @@
           ]
         }
       },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "assessment.institution": {
+      "name": "institution",
+      "schema": "assessment",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "id_sp": {
+          "name": "id_sp",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_sms": {
+          "name": "id_sms",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_fak_unila": {
+          "name": "id_fak_unila",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_jur_unila": {
+          "name": "id_jur_unila",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_induk_sms": {
+          "name": "id_induk_sms",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_jns_sms": {
+          "name": "id_jns_sms",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "id_wil": {
+          "name": "id_wil",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nm_jns_sms": {
+          "name": "nm_jns_sms",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nm_lemb": {
+          "name": "nm_lemb",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "kode_prodi": {
+          "name": "kode_prodi",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "nm_jenj_didik": {
+          "name": "nm_jenj_didik",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "institution_nm_lemb_idx": {
+          "name": "institution_nm_lemb_idx",
+          "columns": [
+            {
+              "expression": "nm_lemb",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "institution_id_sms_idx": {
+          "name": "institution_id_sms_idx",
+          "columns": [
+            {
+              "expression": "id_sms",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "institution_id_fak_unila_idx": {
+          "name": "institution_id_fak_unila_idx",
+          "columns": [
+            {
+              "expression": "id_fak_unila",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "institution_id_jur_unila_idx": {
+          "name": "institution_id_jur_unila_idx",
+          "columns": [
+            {
+              "expression": "id_jur_unila",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
       "policies": {},
       "checkConstraints": {},
       "isRLSEnabled": false
@@ -153,7 +265,23 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "major_name_idx": {
+          "name": "major_name_idx",
+          "columns": [
+            {
+              "expression": "name",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
@@ -197,9 +325,34 @@
           "primaryKey": false,
           "notNull": false
         },
-        "enrollment_year_id": {
-          "name": "enrollment_year_id",
-          "type": "integer",
+        "gender": {
+          "name": "gender",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "degree": {
+          "name": "degree",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "enrollment_year": {
+          "name": "enrollment_year",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "has_taken_test": {
+          "name": "has_taken_test",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -209,14 +362,14 @@
           "primaryKey": false,
           "notNull": true
         },
-        "faculty_id": {
-          "name": "faculty_id",
+        "department_id": {
+          "name": "department_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
         },
-        "degree_id": {
-          "name": "degree_id",
+        "faculty_id": {
+          "name": "faculty_id",
           "type": "integer",
           "primaryKey": false,
           "notNull": true
@@ -252,11 +405,11 @@
           "method": "gin",
           "with": {}
         },
-        "students_enrollment_year_idx": {
-          "name": "students_enrollment_year_idx",
+        "students_major_idx": {
+          "name": "students_major_idx",
           "columns": [
             {
-              "expression": "enrollment_year_id",
+              "expression": "major_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -267,11 +420,26 @@
           "method": "btree",
           "with": {}
         },
-        "students_major_idx": {
-          "name": "students_major_idx",
+        "students_user_idx": {
+          "name": "students_user_idx",
           "columns": [
             {
               "expression": "major_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "students_department_idx": {
+          "name": "students_department_idx",
+          "columns": [
+            {
+              "expression": "department_id",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -297,11 +465,41 @@
           "method": "btree",
           "with": {}
         },
+        "students_enrollment_year_idx": {
+          "name": "students_enrollment_year_idx",
+          "columns": [
+            {
+              "expression": "enrollment_year",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
+        "students_gender_idx": {
+          "name": "students_gender_idx",
+          "columns": [
+            {
+              "expression": "gender",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        },
         "students_degree_idx": {
           "name": "students_degree_idx",
           "columns": [
             {
-              "expression": "degree_id",
+              "expression": "degree",
               "isExpression": false,
               "asc": true,
               "nulls": "last"
@@ -314,13 +512,13 @@
         }
       },
       "foreignKeys": {
-        "student_enrollment_year_id_enrollment_year_id_fk": {
-          "name": "student_enrollment_year_id_enrollment_year_id_fk",
+        "student_user_id_user_id_fk": {
+          "name": "student_user_id_user_id_fk",
           "tableFrom": "student",
-          "tableTo": "enrollment_year",
+          "tableTo": "user",
           "schemaTo": "assessment",
           "columnsFrom": [
-            "enrollment_year_id"
+            "user_id"
           ],
           "columnsTo": [
             "id"
@@ -342,13 +540,13 @@
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
-        "student_faculty_id_faculty_id_fk": {
-          "name": "student_faculty_id_faculty_id_fk",
+        "student_department_id_department_id_fk": {
+          "name": "student_department_id_department_id_fk",
           "tableFrom": "student",
-          "tableTo": "faculty",
+          "tableTo": "department",
           "schemaTo": "assessment",
           "columnsFrom": [
-            "faculty_id"
+            "department_id"
           ],
           "columnsTo": [
             "id"
@@ -356,13 +554,13 @@
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
-        "student_degree_id_degree_id_fk": {
-          "name": "student_degree_id_degree_id_fk",
+        "student_faculty_id_faculty_id_fk": {
+          "name": "student_faculty_id_faculty_id_fk",
           "tableFrom": "student",
-          "tableTo": "degree",
+          "tableTo": "faculty",
           "schemaTo": "assessment",
           "columnsFrom": [
-            "degree_id"
+            "faculty_id"
           ],
           "columnsTo": [
             "id"
@@ -378,6 +576,13 @@
           "nullsNotDistinct": false,
           "columns": [
             "npm"
+          ]
+        },
+        "student_user_id_unique": {
+          "name": "student_user_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "user_id"
           ]
         }
       },
@@ -886,7 +1091,7 @@
         },
         "result": {
           "name": "result",
-          "type": "text",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": true
         },
@@ -995,7 +1200,9 @@
     }
   },
   "enums": {},
-  "schemas": {},
+  "schemas": {
+    "assessment": "assessment"
+  },
   "sequences": {},
   "roles": {},
   "policies": {},

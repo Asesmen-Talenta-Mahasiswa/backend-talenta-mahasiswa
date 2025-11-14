@@ -1,4 +1,4 @@
-import { t } from "elysia";
+import Elysia, { t } from "elysia";
 import { dbModel } from "../../db/model";
 import { SortDirection } from "../../common/constant";
 import {
@@ -6,31 +6,25 @@ import {
   testSubmissionModel,
   testSubmissionResultModel,
 } from "../test/model";
+import {
+  errorResponseModel,
+  failResponseModel,
+  paginationModel,
+  successResponseModel,
+} from "../../common/model";
 
 const selectStudent = dbModel.select.student;
 const { id, updatedAt, createdAt, ...insertStudent } = dbModel.insert.student;
 
-export const studentModel = t.Object({
-  ...selectStudent,
+export const studentModel = t.Object(selectStudent);
+export const newStudentModel = t.Object(insertStudent, {
+  error: "Request body untuk mahasiswa baru tidak valid",
 });
-export const newStudentModel = t.Object(
-  {
-    ...insertStudent,
-  },
-  {
-    error: "Request body untuk mahasiswa baru tidak valid",
-  },
-);
 export const updateStudentModel = t.Partial(
-  t.Object(
-    {
-      ...insertStudent,
-    },
-    {
-      minProperties: 1,
-      error: "Request body untuk mengubah data mahasiswa tidak valid",
-    },
-  ),
+  t.Object(insertStudent, {
+    minProperties: 1,
+    error: "Request body untuk mengubah data mahasiswa tidak valid",
+  }),
 );
 
 export const studentParamsModel = t.Object({
@@ -110,21 +104,18 @@ export const studentQueryModel = t.Object({
   ),
 });
 
-export const studentResponseModel = t.Object({
-  ...studentModel.properties,
-  submissions: t.Array(
-    t.Object({
-      ...testSubmissionModel.properties,
-      results: t.Array(
-        t.Object({
-          ...testSubmissionResultModel.properties,
-          test: t.Union([testModel, t.Null()]),
-        }),
-      ),
-    }),
-  ),
+export const getStudentsResponseModel = t.Object({
+  status: successResponseModel,
+  data: t.Array(studentModel),
+  pagination: paginationModel,
+});
+export const getStudentResponseModel = t.Object({
+  status: successResponseModel,
+  data: studentModel,
 });
 
 export type StudentModel = typeof studentModel.static;
 export type NewStudentModel = typeof newStudentModel.static;
 export type UpdateStudentModel = typeof updateStudentModel.static;
+
+export type StudentQueryModel = typeof studentQueryModel.static;

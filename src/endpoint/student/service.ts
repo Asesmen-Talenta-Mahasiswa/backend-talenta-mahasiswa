@@ -1,21 +1,28 @@
 import { and, eq, ilike, inArray, like, or, sql } from "drizzle-orm";
 import { status } from "elysia";
-import db from "../../db";
+import db, { Transaction } from "../../db";
 import { student as studentsTable } from "../../db/schema";
-import type { NewStudentModel, UpdateStudentModel } from "./model";
+import type {
+  NewStudentModel,
+  StudentModel,
+  StudentQueryModel,
+  UpdateStudentModel,
+} from "./model";
 import type { FailResponseModel } from "../../common/model";
 import { SystemService } from "../system/service";
 
 export abstract class StudentService {
-  static async getStudents(
-    page = 1,
-    pageSize = 10,
-    search = "",
-    majorIds: number[] = [],
-    departmentIds: number[] = [],
-    facultyIds: number[] = [],
-    sortDirection: "asc" | "desc" = "desc",
-  ) {
+  static async getStudents(query: StudentQueryModel = {}) {
+    const {
+      page = 1,
+      pageSize = 10,
+      search = "",
+      majorId = [],
+      departmentId = [],
+      facultyId = [],
+      sortDirection = "desc",
+    } = query;
+
     try {
       const whereClause = and(
         or(
@@ -23,14 +30,14 @@ export abstract class StudentService {
           search ? ilike(studentsTable.name, `%${search}%`) : undefined,
         ),
         and(
-          majorIds.length > 0
-            ? inArray(studentsTable.majorId, majorIds)
+          majorId.length > 0
+            ? inArray(studentsTable.majorId, majorId)
             : undefined,
-          facultyIds.length > 0
-            ? inArray(studentsTable.facultyId, facultyIds)
+          facultyId.length > 0
+            ? inArray(studentsTable.facultyId, facultyId)
             : undefined,
-          departmentIds.length > 0
-            ? inArray(studentsTable.departmentId, departmentIds)
+          departmentId.length > 0
+            ? inArray(studentsTable.departmentId, departmentId)
             : undefined,
         ),
       );
@@ -42,21 +49,6 @@ export abstract class StudentService {
             ? desc(studentColumn.id)
             : asc(studentColumn.id),
         ],
-        with: {
-          submissions: {
-            limit: 1,
-            orderBy: (submissionColumn, { desc }) => [
-              desc(submissionColumn.id),
-            ],
-            with: {
-              results: {
-                with: {
-                  test: true,
-                },
-              },
-            },
-          },
-        },
         limit: pageSize,
         offset: (page - 1) * pageSize,
       });
@@ -81,24 +73,108 @@ export abstract class StudentService {
 
   static async getStudent(npm: string) {
     try {
-      const student = await db.query.student.findFirst({
-        with: {
-          submissions: {
-            orderBy: (submissionColumn, { desc }) => [
-              desc(submissionColumn.id),
-            ],
-            with: {
-              results: {
-                with: {
-                  test: true,
-                },
-              },
-            },
-          },
-        },
+      return await db.query.student.findFirst({
         where: eq(studentsTable.npm, npm),
+        with: {
+          user: true,
+        },
       });
-      return student;
+    } catch (error) {
+      SystemService.errorHandle(error);
+    }
+  }
+
+  static async getStudentById(id: string) {
+    try {
+      return await db.query.student.findFirst({
+        where: eq(studentsTable.id, id),
+      });
+    } catch (error) {
+      SystemService.errorHandle(error);
+    }
+  }
+
+  static async createEmptyStudent(
+    newStudent: NewStudentModel,
+    tx: Transaction,
+  ) {
+    try {
+      const majorIdFound = tx.query.major.findFirst({
+        where: (col, { eq }) => eq(col.id, newStudent.majorId),
+      });
+      const departmentIdFound = tx.query.department.findFirst({
+        where: (col, { eq }) => eq(col.id, newStudent.departmentId),
+      });
+      const facultyIdFound = tx.query.faculty.findFirst({
+        where: (col, { eq }) => eq(col.id, newStudent.facultyId),
+      });
+      const npmFound = tx.query.student.findFirst({
+        columns: { id: true },
+        where: (col, { eq }) => eq(col.npm, newStudent.npm),
+      });
+
+      const [major, department, faculty, npm] = await Promise.all([
+        majorIdFound,
+        departmentIdFound,
+        facultyIdFound,
+        npmFound,
+      ]);
+
+      const data = [];
+
+      if (!department) {
+        data.push({
+          field: "department",
+          message: "Jurusan tidak ditemukan",
+        });
+      }
+
+      if (!faculty) {
+        data.push({
+          field: "faculty",
+          message: "Fakultas tidak ditemukan",
+        });
+      }
+
+      if (!major) {
+        data.push({
+          field: "major",
+          message: "Program studi tidak ditemukan",
+        });
+      }
+
+      if (npm) {
+        data.push({
+          field: "npm",
+          message: "Mahasiswa sudah terdaftar",
+        });
+      }
+
+      if (!department || !major || !faculty || npm) {
+        throw status(422, {
+          status: "fail",
+          data,
+        } satisfies FailResponseModel);
+      }
+
+      const result = await tx
+        .insert(studentsTable)
+        .values(newStudent)
+        .returning();
+
+      if (result.length === 0) {
+        throw status(422, {
+          status: "fail",
+          data: [
+            {
+              field: "",
+              message: "Gagal saat menambahkan data mahasiswa",
+            },
+          ],
+        } satisfies FailResponseModel);
+      }
+
+      return result[0];
     } catch (error) {
       SystemService.errorHandle(error);
     }
@@ -185,6 +261,32 @@ export abstract class StudentService {
       }
 
       return result[0];
+    } catch (error) {
+      SystemService.errorHandle(error);
+    }
+  }
+
+  static async putStudent(npm: string) {
+    try {
+      let student: StudentModel | undefined = undefined;
+
+      student = await db.query.student.findFirst({
+        where: (col, { eq }) => eq(col.npm, npm),
+      });
+
+      if (!student) {
+        throw status(404, {
+          status: "fail",
+          data: [
+            {
+              field: "npm",
+              message: "Mahasiswa tidak ditemukan",
+            },
+          ],
+        } satisfies FailResponseModel);
+      }
+
+      return student;
     } catch (error) {
       SystemService.errorHandle(error);
     }

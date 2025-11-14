@@ -11,3 +11,4 @@ export { default as testSubmissionResult } from "./testSubmissionResult";
 export { default as faculty } from "./faculty";
 export { default as major } from "./major";
 export { default as department } from "./department";
+export { default as institution } from "./institution";

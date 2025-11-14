@@ -19,6 +19,18 @@ export const errorHandleMiddleware = new Elysia({
       return status(404, "What yall lookin for?");
     }
 
+    if (code === "PARSE") {
+      return status(422, {
+        status: "fail",
+        data: [
+          {
+            field: "body",
+            message: "Invalid request body",
+          },
+        ],
+      } satisfies FailResponseModel);
+    }
+
     if (code === "UNKNOWN") {
       return status(500, "Unknown error occurred");
     }

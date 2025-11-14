@@ -1,4 +1,5 @@
 export const UserRole = {
+  Student: "mahasiswa",
   Major: "program_studi",
   Department: "jurusan",
   Faculty: "fakultas",
@@ -28,4 +29,9 @@ export const ServiceStatus = { Healthy: "healthy", Bad: "bad" } as const;
 export const SortDirection = {
   ASC: "asc",
   DESC: "desc",
+} as const;
+
+export const Gender = {
+  Male: "pria",
+  Female: "wanita",
 } as const;

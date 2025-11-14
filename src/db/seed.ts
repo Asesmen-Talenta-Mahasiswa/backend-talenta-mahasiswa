@@ -12,9 +12,11 @@ console.log("Seeding database...");
 
 console.log("Truncating tables...");
 for (const table of [
+  schema.user,
   schema.department,
   schema.faculty,
   schema.major,
+  schema.institution,
   schema.student,
   schema.test,
   schema.testInstruction,
@@ -24,7 +26,6 @@ for (const table of [
   schema.testSubmission,
   schema.testSubmissionAnswer,
   schema.testSubmissionResult,
-  schema.user,
 ]) {
   await db.execute(
     sql.raw(
@@ -35,20 +36,34 @@ for (const table of [
 
 console.log("Seeding tables...");
 const result = await db.transaction(async (tx) => {
-  console.log("Seeding degree");
-  await seeds.department(tx);
-  await seeds.faculty(tx);
-  await seeds.major(tx);
-  await seeds.student(tx);
-  await seeds.test(tx);
-  await seeds.testInstruction(tx);
-  await seeds.testNote(tx);
-  await seeds.testQuestion(tx);
-  await seeds.testQuestionOption(tx);
-  await seeds.testSubmission(tx);
-  await seeds.testSubmissionAnswer(tx);
-  await seeds.testSubmissionResult(tx);
+  console.log("Seeding user");
   await seeds.user(tx);
+  console.log("Seeding department");
+  await seeds.department(tx);
+  console.log("Seeding faculty");
+  await seeds.faculty(tx);
+  console.log("Seeding major");
+  await seeds.major(tx);
+  console.log("Seeding institution");
+  await seeds.institution(tx);
+  console.log("Seeding student");
+  await seeds.student(tx);
+  console.log("Seeding test");
+  await seeds.test(tx);
+  console.log("Seeding testInstruction");
+  await seeds.testInstruction(tx);
+  console.log("Seeding testNote");
+  await seeds.testNote(tx);
+  console.log("Seeding testQuestion");
+  await seeds.testQuestion(tx);
+  console.log("Seeding testQuestionOption");
+  await seeds.testQuestionOption(tx);
+  console.log("Seeding testSubmission");
+  await seeds.testSubmission(tx);
+  console.log("Seeding testSubmissionAnswer");
+  await seeds.testSubmissionAnswer(tx);
+  console.log("Seeding testSubmissionResult");
+  await seeds.testSubmissionResult(tx);
   return true;
 });
 

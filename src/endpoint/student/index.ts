@@ -1,11 +1,12 @@
 import Elysia, { t } from "elysia";
 import { StudentService } from "./service";
 import {
+  getStudentResponseModel,
+  getStudentsResponseModel,
   newStudentModel,
   studentModel,
   studentParamsModel,
   studentQueryModel,
-  studentResponseModel,
   updateStudentModel,
 } from "./model";
 import {
@@ -22,15 +23,7 @@ export const studentEndpoint = new Elysia({
   .get(
     "",
     async ({ query, status }) => {
-      const { pagination, students } = await StudentService.getStudents(
-        query.page,
-        query.pageSize,
-        query.search,
-        query.majorId,
-        query.departmentId,
-        query.facultyId,
-        query.sortDirection,
-      );
+      const { pagination, students } = await StudentService.getStudents(query);
 
       return status(200, {
         status: ResponseStatus.Success,
@@ -41,16 +34,7 @@ export const studentEndpoint = new Elysia({
     {
       query: studentQueryModel,
       response: {
-        200: t.Object({
-          status: successResponseModel,
-          data: t.Array(studentResponseModel),
-          pagination: t.Object({
-            page: t.Number(),
-            pageSize: t.Number(),
-            totalItems: t.Number(),
-            totalPages: t.Number(),
-          }),
-        }),
+        200: getStudentsResponseModel,
         422: failResponseModel,
         500: errorResponseModel,
       },
@@ -81,10 +65,7 @@ export const studentEndpoint = new Elysia({
     {
       params: studentParamsModel,
       response: {
-        200: t.Object({
-          status: successResponseModel,
-          data: studentResponseModel,
-        }),
+        200: getStudentResponseModel,
         404: failResponseModel,
         422: failResponseModel,
         500: errorResponseModel,
@@ -125,6 +106,7 @@ export const studentEndpoint = new Elysia({
       },
     },
   )
+  .put("/:npm", async ({ params }) => {}, { params: studentParamsModel })
   .patch(
     "/:npm",
     async ({ params, body, status }) => {

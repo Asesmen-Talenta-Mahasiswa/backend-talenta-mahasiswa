@@ -2,12 +2,10 @@ import { t } from "elysia";
 import { dbModel } from "../../db/model";
 import { SortDirection } from "../../common/constant";
 
-const { password, ...selectUser } = dbModel.select.user;
+const selectUser = dbModel.select.user;
 const { id, createdAt, updatedAt, ...insertUser } = dbModel.insert.user;
 
-export const userModel = t.Object({
-  ...selectUser,
-});
+export const userModel = t.Object(selectUser);
 
 export const newUserModel = t.Object(
   {

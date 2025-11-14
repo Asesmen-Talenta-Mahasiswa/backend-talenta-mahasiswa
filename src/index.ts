@@ -9,8 +9,9 @@ import { studentEndpoint } from "./endpoint/student";
 import { systemEndpoint } from "./endpoint/system";
 import { testEndpoint } from "./endpoint/test";
 import { userEndpoint } from "./endpoint/user";
-import { logger } from "./logger";
 import { errorHandleMiddleware } from "./middleware/errorHandle";
+import { authEndpoint } from "./endpoint/auth";
+import { logger } from "./middleware/logger";
 
 export const serverStartTime = performance.now();
 
@@ -29,6 +30,15 @@ new Elysia()
           contact: {
             name: author.name,
             email: author.email,
+          },
+        },
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              type: "http",
+              scheme: "bearer",
+              bearerFormat: "JWT",
+            },
           },
         },
       },
@@ -52,6 +62,7 @@ new Elysia()
 
   .use(errorHandleMiddleware)
 
+  .use(authEndpoint)
   .use(systemEndpoint)
   .use(filterEndpoint)
   .use(studentEndpoint)

@@ -16,7 +16,9 @@
     "db:seed": "DB_SEEDING=true bun run ./src/db/seed.ts"
   },
   "dependencies": {
+    "@elysiajs/bearer": "^1.4.1",
     "@elysiajs/cors": "^1.4.0",
+    "@elysiajs/jwt": "^1.4.0",
     "@elysiajs/openapi": "^1.4.11",
     "@faker-js/faker": "^10.1.0",
     "@sinclair/typebox": "^0.34.8",

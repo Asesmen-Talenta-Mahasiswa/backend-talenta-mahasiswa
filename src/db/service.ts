@@ -6,11 +6,12 @@ import {
   sql,
 } from "drizzle-orm";
 import db from ".";
-import { MyLogger } from "../logger";
+
 import { InternalServerError, status } from "elysia";
 
 import * as schema from "../db/schema";
 import * as seeds from "../db/seeds";
+import { MyLogger } from "../middleware/logger";
 
 export abstract class DatabaseService {
   static errorHandle(error: unknown) {

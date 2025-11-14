@@ -5,6 +5,7 @@ import {
   foreignKey,
   index,
   integer,
+  jsonb,
   pgSchema,
   serial,
   text,
@@ -30,23 +31,69 @@ export const user = assessmentSchema.table("user", {
     .$onUpdate(() => sql`now()`),
 });
 
+export const userRelations = relations(user, ({ one }) => ({
+  student: one(student, {
+    fields: [user.id],
+    references: [student.userId],
+  }),
+}));
+
 // ============================================================================
 // Lookup Tables (Department, Faculty, Major)
 // ============================================================================
-export const faculty = assessmentSchema.table("faculty", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull().unique(),
-});
+export const faculty = assessmentSchema.table(
+  "faculty",
+  {
+    id: serial("id").primaryKey(),
+    name: text("name").notNull().unique(),
+  },
+  (column) => [index("faculty_name_idx").on(column.name)],
+);
 
-export const major = assessmentSchema.table("major", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull().unique(),
-});
+export const major = assessmentSchema.table(
+  "major",
+  {
+    id: serial("id").primaryKey(),
+    name: text("name").notNull().unique(),
+  },
+  (column) => [index("major_name_idx").on(column.name)],
+);
 
-export const department = assessmentSchema.table("department", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull().unique(),
-});
+export const department = assessmentSchema.table(
+  "department",
+  {
+    id: serial("id").primaryKey(),
+    name: text("name").notNull().unique(),
+  },
+  (column) => [index("department_name_idx").on(column.name)],
+);
+
+// LET IT BE SNAKE_CASE BECAUSE IT'S A LOOKUP TABLE FROM ONEDATA UNILA
+export const institution = assessmentSchema.table(
+  "institution",
+  {
+    id: uuid("id")
+      .primaryKey()
+      .$default(() => randomUUIDv7()),
+    id_sp: uuid("id_sp"),
+    id_sms: uuid("id_sms"),
+    id_fak_unila: uuid("id_fak_unila"),
+    id_jur_unila: uuid("id_jur_unila"),
+    id_induk_sms: uuid("id_induk_sms"),
+    id_jns_sms: text("id_jns_sms"),
+    id_wil: text("id_wil"),
+    nm_jns_sms: text("nm_jns_sms"),
+    nm_lemb: text("nm_lemb"),
+    kode_prodi: text("kode_prodi"),
+    nm_jenj_didik: text("nm_jenj_didik"),
+  },
+  (column) => [
+    index("institution_nm_lemb_idx").on(column.nm_lemb),
+    index("institution_id_sms_idx").on(column.id_sms),
+    index("institution_id_fak_unila_idx").on(column.id_fak_unila),
+    index("institution_id_jur_unila_idx").on(column.id_jur_unila),
+  ],
+);
 
 // ============================================================================
 // Student Schema
@@ -60,6 +107,14 @@ export const student = assessmentSchema.table(
     npm: text("npm").notNull().unique(),
     name: text("name").notNull(),
     email: text("email"),
+    gender: text("gender").notNull(),
+    degree: text("degree").notNull(),
+    enrollmentYear: text("enrollment_year").notNull(),
+    hasTakenTest: boolean("has_taken_test").notNull().default(false),
+    userId: uuid("user_id")
+      .notNull()
+      .unique()
+      .references(() => user.id, { onDelete: "restrict" }),
     majorId: integer("major_id")
       .notNull()
       .references(() => major.id, { onDelete: "restrict" }),
@@ -85,8 +140,12 @@ export const student = assessmentSchema.table(
 
     // single-column btree indexes for filters
     index("students_major_idx").on(column.majorId),
+    index("students_user_idx").on(column.majorId),
     index("students_department_idx").on(column.departmentId),
     index("students_faculty_idx").on(column.facultyId),
+    index("students_enrollment_year_idx").on(column.enrollmentYear),
+    index("students_gender_idx").on(column.gender),
+    index("students_degree_idx").on(column.degree),
   ],
 );
 
@@ -102,6 +161,10 @@ export const studentRelations = relations(student, ({ one, many }) => ({
   faculty: one(faculty, {
     fields: [student.facultyId],
     references: [faculty.id],
+  }),
+  user: one(user, {
+    fields: [student.userId],
+    references: [user.id],
   }),
   submissions: many(testSubmission),
 }));
@@ -408,7 +471,7 @@ export const testSubmissionResult = assessmentSchema.table(
     testId: integer("test_id").references(() => test.id, {
       onDelete: "set null",
     }),
-    result: text("result").notNull(),
+    result: jsonb("result").notNull(),
     createdAt: timestamp("created_at", { mode: "string" })
       .defaultNow()
       .notNull(),

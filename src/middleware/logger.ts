@@ -1,7 +1,7 @@
 import Elysia from "elysia";
 import { version as ELYSIA_VERSION } from "elysia/package.json";
 import { version as APP_VERSION } from "../../package.json";
-import { env } from "../env";
+import { env, isProd } from "../env";
 import { serverStartTime } from "..";
 
 type LoggerConfig = {
@@ -56,31 +56,40 @@ function formatMessage(message: unknown): { text: string; isJSON: boolean } {
 
 export abstract class MyLogger {
   static async debug(section: string, message: unknown) {
+    if (isProd) return;
     const timestamp = new Date().toLocaleString();
     const { text, isJSON } = formatMessage(message);
     const separator = isJSON ? "\n" : " ";
-    console.debug(`${timestamp} [${section.toUpperCase()}]${separator}${text}`);
+    console.debug(
+      `${timestamp} | [${section.toUpperCase()}] |${separator}${text}`,
+    );
   }
 
   static async error(section: string, message: unknown) {
     const timestamp = new Date().toLocaleString();
     const { text, isJSON } = formatMessage(message);
     const separator = isJSON ? "\n" : " ";
-    console.error(`${timestamp} [${section.toUpperCase()}]${separator}${text}`);
+    console.error(
+      `${timestamp} | [${section.toUpperCase()}] |${separator}${text}`,
+    );
   }
 
   static async warn(section: string, message: unknown) {
     const timestamp = new Date().toLocaleString();
     const { text, isJSON } = formatMessage(message);
     const separator = isJSON ? "\n" : " ";
-    console.warn(`${timestamp} [${section.toUpperCase()}]${separator}${text}`);
+    console.warn(
+      `${timestamp} | [${section.toUpperCase()}] |${separator}${text}`,
+    );
   }
 
   static async info(section: string, message: unknown) {
     const timestamp = new Date().toLocaleString();
     const { text, isJSON } = formatMessage(message);
     const separator = isJSON ? "\n" : " ";
-    console.info(`${timestamp} [${section.toUpperCase()}]${separator}${text}`);
+    console.info(
+      `${timestamp} | [${section.toUpperCase()}] |${separator}${text}`,
+    );
   }
 }
 

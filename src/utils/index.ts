@@ -45,10 +45,10 @@ import { createSelectSchema, createInsertSchema } from "../db";
  * @returns A non-empty tuple of string literal values accepted by Drizzle's `pgEnum`.
  */
 export function enumToPgEnum<T extends Record<string, any>>(
-    myEnum: T,
+  myEnum: T,
 ): [T[keyof T], ...T[keyof T][]] {
-    // NOTE: We assume caller supplies a string enum / const object; cast preserves literal types.
-    return Object.values(myEnum).map((value: any) => `${value}`) as any;
+  // NOTE: We assume caller supplies a string enum / const object; cast preserves literal types.
+  return Object.values(myEnum).map((value: any) => `${value}`) as any;
 }
 
 /**
@@ -66,7 +66,7 @@ export function enumToPgEnum<T extends Record<string, any>>(
  * @returns An array of values with type `T[keyof T][]`.
  */
 export const objectValues = <T extends Record<string, unknown>>(obj: T) =>
-    Object.values(obj) as T[keyof T][];
+  Object.values(obj) as T[keyof T][];
 
 /**
  * Generate a random username that:
@@ -80,144 +80,135 @@ export const objectValues = <T extends Record<string, unknown>>(obj: T) =>
  * Example output: "aB_cdEfG", "Zx_yZabC"
  */
 export function generateRandomUsername(): string {
-    const length = 8;
-    const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const LOWER = "abcdefghijklmnopqrstuvwxyz";
-    const UNDERSCORE = "_";
-    const ALL = UPPER + LOWER + UNDERSCORE;
+  const length = 8;
+  const UPPER = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const LOWER = "abcdefghijklmnopqrstuvwxyz";
+  const UNDERSCORE = "_";
+  const ALL = UPPER + LOWER + UNDERSCORE;
 
-    const pick = (pool: string) =>
-        pool[Math.floor(Math.random() * pool.length)];
+  const pick = (pool: string) => pool[Math.floor(Math.random() * pool.length)];
 
-    // Ensure required character categories are present
-    const required = [pick(UPPER), pick(LOWER), UNDERSCORE];
+  // Ensure required character categories are present
+  const required = [pick(UPPER), pick(LOWER), UNDERSCORE];
 
-    const result: string[] = new Array(length);
-    const used = new Set<number>();
-    while (used.size < required.length) {
-        used.add(Math.floor(Math.random() * length));
+  const result: string[] = new Array(length);
+  const used = new Set<number>();
+  while (used.size < required.length) {
+    used.add(Math.floor(Math.random() * length));
+  }
+  let i = 0;
+  for (const pos of used) {
+    result[pos] = required[i++];
+  }
+
+  // Fill remaining positions
+  for (let idx = 0; idx < length; idx++) {
+    if (!result[idx]) {
+      result[idx] = pick(ALL);
     }
-    let i = 0;
-    for (const pos of used) {
-        result[pos] = required[i++];
-    }
+  }
 
-    // Fill remaining positions
-    for (let idx = 0; idx < length; idx++) {
-        if (!result[idx]) {
-            result[idx] = pick(ALL);
-        }
-    }
-
-    return result.join("");
+  return result.join("");
 }
 
 export const cleanFalsyArray = <T>(
-    arr?: (T | null | undefined | false | "" | 0)[],
+  arr?: (T | null | undefined | false | "" | 0)[],
 ): T[] => (arr ?? []).filter(Boolean) as T[];
 
 export const buildConflictUpdateColumns = <
-    T extends PgTable | SQLiteTable,
-    Q extends keyof T["_"]["columns"],
+  T extends PgTable | SQLiteTable,
+  Q extends keyof T["_"]["columns"],
 >(
-    table: T,
-    columns: Q[],
+  table: T,
+  columns: Q[],
 ) => {
-    const cls = getTableColumns(table);
+  const cls = getTableColumns(table);
 
-    return columns.reduce(
-        (acc, column) => {
-            const colName = cls[column].name;
-            acc[column] = sql.raw(`excluded.${colName}`);
+  return columns.reduce(
+    (acc, column) => {
+      const colName = cls[column].name;
+      acc[column] = sql.raw(`excluded.${colName}`);
 
-            return acc;
-        },
-        {} as Record<Q, SQL>,
-    );
+      return acc;
+    },
+    {} as Record<Q, SQL>,
+  );
 };
 
 export function enumValuesAsNonEmptyTuple<
-    T extends Record<string, string | number>,
+  T extends Record<string, string | number>,
 >(obj: T): readonly [T[keyof T], ...T[keyof T][]] {
-    const vals = Object.values(obj) as T[keyof T][];
-    if (vals.length === 0) {
-        throw new Error("enum object must have at least one value");
-    }
-    // We assert the runtime-checked array is a non-empty tuple of the same value type.
-    return vals as unknown as readonly [T[keyof T], ...T[keyof T][]];
+  const vals = Object.values(obj) as T[keyof T][];
+  if (vals.length === 0) {
+    throw new Error("enum object must have at least one value");
+  }
+  // We assert the runtime-checked array is a non-empty tuple of the same value type.
+  return vals as unknown as readonly [T[keyof T], ...T[keyof T][]];
 }
 
 export function hasAnyValue<T>(obj: T): boolean {
-    for (const key in obj) {
-        const value = obj[key as keyof T];
-        if (value !== undefined && value !== null) return true;
-    }
-    return false;
+  for (const key in obj) {
+    const value = obj[key as keyof T];
+    if (value !== undefined && value !== null) return true;
+  }
+  return false;
 }
 
 export type Prettify<T> = { [K in keyof T]: T[K] } & {};
 
 type Spread<
-    T extends TObject | Table,
-    Mode extends "select" | "insert" | undefined,
+  T extends TObject | Table,
+  Mode extends "select" | "insert" | undefined,
 > =
-    T extends TObject<infer Fields>
-        ? {
-              [K in keyof Fields]: Fields[K];
-          }
-        : T extends Table
-          ? Mode extends "select"
-              ? BuildSchema<
-                    "select",
-                    T["_"]["columns"],
-                    undefined
-                >["properties"]
-              : Mode extends "insert"
-                ? BuildSchema<
-                      "insert",
-                      T["_"]["columns"],
-                      undefined
-                  >["properties"]
-                : {}
-          : {};
+  T extends TObject<infer Fields>
+    ? {
+        [K in keyof Fields]: Fields[K];
+      }
+    : T extends Table
+      ? Mode extends "select"
+        ? BuildSchema<"select", T["_"]["columns"], undefined>["properties"]
+        : Mode extends "insert"
+          ? BuildSchema<"insert", T["_"]["columns"], undefined>["properties"]
+          : {}
+      : {};
 
 /**
  * Spread a Drizzle schema into a plain object
  */
 export const spread = <
-    T extends TObject | Table,
-    Mode extends "select" | "insert" | undefined,
+  T extends TObject | Table,
+  Mode extends "select" | "insert" | undefined,
 >(
-    schema: T,
-    mode?: Mode,
+  schema: T,
+  mode?: Mode,
 ): Spread<T, Mode> => {
-    const newSchema: Record<string, unknown> = {};
-    let table;
+  const newSchema: Record<string, unknown> = {};
+  let table;
 
-    switch (mode) {
-        case "insert":
-        case "select":
-            if (Kind in schema) {
-                table = schema;
-                break;
-            }
+  switch (mode) {
+    case "insert":
+    case "select":
+      if (Kind in schema) {
+        table = schema;
+        break;
+      }
 
-            table =
-                mode === "insert"
-                    ? createInsertSchema(schema)
-                    : createSelectSchema(schema);
+      table =
+        mode === "insert"
+          ? createInsertSchema(schema)
+          : createSelectSchema(schema);
 
-            break;
+      break;
 
-        default:
-            if (!(Kind in schema)) throw new Error("Expect a schema");
-            table = schema;
-    }
+    default:
+      if (!(Kind in schema)) throw new Error("Expect a schema");
+      table = schema;
+  }
 
-    for (const key of Object.keys(table.properties))
-        newSchema[key] = table.properties[key];
+  for (const key of Object.keys(table.properties))
+    newSchema[key] = table.properties[key];
 
-    return newSchema as any;
+  return newSchema as any;
 };
 
 /**
@@ -228,18 +219,45 @@ export const spread = <
  * If `mode` is undefined, the schema will be spread as is, models will need to be refined manually
  */
 export const spreads = <
-    T extends Record<string, TObject | Table>,
-    Mode extends "select" | "insert" | undefined,
+  T extends Record<string, TObject | Table>,
+  Mode extends "select" | "insert" | undefined,
 >(
-    models: T,
-    mode?: Mode,
+  models: T,
+  mode?: Mode,
 ): {
-    [K in keyof T]: Spread<T[K], Mode>;
+  [K in keyof T]: Spread<T[K], Mode>;
 } => {
-    const newSchema: Record<string, unknown> = {};
-    const keys = Object.keys(models);
+  const newSchema: Record<string, unknown> = {};
+  const keys = Object.keys(models);
 
-    for (const key of keys) newSchema[key] = spread(models[key], mode);
+  for (const key of keys) newSchema[key] = spread(models[key], mode);
 
-    return newSchema as any;
+  return newSchema as any;
 };
+
+/**
+ * Convert a string to Proper Case (Title Case).
+ *
+ * This function capitalizes the first letter of each word while converting
+ * all other letters to lowercase. Words are separated by spaces.
+ *
+ * Examples:
+ * - "hello world" → "Hello World"
+ * - "HELLO WORLD" → "Hello World"
+ * - "hello_world" → "Hello_world" (underscores are not treated as word separators)
+ * - "the quick brown fox" → "The Quick Brown Fox"
+ *
+ * @param str The string to convert to proper case
+ * @returns The string formatted in proper case
+ */
+export function toProperCase(str: string): string {
+  if (!str) return str;
+
+  return str
+    .split(" ")
+    .map((word) => {
+      if (word.length === 0) return word;
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join(" ");
+}

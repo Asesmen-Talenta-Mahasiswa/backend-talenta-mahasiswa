@@ -2,9 +2,10 @@ import { InternalServerError } from "elysia";
 import db from "../../db";
 import { DatabaseService } from "../../db/service";
 import { eq, asc, desc } from "drizzle-orm";
-import type { NewUserModel, UpdateUserModel } from "./model";
+import type { NewUserModel, UpdateUserModel, UserModel } from "./model";
 import { user as userSchema } from "../../db/schema";
 import { SystemService } from "../system/service";
+import { StudentModel } from "../student/model";
 
 export abstract class UserService {
   static async getUsers(page = 1, pageSize = 10, sort = "desc") {
@@ -39,6 +40,24 @@ export abstract class UserService {
       const user = await db.query.user.findFirst({
         where: (column, { eq }) => eq(column.id, userId),
       });
+
+      const safeUser = user ? (({ password, ...rest }) => rest)(user) : null;
+
+      return safeUser;
+    } catch (error) {
+      SystemService.errorHandle(error);
+    }
+  }
+
+  /**
+   * student can be null
+   */
+  static async getUserWithStudent(userId: string) {
+    try {
+      const user = (await db.query.user.findFirst({
+        where: (column, { eq }) => eq(column.id, userId),
+        with: { student: true },
+      })) as (UserModel & { student: StudentModel | null }) | undefined;
 
       const safeUser = user ? (({ password, ...rest }) => rest)(user) : null;
 
